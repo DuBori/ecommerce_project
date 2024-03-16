@@ -1,7 +1,7 @@
 package com.duboribu.ecommerce.auth.util;
 
 import com.duboribu.ecommerce.auth.JwtException;
-import com.duboribu.ecommerce.auth.entity.User;
+import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -54,7 +54,7 @@ public class JwtTokenProvider implements InitializingBean {
         List<SimpleGrantedAuthority> collect = Arrays.stream(body.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        User user = new User("dummy", body.getSubject(), collect);
+        UserDto user = new UserDto("dummy", body.getSubject(), collect);
         return new UsernamePasswordAuthenticationToken(user, token, collect);
     }
 

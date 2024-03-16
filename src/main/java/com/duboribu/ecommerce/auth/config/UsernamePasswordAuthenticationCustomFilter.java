@@ -5,6 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -13,6 +14,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 //로그인 인증 처리 커스텀 필터
+@Slf4j
 @RequiredArgsConstructor
 public class UsernamePasswordAuthenticationCustomFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -33,7 +35,7 @@ public class UsernamePasswordAuthenticationCustomFilter extends UsernamePassword
 
         //3. User Password 인증이 이루어지는 부분
         //"authenticate" 가 실행될때 "PrincipalDetailService.loadUserByUsername" 실행
-
+        log.info("UsernamePasswordAuth Come in");
         return null;
     }
 
