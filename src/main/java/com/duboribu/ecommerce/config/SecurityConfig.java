@@ -1,6 +1,7 @@
 package com.duboribu.ecommerce.config;
 
 import com.duboribu.ecommerce.auth.config.*;
+import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -13,19 +14,16 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CorsConfig config;
-    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
-    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final UserLoginSuccessCustomHandler successHandler;
-    private final UserLoginFailureCustomHandler failureHandler;
-
-    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomOauth2UserService customOauth2UserService;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
@@ -54,8 +52,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**", "/auth/**", "/join/**").permitAll()
                         .anyRequest()
                         .authenticated())
-                .formLogin( form -> form.loginProcessingUrl("/join/sign-in")
+                .formLogin(form -> form.loginProcessingUrl("/join/sign-in")
                         .defaultSuccessUrl("/swagger-ui/index.html"))
+                .oauth2Login(oauth -> oauth.defaultSuccessUrl("/swagger-ui/index.html")
+                        .failureUrl("/")
+                        .userInfoEndpoint(userInfo -> userInfo.userService(customOauth2UserService)))
                 .build();
     }
 }

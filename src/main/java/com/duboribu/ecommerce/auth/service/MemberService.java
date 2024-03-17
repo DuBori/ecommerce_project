@@ -3,6 +3,8 @@ package com.duboribu.ecommerce.auth.service;
 import com.duboribu.ecommerce.auth.dao.MemberDao;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
+import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.PrincipalDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,9 +29,18 @@ public class MemberService implements UserDetailsService {
     private void encodePassword(UserDto userDto) {
         userDto.setPassword(encoder.encode(userDto.getPassword()));
     }
+
+    public Member findByMemberName(String name) {
+        Member member = memberJpaRepository.findByName(name)
+                .orElse(null);
+        return member;
+    }
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return memberJpaRepository.findById(username)
-                .orElseThrow(() -> {throw new IllegalArgumentException("회원이 아닙니다");});
+        Member member = memberJpaRepository.findById(username)
+                .orElseThrow(() -> {
+                    throw new IllegalArgumentException("회원이 아닙니다");
+                });
+        return new PrincipalDetails(member);
     }
 }

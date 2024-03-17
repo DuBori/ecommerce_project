@@ -10,14 +10,16 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Map;
 
 @Entity
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member implements UserDetails {
+public class Member {
     @Id
     @Column(name = "member_id")
     private String id;
@@ -25,8 +27,6 @@ public class Member implements UserDetails {
     private String pwd;
     @Column
     private String name;
-
-
 
     public Member(String id, String pwd, String name) {
         this.id = id;
@@ -38,40 +38,5 @@ public class Member implements UserDetails {
         this.id = userDto.getUsername();
         this.pwd = userDto.getPassword();
         this.name = userDto.getName();
-    }
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
-    }
-
-    @Override
-    public String getPassword() {
-        return pwd;
-    }
-
-    @Override
-    public String getUsername() {
-        return id;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

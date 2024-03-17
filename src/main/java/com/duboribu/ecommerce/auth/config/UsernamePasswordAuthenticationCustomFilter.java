@@ -1,5 +1,7 @@
 package com.duboribu.ecommerce.auth.config;
 
+import com.duboribu.ecommerce.auth.domain.request.JwtLoginRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -7,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -21,22 +24,22 @@ public class UsernamePasswordAuthenticationCustomFilter extends UsernamePassword
     private final AuthenticationManager authenticationManager;
     private final UserLoginSuccessCustomHandler successHandler;
     private final UserLoginFailureCustomHandler failureHandler;
+    private final ObjectMapper objectMapper;
 
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        //1. body 에서 로그인 정보 받아오기
-        /*if (ObjectUtils.isEmpty()) {
-            throw new JwtException(JwtUserExceptionType.AUTHENTICATION_EMPTY);
-        }*/
 
-        //2. Login ID, Pass 를 기반으로 AuthenticationToken 생성
-
-
-        //3. User Password 인증이 이루어지는 부분
-        //"authenticate" 가 실행될때 "PrincipalDetailService.loadUserByUsername" 실행
+        JwtLoginRequest jwtLoginRequest = null;
+        try {
+            jwtLoginRequest = objectMapper.readValue(request.getInputStream(), JwtLoginRequest.class);
+        } catch (IOException e) {
+            throw new RuntimeException("Internal server error");
+        }
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                new UsernamePasswordAuthenticationToken(jwtLoginRequest.getName() , jwtLoginRequest.getPwd());
         log.info("UsernamePasswordAuth Come in");
-        return null;
+        return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
     }
 
     @Override

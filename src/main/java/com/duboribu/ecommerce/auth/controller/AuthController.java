@@ -32,7 +32,7 @@ public class AuthController {
     public ResponseEntity<DefaultResponse<JwtTokenResponse>> createAuthenticationToken(@RequestBody final JwtLoginRequest request, HttpServletResponse response) {
         final Authentication authentication = authenticationManagerBuilder.getObject().authenticate(request.toAuthentication());
         // 2. SecurityContextHolder에 인증 정보 저장
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        /*SecurityContextHolder.getContext().setAuthentication(authentication);*/
 
         final JwtTokenResponse token = authService.createJwtToken(authentication);
         createCookie(response, token.getRefreshToken());
