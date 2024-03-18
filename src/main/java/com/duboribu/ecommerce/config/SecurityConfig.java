@@ -1,14 +1,18 @@
 package com.duboribu.ecommerce.config;
 
-import com.duboribu.ecommerce.auth.config.*;
+import com.duboribu.ecommerce.auth.config.CorsConfig;
+import com.duboribu.ecommerce.auth.config.JwtAccessDeniedHandler;
+import com.duboribu.ecommerce.auth.config.JwtAuthenticationEntryPoint;
+import com.duboribu.ecommerce.auth.config.JwtCustomFilter;
 import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,11 +36,12 @@ public class SecurityConfig {
                 .exceptionHandling(exception ->
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
-
                 .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**",
-                                "/auth/**", "/join/**", "/swagger-ui.html/**",
+                                "/auth/**", "/join/**", "/main/**", "/admin/**",
+                                "/swagger-ui.html/**",
                                 "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
-                                "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**")
+                                "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**"
+                                , "/fonts/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -45,4 +50,14 @@ public class SecurityConfig {
                 .build();
     }
 
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        return web -> web.ignoring()
+                .requestMatchers(PathRequest
+                        .toStaticResources()
+                        .atCommonLocations()
+                ).requestMatchers("/fonts/**", "/sass/**", "/Source/**",
+                        "/assets/**", "/forms/**");
+
+    }
 }
