@@ -22,6 +22,7 @@ public class MemberService implements UserDetailsService {
     private final MemberJpaRepository memberJpaRepository;
     private final RoleService roleService;
 
+
     @Transactional
     public UserDto join(UserDto user) {
         encodePassword(user);
