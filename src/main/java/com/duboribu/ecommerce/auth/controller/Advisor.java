@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class Advisor {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<DefaultResponse> exceptionHandler(final JwtException e) {
-
         log.info(e.getMessage());
         return new ResponseEntity<>(new DefaultResponse(e.getMessage(), e.getCode()), HttpStatus.OK);
     }

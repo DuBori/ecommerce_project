@@ -54,7 +54,7 @@ public class JwtTokenProvider implements InitializingBean {
         List<SimpleGrantedAuthority> collect = Arrays.stream(body.get(AUTHORITIES_KEY).toString().split(","))
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
-        UserDto user = new UserDto("dummy", body.getSubject(), collect);
+        UserDto user = new UserDto(body.getId(), body.getSubject(), collect);
         return new UsernamePasswordAuthenticationToken(user, token, collect);
     }
 

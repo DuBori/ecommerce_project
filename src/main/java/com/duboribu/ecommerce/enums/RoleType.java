@@ -1,0 +1,16 @@
+package com.duboribu.ecommerce.enums;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+@Getter
+@ToString(of = "desc")
+@RequiredArgsConstructor
+public enum RoleType {
+    ROLE_USER("회원", 1L),
+    ROLE_ADMIN("관리자", 2L);
+    private final String desc;
+    private final Long dbValue;
+
+}

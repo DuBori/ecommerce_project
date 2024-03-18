@@ -1,18 +1,19 @@
 package com.duboribu.ecommerce.entity;
 
-import com.duboribu.ecommerce.auth.domain.response.MemberResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
 @Getter
-@ToString
+@ToString(of = "member")
 @RequiredArgsConstructor
 public class PrincipalDetails implements UserDetails, OAuth2User {
 
@@ -38,7 +39,7 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override
@@ -67,6 +68,6 @@ public class PrincipalDetails implements UserDetails, OAuth2User {
     }
     @Override
     public String getName() {
-        return null;
+        return member.getName();
     }
 }

@@ -1,6 +1,8 @@
 package com.duboribu.ecommerce.auth.domain;
 
 import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.Role;
+import com.duboribu.ecommerce.enums.RoleType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,8 @@ public class UserDto {
     private String username;
     private String password;
     private String name;
+    private Role role;
+
     //@Transient
     private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
@@ -33,7 +37,9 @@ public class UserDto {
         this.authorities = collect;
     }
 
-    public Member toEntity() {
+    public Member toEntity(Role role) {
+        this.role = role;
         return new Member(this);
     }
+
 }

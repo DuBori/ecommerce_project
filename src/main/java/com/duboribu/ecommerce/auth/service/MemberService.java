@@ -1,11 +1,12 @@
 package com.duboribu.ecommerce.auth.service;
 
-import com.duboribu.ecommerce.auth.dao.MemberDao;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
 import com.duboribu.ecommerce.entity.Member;
 import com.duboribu.ecommerce.entity.PrincipalDetails;
+import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,16 +16,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService implements UserDetailsService {
-    private final MemberDao memberDao;
     private final BCryptPasswordEncoder encoder;
-
     private final MemberJpaRepository memberJpaRepository;
+    private final RoleService roleService;
 
     @Transactional
     public UserDto join(UserDto user) {
         encodePassword(user);
-        return new UserDto(memberJpaRepository.save(user.toEntity()));
+        return new UserDto(memberJpaRepository.save(user.toEntity(roleService.findById(RoleType.ROLE_USER))));
     }
     private void encodePassword(UserDto userDto) {
         userDto.setPassword(encoder.encode(userDto.getPassword()));
@@ -36,10 +37,11 @@ public class MemberService implements UserDetailsService {
         return member;
     }
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Member member = memberJpaRepository.findById(username)
                 .orElseThrow(() -> {
-                    throw new IllegalArgumentException("회원이 아닙니다");
+                    throw new UsernameNotFoundException("회원이 아닙니다");
                 });
         return new PrincipalDetails(member);
     }

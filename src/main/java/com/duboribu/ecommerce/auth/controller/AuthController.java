@@ -31,9 +31,7 @@ public class AuthController {
     @Operation(summary = "검증된 회원 token 생성 및 발급", description = "이름과 비밀번호를 입력해주세요")
     public ResponseEntity<DefaultResponse<JwtTokenResponse>> createAuthenticationToken(@RequestBody final JwtLoginRequest request, HttpServletResponse response) {
         final Authentication authentication = authenticationManagerBuilder.getObject().authenticate(request.toAuthentication());
-        // 2. SecurityContextHolder에 인증 정보 저장
-        /*SecurityContextHolder.getContext().setAuthentication(authentication);*/
-
+        SecurityContextHolder.getContext().setAuthentication(authentication);
         final JwtTokenResponse token = authService.createJwtToken(authentication);
         createCookie(response, token.getRefreshToken());
         return new ResponseEntity<>(new DefaultResponse<>(token), settingHeader(token), HttpStatus.OK);
@@ -49,7 +47,8 @@ public class AuthController {
 
     @GetMapping("/verify")
     @Operation(summary = "accessToken 발급 회원 검증", description = "access 토큰 또는 쿠키로 발급된 refresh 토큰이 필요합니다")
-    public ResponseEntity<DefaultResponse<Void>> resourceCheck(HttpServletRequest request, @RequestHeader(name = "Authorization") String accessToken) {
+    public ResponseEntity<DefaultResponse<Void>> resourceCheck(HttpServletRequest request) {
+        String accessToken = request.getHeader("Authorization");
         log.info("Bearer : {}", accessToken);
         String refreshToken = JwtParser.getRefreshToken(request);
         log.info("refresh Token : {}", refreshToken);

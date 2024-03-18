@@ -1,8 +1,11 @@
 package com.duboribu.ecommerce.auth.service;
 
 import com.duboribu.ecommerce.auth.domain.UserDto;
+import com.duboribu.ecommerce.auth.repository.RoleJpaRepository;
 import com.duboribu.ecommerce.entity.Member;
 import com.duboribu.ecommerce.entity.PrincipalDetails;
+import com.duboribu.ecommerce.entity.Role;
+import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,9 +22,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class CustomOauth2UserService extends DefaultOAuth2UserService {
     private final MemberService memberService;
+    private final RoleService roleService;
     private final BCryptPasswordEncoder encoder;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        log.info("Oatuh loginUser");
         String provider = userRequest.getClientRegistration().getRegistrationId();
         Map<String, Object> attribute = getAttribute(userRequest, provider);
         return getPrincipalDetails(attribute, provider);
@@ -40,7 +46,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             String email = String.valueOf(attribute.get("email"));
             String name = String.valueOf(attribute.get("name"));
             UserDto userResponse = memberService.join(new UserDto(new Member(username, password, name)));
-            return new PrincipalDetails(userResponse.toEntity(), attribute);
+            return new PrincipalDetails(userResponse.toEntity(roleService.findById(RoleType.ROLE_USER)), attribute);
         }
 
         return new PrincipalDetails(member, attribute);
