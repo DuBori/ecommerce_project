@@ -16,12 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/join")
 @RequiredArgsConstructor
 public class LoginController {
-
     private final MemberService memberService;
-    @GetMapping("/")
-    public void loginPage() {
-        log.info("loginPage");
-    }
 
     @PostMapping("/sign-up")
     @Operation(summary = "회원가입", description = "회원 정보가 필요합니다")

@@ -22,6 +22,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
     private final BCryptPasswordEncoder encoder;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+        log.info("Oatuh loginUser");
         String provider = userRequest.getClientRegistration().getRegistrationId();
         Map<String, Object> attribute = getAttribute(userRequest, provider);
         return getPrincipalDetails(attribute, provider);

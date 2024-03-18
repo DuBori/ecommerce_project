@@ -1,24 +1,16 @@
 package com.duboribu.ecommerce.entity;
 
 import com.duboribu.ecommerce.auth.domain.UserDto;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import lombok.AccessLevel;
+import com.duboribu.ecommerce.enums.RoleType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-
-import java.util.Collection;
-import java.util.Map;
 
 @Entity
 @Getter
-@ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@ToString(of = {"id", "name"})
+@NoArgsConstructor
 public class Member {
     @Id
     @Column(name = "member_id")
@@ -27,6 +19,10 @@ public class Member {
     private String pwd;
     @Column
     private String name;
+
+    @Enumerated
+    @Column
+    private RoleType role;
 
     public Member(String id, String pwd, String name) {
         this.id = id;
@@ -38,5 +34,7 @@ public class Member {
         this.id = userDto.getUsername();
         this.pwd = userDto.getPassword();
         this.name = userDto.getName();
+        this.role = userDto.getRoleType();
+
     }
 }
