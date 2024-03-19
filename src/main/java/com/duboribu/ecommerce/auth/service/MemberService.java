@@ -14,6 +14,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -36,6 +38,9 @@ public class MemberService implements UserDetailsService {
         Member member = memberJpaRepository.findByName(name)
                 .orElse(null);
         return member;
+    }
+    public Optional<Member> findById(String id) {
+        return memberJpaRepository.findById(id);
     }
     @Override
     @Transactional

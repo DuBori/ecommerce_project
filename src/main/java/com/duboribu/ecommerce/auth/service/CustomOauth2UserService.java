@@ -1,73 +1,61 @@
 package com.duboribu.ecommerce.auth.service;
 
-import com.duboribu.ecommerce.auth.domain.UserDto;
-import com.duboribu.ecommerce.auth.repository.RoleJpaRepository;
+import com.duboribu.ecommerce.auth.domain.request.OAuth2Attribute;
 import com.duboribu.ecommerce.entity.Member;
-import com.duboribu.ecommerce.entity.PrincipalDetails;
-import com.duboribu.ecommerce.entity.Role;
 import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CustomOauth2UserService extends DefaultOAuth2UserService {
+public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final MemberService memberService;
     private final RoleService roleService;
     private final BCryptPasswordEncoder encoder;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("Oatuh loginUser");
-        String provider = userRequest.getClientRegistration().getRegistrationId();
-        Map<String, Object> attribute = getAttribute(userRequest, provider);
-        return getPrincipalDetails(attribute, provider);
-    }
+        log.info("oatuh 진입=====");
+        OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
+        OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
-    private OAuth2User getPrincipalDetails(Map<String, Object> attribute, String provider) {
-        String providerId = getId(attribute, provider);
-        String username = new StringBuilder().append(provider)
-                .append("_")
-                .append(providerId)
-                .toString();
-        Member member = memberService.findByMemberName(username);
+        String registrationId = userRequest.getClientRegistration().getRegistrationId();
+        String userNameAttributeName = userRequest.getClientRegistration()
+                .getProviderDetails()
+                .getUserInfoEndpoint()
+                .getUserNameAttributeName();
 
-        if (member == null) {
-            String password =  encoder.encode("test");
-            String email = String.valueOf(attribute.get("email"));
-            String name = String.valueOf(attribute.get("name"));
-            UserDto userResponse = memberService.join(new UserDto(new Member(username, password, name)));
-            return new PrincipalDetails(userResponse.toEntity(roleService.findById(RoleType.ROLE_USER)), attribute);
+        // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
+        OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
+        Map<String, Object> oAuthMap = oAuth2Attribute.convertToMap();
+        String id = (String) oAuthMap.get("id");
+
+        Optional<Member> findMember = memberService.findById(id);
+        // 회원의 권한(회원이 존재하지 않으므로 기본권한인 ROLE_USER를 넣어준다), 회원속성, 속성이름을 이용해 DefaultOAuth2User 객체를 생성해 반환한다.
+        if(findMember.isEmpty()) {
+            oAuthMap.put("exist", false);
+            return new DefaultOAuth2User(
+                    Collections.singleton(new SimpleGrantedAuthority(RoleType.ROLE_USER.name())),
+                    oAuthMap, "email");
         }
-
-        return new PrincipalDetails(member, attribute);
+        // 기존 유저
+        oAuthMap.put("exist", true);
+        return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(findMember.get().getRole().getRoleType().name())),
+                oAuthMap, "email");
     }
 
-    private String getId(Map<String, Object> attribute, String provider) {
-        if ("google".equals(provider)) {
-            return String.valueOf(attribute.get("sub"));
-        }
-        return String.valueOf(attribute.get("id"));
-    }
-
-    private Map<String, Object> getAttribute(OAuth2UserRequest userRequest, String provider) {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-        if ("google".equals(provider) || "facebook".equals(provider)) {
-            return oAuth2User.getAttributes();
-        } else if ("naver".equals(provider)) {
-            return (Map) oAuth2User.getAttributes().get("response");
-        } else if ("kakao".equals(provider)) {
-            return (Map) oAuth2User.getAttributes().get("kakao_account");
-        }
-        throw new IllegalArgumentException("not support service");
-    }
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>로그인 (Please sign in)</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+  <style>
+    body {
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    p {
+      text-align: center;
+    }
+
+    .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .btn-third {
+      background-color: #ffeb3b;
+      color: #000;
+    }
+
+    .btn-third:hover {
+      background-color: #fdd835;
+      color: #000;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2 class="form-signin-heading">로그인이 필요한 페이지입니다.</h2>
+  <p>(Login with OAuth 2.0)</p>
+  <p>외부 로그인 계정을 선택해주세요.</p>
+  <a href="/oauth2/authorization/google" class="btn btn-sm btn-success active" role="button">Google Login</a><br>
+  <a href="/oauth2/authorization/naver" class="btn btn-sm btn-success active" role="button">Naver Login</a><br>
+  <a href="/oauth2/authorization/kakao" class="btn btn-third active" role="button">Kakao Login</a>
+
+</div>
+</body>
+</html>

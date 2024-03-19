@@ -1,11 +1,9 @@
-package com.duboribu.ecommerce.config;
+package com.duboribu.ecommerce.auth.config;
 
-import com.duboribu.ecommerce.auth.config.CorsConfig;
-import com.duboribu.ecommerce.auth.config.JwtAccessDeniedHandler;
-import com.duboribu.ecommerce.auth.config.JwtAuthenticationEntryPoint;
-import com.duboribu.ecommerce.auth.config.JwtCustomFilter;
+import com.duboribu.ecommerce.auth.JwtExceptionFilter;
 import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
+import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -21,15 +19,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CorsConfig corsConfig;
     private final CustomOauth2UserService customOauth2UserService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+
+    private final JwtExceptionFilter jwtExceptionFilter;
     private final JwtTokenProvider tokenProvider;
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf((csrf) -> csrf.disable())
+        return http
+                .csrf((csrf) -> csrf.disable())
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -37,16 +39,19 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**",
-                                "/auth/**", "/join/**", "/main/**", "/admin/**",
-                                "/swagger-ui.html/**",
+                                "/auth/**", "/join/**","/main", "/swagger-ui.html/**","/login/**",
                                 "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
-                                "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**"
-                                , "/fonts/**")
+                                "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+                                "/fonts/**")
                         .permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
                         .anyRequest()
                         .authenticated())
-                /*.addFilterBefore(corsConfig.corsFilter(), UsernamePasswordAuthenticationFilter.class)*/
+                .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2UserService))
+                        .successHandler(authenticationSuccessHandler)
+                        .failureHandler(authenticationFailureHandler))
                 .addFilterBefore(new JwtCustomFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtCustomFilter.class)
                 .build();
     }
 
@@ -57,7 +62,8 @@ public class SecurityConfig {
                         .toStaticResources()
                         .atCommonLocations()
                 ).requestMatchers("/fonts/**", "/sass/**", "/Source/**",
-                        "/assets/**", "/forms/**");
+                        "/assets/**", "/forms/**"
+                ,"/swagger-ui/**","/v3/**");
 
     }
 }
