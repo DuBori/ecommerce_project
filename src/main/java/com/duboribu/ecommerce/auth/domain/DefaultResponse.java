@@ -9,8 +9,14 @@ import lombok.ToString;
 @EqualsAndHashCode
 public class DefaultResponse<T> {
     public static final int SUCCESS = 200;
+    public static final int LOGIN_ERR = 201;
+    public static final int NON_MEMBER_ERR = 202;
+    public static final int NON_TOKEN = 203;
+    public static final int EXPIRED_REFRESH_TOKEN = 204;
+
     public static final String SUCCESS_MSG = "정상처리";
     public static final int SYSTEM_ERR = 500;
+
     public static final String SYSTEM_ERR_MSG = "시스템 오류";
 
     private final String resMsg;

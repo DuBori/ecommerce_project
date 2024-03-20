@@ -10,7 +10,6 @@ import lombok.ToString;
 public class JwtTokenResponse {
     private final String accessToken;
     private final String refreshToken;
-
     public JwtTokenResponse() {
         accessToken = null;
         refreshToken = null;

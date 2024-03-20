@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
 import com.duboribu.ecommerce.auth.JwtExceptionFilter;
 import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;

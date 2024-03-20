@@ -28,8 +28,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider implements InitializingBean {
-    private String AUTHORITIES_KEY ="auth";
-    private String AUTHORITY_DELIMITER =",";
+    private final String AUTHORITIES_KEY ="auth";
+    private final String AUTHORITY_DELIMITER =",";
 
     private Key key;
     @Value("${custom.jwt.token.key}")
@@ -82,7 +82,7 @@ public class JwtTokenProvider implements InitializingBean {
     // 검증
     public boolean validateToken(final String token) {
         try {
-            Jws<Claims> claimsJws = Jwts.parserBuilder()
+            Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token);

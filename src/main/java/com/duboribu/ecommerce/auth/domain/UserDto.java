@@ -1,25 +1,30 @@
 package com.duboribu.ecommerce.auth.domain;
 
+import com.duboribu.ecommerce.auth.JwtException;
+import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
 import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.MemberToken;
 import com.duboribu.ecommerce.entity.Role;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.duboribu.ecommerce.enums.RoleType;
+import lombok.*;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
     private String username;
-    private String password;
+    private String password = "test";
     private String name;
-    private Role role;
+    private RoleType roleType;
     private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
     public UserDto(Member member) {
@@ -33,8 +38,19 @@ public class UserDto {
         this.name = name;
         this.authorities = collect;
     }
-    public Member toEntity(Role role) {
-        this.role = role;
-        return new Member(this);
+    public Member toEntity(Role role, MemberToken refreshToken) {
+        roleType = role.getRoleType();
+        return new Member(username, password, name, role, refreshToken);
     }
+
+    public Authentication toAuthentication() {
+        if (!StringUtils.hasText(username)) {
+            throw new JwtException(JwtUserExceptionType.REQUEST_EMPTY_NAME);
+        }
+        if (!StringUtils.hasText(password)) {
+            throw new JwtException(JwtUserExceptionType.REQUEST_EMPTY_PWD);
+        }
+        return new UsernamePasswordAuthenticationToken(name, password);
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

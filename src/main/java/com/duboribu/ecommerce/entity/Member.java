@@ -1,7 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
 import com.duboribu.ecommerce.auth.domain.UserDto;
-import com.duboribu.ecommerce.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,8 +20,12 @@ public class Member {
     private String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "ROLE_ID")
     private Role role;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_TOKEN_ID")
+    private MemberToken memberToken;
 
     public Member(String id, String pwd, String name) {
         this.id = id;
@@ -30,10 +33,21 @@ public class Member {
         this.name = name;
     }
 
+    public Member(String id, String pwd, String name, Role role, MemberToken memberToken) {
+        this.id = id;
+        this.pwd = pwd;
+        this.name = name;
+        this.role = role;
+        this.memberToken = memberToken;
+    }
+
     public Member(UserDto userDto) {
         this.id = userDto.getUsername();
         this.pwd = userDto.getPassword();
         this.name = userDto.getName();
-        this.role = userDto.getRole();
+    }
+
+    public void updateToken(MemberToken memberToken) {
+        this.memberToken = memberToken;
     }
 }

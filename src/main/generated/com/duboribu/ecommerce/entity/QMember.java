@@ -24,6 +24,8 @@ public class QMember extends EntityPathBase<Member> {
 
     public final StringPath id = createString("id");
 
+    public final QMemberToken memberToken;
+
     public final StringPath name = createString("name");
 
     public final StringPath pwd = createString("pwd");
@@ -48,6 +50,7 @@ public class QMember extends EntityPathBase<Member> {
 
     public QMember(Class<? extends Member> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
+        this.memberToken = inits.isInitialized("memberToken") ? new QMemberToken(forProperty("memberToken"), inits.get("memberToken")) : null;
         this.role = inits.isInitialized("role") ? new QRole(forProperty("role")) : null;
     }
 

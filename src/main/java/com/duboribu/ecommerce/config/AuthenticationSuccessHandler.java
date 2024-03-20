@@ -1,5 +1,6 @@
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
+import com.duboribu.ecommerce.auth.service.AuthService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -21,11 +22,16 @@ import java.nio.charset.StandardCharsets;
 public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final JwtTokenProvider jwtTokenProvider;
 
+    private final AuthService authService;
+    /**
+     * 기존 회원인 경우, AccessToken 발급 받은 후, 메인페이지로 이동
+     * 기존 회원이 아닌 경우, 회원가입 페이지로 이동한다. 간단한 정보를 담아 간편 가입을 진행시키도록 해보자
+     * */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
         boolean isExist = oAuth2User.getAttribute("exist");
-        log.info("==Oauth 로그인 성공객체===");
+       
         // 회원이 존재할경우
         if (isExist) {
             // 회원이 존재하면 jwt token 발행을 시작한다.
@@ -34,16 +40,16 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
 
             // accessToken을 쿼리스트링에 담는 url을 만들어준다.
             String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/main")
-                    .queryParam("accessToken", accessToken)
                     .build()
                     .encode(StandardCharsets.UTF_8)
                     .toUriString();
+            response.setHeader("Bearer", accessToken);
             // 로그인 확인 페이지로 리다이렉트 시킨다.
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         } else {
-            // 회원이 존재하지 않을경우, 서비스 제공자와 email을 쿼리스트링으로 전달하는 url을 만들어준다.
+            // 회원이 존재하지 않을경우, 회원가입 페이지로 이동한다.
             String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/login/signup")
-                    .queryParam("id", (String) oAuth2User.getAttribute("id"))
+                    .queryParam("username", (String) oAuth2User.getAttribute("id"))
                     .queryParam("provider", (String)oAuth2User.getAttribute("provider"))
                     .build()
                     .encode(StandardCharsets.UTF_8)
@@ -52,5 +58,4 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
             getRedirectStrategy().sendRedirect(request, response, targetUrl);
         }
     }
-
 }

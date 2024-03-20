@@ -1,9 +1,13 @@
 package com.duboribu.ecommerce.auth.service;
 
 import com.duboribu.ecommerce.auth.domain.UserDto;
+import com.duboribu.ecommerce.auth.domain.response.UserResponse;
 import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
+import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.MemberToken;
 import com.duboribu.ecommerce.entity.PrincipalDetails;
+import com.duboribu.ecommerce.entity.Role;
 import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,12 +27,23 @@ public class MemberService implements UserDetailsService {
     private final BCryptPasswordEncoder encoder;
     private final MemberJpaRepository memberJpaRepository;
     private final RoleService roleService;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final MemberTokenService memberTokenService;
 
 
     @Transactional
-    public UserDto join(UserDto user) {
-        encodePassword(user);
-        return new UserDto(memberJpaRepository.save(user.toEntity(roleService.findById(RoleType.ROLE_USER))));
+    public UserResponse join(UserDto userDto) {
+        if (!memberJpaRepository.findById(userDto.getUsername()).isEmpty()) {
+            return null;
+        }
+        encodePassword(userDto);
+        final Role user = roleService.findById(RoleType.ROLE_USER);
+        final String token = jwtTokenProvider.createRefreshToken();
+        MemberToken memberToken = new MemberToken(token);
+        memberTokenService.save(memberToken);
+        memberJpaRepository.save(userDto.toEntity(user, memberToken));
+
+        return new UserResponse(userDto);
     }
     private void encodePassword(UserDto userDto) {
         userDto.setPassword(encoder.encode(userDto.getPassword()));
@@ -50,5 +65,12 @@ public class MemberService implements UserDetailsService {
                     throw new UsernameNotFoundException("회원이 아닙니다");
                 });
         return new PrincipalDetails(member);
+    }
+
+    public String issueRefreshToken(Member member) {
+        final String token = jwtTokenProvider.createRefreshToken();
+        memberTokenService.delete(member.getMemberToken());
+        member.updateToken(new MemberToken(token));
+        return token;
     }
 }

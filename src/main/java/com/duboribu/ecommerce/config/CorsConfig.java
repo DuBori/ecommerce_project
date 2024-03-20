@@ -1,5 +1,5 @@
 
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

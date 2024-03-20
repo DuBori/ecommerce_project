@@ -1,5 +1,5 @@
 
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +18,7 @@ import java.io.IOException;
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        log.error("권한이 없는 사용자 접근");
+        log.error("인증된 사용자가 접근 권한이 없는 경우 ");
         response.sendError(HttpServletResponse.SC_FORBIDDEN);
     }
 }

@@ -11,7 +11,7 @@ import lombok.ToString;
 public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
+    @Column(name = "ROLE_ID")
     private Long id;
 
     @Enumerated(EnumType.STRING)

@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
@@ -23,21 +23,22 @@ public class JwtCustomFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("//로그인 인증 처리 커스텀 필터 진입");
+        log.info("Token 검증 필터 진입");
 
         String jwt = resolveToken(request);
+        log.info("header jwt : {]", jwt);
         String requestURI = request.getRequestURI();
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
-        } else {
-            log.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
+            filterChain.doFilter(request, response);
         }
+
+        log.info("유효한 JWT 토큰이 없습니다, uri: {}", requestURI);
         filterChain.doFilter(request, response);
     }
-
     // Request Header 에서 토큰 정보를 꺼내오기 위한 메소드
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);

@@ -1,6 +1,5 @@
-package com.duboribu.ecommerce.auth.config;
+package com.duboribu.ecommerce.config;
 
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +16,7 @@ import java.io.IOException;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException{
-        log.error("JWT 토큰 인증 실패2");
+        log.error("사용자가 로그인하지 않은 경우");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
     }
 }
