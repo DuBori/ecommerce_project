@@ -1,61 +1,69 @@
 package com.duboribu.ecommerce.config;
 
-import com.duboribu.ecommerce.auth.config.*;
+import com.duboribu.ecommerce.auth.JwtExceptionFilter;
+import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
+import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private final CorsConfig config;
+    private final CustomOauth2UserService customOauth2UserService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
-    private final UserLoginSuccessCustomHandler successHandler;
-    private final UserLoginFailureCustomHandler failureHandler;
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+
+    private final JwtExceptionFilter jwtExceptionFilter;
+    private final JwtTokenProvider tokenProvider;
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf((csrf) -> csrf.disable())
+                .sessionManagement(sessionManagement ->
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                                .accessDeniedHandler(jwtAccessDeniedHandler))
+                .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**",
+                                "/auth/**", "/join/**","/main", "/swagger-ui.html/**","/login/**",
+                                "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
+                                "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+                                "/fonts/**")
+                        .permitAll()
+                        .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
+                        .anyRequest()
+                        .authenticated())
+                .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2UserService))
+                        .successHandler(authenticationSuccessHandler)
+                        .failureHandler(authenticationFailureHandler))
+                .addFilterBefore(new JwtCustomFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtExceptionFilter, JwtCustomFilter.class)
+                .build();
+    }
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return web -> web.ignoring()
-               /* //유저관련(회원가입)
-                .requestMatchers("/codebox/join*", "/codebox/join/mailConfirm", "/codebox/join/validNickName")*/
-                //리프레쉬 토큰 관련
-                .requestMatchers("/codebox/refreshToken")
-                .requestMatchers("/auth/*")
-                //swagger
-                .requestMatchers("/swagger-ui.html/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**")
-                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**");
-                //test
-                /*.requestMatchers( "/test", "/login/oauth2/code/kakao", "/login/oauth2/code/google", "/tokenParsingTest");*/
-    }
+                .requestMatchers(PathRequest
+                        .toStaticResources()
+                        .atCommonLocations()
+                ).requestMatchers("/fonts/**", "/sass/**", "/Source/**",
+                        "/assets/**", "/forms/**"
+                ,"/swagger-ui/**","/v3/**");
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-
-        return http.csrf((csrf) -> csrf.disable())
-                // 시큐리티는 기본적으로 세션을 사용
-                // 여기서는 세션을 사용하지 않기 때문에 세션 설정을 Stateless 로 설정
-                .sessionManagement((sessionManagement) ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**", "/auth/**", "/join/**").permitAll()
-                        .anyRequest()
-                        .authenticated())
-                .formLogin( form -> form.loginProcessingUrl("/join/sign-in")
-                        .defaultSuccessUrl("/swagger-ui/index.html"))
-                .build();
     }
 }

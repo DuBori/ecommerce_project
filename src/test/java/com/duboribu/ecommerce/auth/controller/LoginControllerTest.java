@@ -8,7 +8,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest
 
 class LoginControllerTest {
@@ -20,9 +20,11 @@ class LoginControllerTest {
     @Transactional
     @Rollback(value = false)
     public void 회원가입진행() {
-        Member member = new Member("wjdgus", "1234", "정현");
+
+        Member member = new Member("wjdgus5", "1234", "정현");
         entityManager.persist(member);
         Member findMember = entityManager.find(Member.class, member.getId());
+
         assertEquals(member.getId(), findMember.getId());
     }
 

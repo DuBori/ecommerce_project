@@ -27,6 +27,6 @@ public class JwtLoginRequest {
         if (!StringUtils.hasText(pwd)) {
             throw new JwtException(JwtUserExceptionType.REQUEST_EMPTY_PWD);
         }
-        return new UsernamePasswordAuthenticationToken(this, null);
+        return new UsernamePasswordAuthenticationToken(name, pwd);
     }
 }

@@ -1,41 +1,30 @@
 package com.duboribu.ecommerce.auth.service;
 
-import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
+import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.MemberToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
-
-    public JwtTokenResponse createJwtToken(final Authentication authentication) {
-        JwtTokenResponse response = new JwtTokenResponse(jwtTokenProvider.createAccessToken(authentication), jwtTokenProvider.createRefreshToken());
-        saveToken(authentication, response);
-        return response;
-    }
-
-    private void saveToken(final Authentication authentication, JwtTokenResponse response) {
-        // accessToken refreshToken db 저장 해당 회원
-        log.info("db 저장할 getName : {}", authentication.getName());
-    }
-
-    public String validateAccessToken(String accessToken) {
-        // 만료되지 않은 경우
-        if (jwtTokenProvider.validateToken(accessToken)) {
-            return "access";
+    private final MemberTokenService memberTokenService;
+    private final MemberService memberService;
+    private final BCryptPasswordEncoder encoder;
+    @Transactional
+    public String createToken(Member member) {
+        if (member.getMemberToken() != null) {
+            memberTokenService.delete(member.getMemberToken());
         }
-        return null;
-    }
-
-    public String createAccessTokenByRefreshToken(String refreshToken) {
-        if (jwtTokenProvider.validateToken(refreshToken)) {
-            return jwtTokenProvider.createAccessToken(refreshToken);
-        }
-        throw  new IllegalArgumentException("토큰 만료");
+        String refreshToken = jwtTokenProvider.createRefreshToken();
+        member.updateToken(memberTokenService.save(new MemberToken(refreshToken)));
+        String accessToken = jwtTokenProvider.createAccessToken(refreshToken);
+        return accessToken;
     }
 }
