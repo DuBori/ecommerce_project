@@ -3,7 +3,6 @@ package com.duboribu.ecommerce.auth.domain;
 import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
 import com.duboribu.ecommerce.entity.Member;
-import com.duboribu.ecommerce.entity.MemberToken;
 import com.duboribu.ecommerce.entity.Role;
 import com.duboribu.ecommerce.enums.RoleType;
 import lombok.*;
@@ -38,9 +37,9 @@ public class UserDto {
         this.name = name;
         this.authorities = collect;
     }
-    public Member toEntity(Role role, MemberToken refreshToken) {
+    public Member toEntity(Role role) {
         roleType = role.getRoleType();
-        return new Member(username, password, name, role, refreshToken);
+        return new Member(username, password, name, role);
     }
 
     public Authentication toAuthentication() {

@@ -50,15 +50,13 @@ public class LoginController {
         try {
             Call<DefaultResponse<UserResponse>> responseBodyCall = restInterface.signUp("application/json", userDto);
             Response<DefaultResponse<UserResponse>> execute = responseBodyCall.execute();
-            if (execute.isSuccessful()) {
-                DefaultResponse<UserResponse> body = execute.body();
-                log.info("{}", body.getResMsg());
-                log.info("{}", body.getBody().getId());
-                log.info("{}", body.getBody().getName());
-                log.info("{}", body.getResCode());
+            DefaultResponse<UserResponse> body = execute.body();
+            if (body.getResCode() == 200) {
+                return "redirect:/login";
             }
         } catch (Exception e) {
             log.error(e.getMessage());
+            return "redirect:/login";
         }
         return null;
     }

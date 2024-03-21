@@ -24,9 +24,8 @@ public class JwtCustomFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("Token 검증 필터 진입");
-
         String jwt = resolveToken(request);
-        log.info("header jwt : {]", jwt);
+        log.info("jwt : {]", jwt);
         String requestURI = request.getRequestURI();
 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
@@ -42,11 +41,9 @@ public class JwtCustomFilter extends OncePerRequestFilter {
     // Request Header 에서 토큰 정보를 꺼내오기 위한 메소드
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
-
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
-
         return null;
     }
 }

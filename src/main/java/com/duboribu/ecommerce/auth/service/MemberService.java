@@ -38,11 +38,7 @@ public class MemberService implements UserDetailsService {
         }
         encodePassword(userDto);
         final Role user = roleService.findById(RoleType.ROLE_USER);
-        final String token = jwtTokenProvider.createRefreshToken();
-        MemberToken memberToken = new MemberToken(token);
-        memberTokenService.save(memberToken);
-        memberJpaRepository.save(userDto.toEntity(user, memberToken));
-
+        memberJpaRepository.save(userDto.toEntity(user));
         return new UserResponse(userDto);
     }
     private void encodePassword(UserDto userDto) {

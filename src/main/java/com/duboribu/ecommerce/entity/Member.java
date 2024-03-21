@@ -47,6 +47,13 @@ public class Member {
         this.name = userDto.getName();
     }
 
+    public Member(String id, String pwd, String name, Role role) {
+        this.id = id;
+        this.pwd = pwd;
+        this.name = name;
+        this.role = role;
+    }
+
     public void updateToken(MemberToken memberToken) {
         this.memberToken = memberToken;
     }

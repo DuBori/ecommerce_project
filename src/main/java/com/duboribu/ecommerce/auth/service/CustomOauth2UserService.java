@@ -41,7 +41,7 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
         Map<String, Object> oAuthMap = oAuth2Attribute.convertToMap();
-        String id = (String) oAuthMap.get("id");
+        String id = (String) oAuthMap.get("email");
         log.info("oauth id : {}", id);
         Optional<Member> findMember = memberService.findById(id);
         // 회원의 권한(회원이 존재하지 않으므로 기본권한인 ROLE_USER를 넣어준다), 회원속성, 속성이름을 이용해 DefaultOAuth2User 객체를 생성해 반환한다.
