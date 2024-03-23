@@ -8,8 +8,8 @@ import lombok.ToString;
 @ToString(of = "desc")
 @RequiredArgsConstructor
 public enum RoleType {
-    ROLE_USER("회원", 1L),
-    ROLE_ADMIN("관리자", 2L);
+    ROLE_USER("user", 1L),
+    ROLE_ADMIN("admin", 2L);
     private final String desc;
     private final Long dbValue;
 

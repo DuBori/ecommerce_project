@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +35,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf((csrf) -> csrf.disable())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(sessionManagement ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
@@ -39,17 +43,19 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**",
-                                "/auth/**", "/join/**","/main", "/swagger-ui.html/**","/login/**",
+                                "/auth/**","/main/**","/login/**",
                                 "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
                                 "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
                                 "/fonts/**")
                         .permitAll()
+                        .requestMatchers("/swagger-ui.html/**").hasAnyAuthority(RoleType.ROLE_USER.name())
                         .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2UserService))
                         .successHandler(authenticationSuccessHandler)
-                        .failureHandler(authenticationFailureHandler))
+                        .failureHandler(authenticationFailureHandler)
+                )
                 .addFilterBefore(new JwtCustomFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtCustomFilter.class)
                 .build();
@@ -65,5 +71,19 @@ public class SecurityConfig {
                         "/assets/**", "/forms/**"
                 ,"/swagger-ui/**","/v3/**");
 
+    }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowCredentials(true); // 인증정보를 함께 전송할지 여부 설정
+        configuration.addAllowedOrigin("*");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.addExposedHeader("Authorization");
+        configuration.addAllowedHeader("Authorization"); // 허용할 헤더 설정
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

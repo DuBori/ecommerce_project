@@ -22,10 +22,6 @@ public class OAuth2Attribute {
     public static OAuth2Attribute of(String provider, String attributeKey, Map<String, Object> attributes) {
         if ("google".equals(provider)) {
             return ofGoogle(provider, attributeKey, attributes);
-        } else if ("kakao".equals(provider)) {
-            return ofKakao(provider, "email", attributes);
-        } else if ("naver".equals(provider)) {
-            return ofNaver(provider, "id", attributes);
         }
         throw new RuntimeException();
     }
@@ -68,8 +64,8 @@ public class OAuth2Attribute {
                 .provider(provider)
                 .attributeKey(attributeKey)
                 .build();
-    }
 
+    }
 
     // OAuth2User 객체에 넣어주기 위해서 Map으로 값들을 반환해준다.
     public Map<String, Object> convertToMap() {
@@ -78,7 +74,6 @@ public class OAuth2Attribute {
         map.put("key", attributeKey);
         map.put("email", email);
         map.put("provider", provider);
-
         return map;
     }
 }

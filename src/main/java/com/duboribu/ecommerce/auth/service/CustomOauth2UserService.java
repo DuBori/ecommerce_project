@@ -24,11 +24,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final MemberService memberService;
-
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("oatuh 진입=====");
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
@@ -41,7 +39,7 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         // OAuth2UserService를 사용하여 가져온 OAuth2User 정보로 OAuth2Attribute 객체를 만든다.
         OAuth2Attribute oAuth2Attribute = OAuth2Attribute.of(registrationId, userNameAttributeName, oAuth2User.getAttributes());
         Map<String, Object> oAuthMap = oAuth2Attribute.convertToMap();
-        String id = (String) oAuthMap.get("id");
+        String id = (String) oAuthMap.get("email");
         log.info("oauth id : {}", id);
         Optional<Member> findMember = memberService.findById(id);
         // 회원의 권한(회원이 존재하지 않으므로 기본권한인 ROLE_USER를 넣어준다), 회원속성, 속성이름을 이용해 DefaultOAuth2User 객체를 생성해 반환한다.
@@ -53,7 +51,6 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
         // 기존 유저
         oAuthMap.put("exist", true);
-
         return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(findMember.get().getRole().getRoleType().name())),
                 oAuthMap, "email");
     }
