@@ -1,34 +1,90 @@
 package com.duboribu.ecommerce.auth.controller;
 
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
-import com.duboribu.ecommerce.auth.service.AuthService;
+import com.duboribu.ecommerce.auth.domain.UserDto;
+import com.duboribu.ecommerce.auth.domain.response.PublicUserResponse;
+import com.duboribu.ecommerce.auth.domain.response.UserResponse;
 import com.duboribu.ecommerce.auth.service.MemberService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.enums.SocialType;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
 @Slf4j
-@RestController
+@RestController(value = "LoginAPIController")
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthService authService;
     private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    /**
+     * 일반 유저 회원가입 및 리프레시 토큰 저장
+     * 그 후 일반 회원은 다시 로그인을 해야한다.
+     * */
+    @PostMapping("/sign-up")
+    @Operation(summary = "회원가입", description = "회원가입 및 리프레시 토큰 발급을 진행합니다.")
+    public ResponseEntity<DefaultResponse> signUp(@RequestBody UserDto userDto) {
+        UserResponse userResponse = memberService.join(userDto);
+        if (userResponse == null) {
+            log.error("회원가입실패");
+            return new ResponseEntity<>(new DefaultResponse("이미 회원입니다.", DefaultResponse.DUP_MEMBER_ERR), HttpStatus.OK);
+        }
+        log.info("회원가입성공");
+        return new ResponseEntity<>(new DefaultResponse("회원가입 완료", DefaultResponse.SUCCESS), HttpStatus.OK);
+    }
+    /**
+     * 통합 로그인이 아닌, 일반 회원인 경우 진입
+     * 너 회원인거 확인했어 -> 토큰 바로 발급하고 셋팅해줄게 -> 메인페이지
+     * 리프레시 토큰 만료 확인 후, 발급 필요
+     * */
+    @PostMapping("/sign-in")
+    @Operation(summary = "로그인", description = "회원 정보가 필요합니다")
+    public ResponseEntity<DefaultResponse<UserResponse>> signIn(@RequestBody UserDto userDto) {
+        Optional<Member> findMember = memberService.findById(userDto.getUsername());
+        if (findMember.isEmpty()) {
+            return new ResponseEntity<>(new DefaultResponse<>("회원의 정보가 존재하지않습니다.",DefaultResponse.NON_MEMBER_ERR), HttpStatus.OK);
+        }
+        Member member = findMember.get();
+        /*JwtTokenResponse token = authService.createToken(findMember.get());*/
+        return new ResponseEntity<>(new DefaultResponse<>(new UserResponse(member.getId(), member.getName())), HttpStatus.OK);
+    }
+    /**
+     * 통합 소셜 로그인
+     * 신규 유저 강제 회원가입 및 리스폰스
+     * 토큰 직접 발급 및 관리 필요
+     * */
+    @GetMapping("/oauth2/code/{site}")
+    public ResponseEntity<DefaultResponse<PublicUserResponse>> SocialSignIn(@PathVariable(name = "site") String site, String code, HttpServletResponse response) {
+        log.info("소셜 로그인 접속시도");
+        UserResponse userResponse = memberService.saveSocialUser(code, SocialType.getSite(site));
+        if (userResponse == null) {
+            return new ResponseEntity<>(new DefaultResponse<>("해당 사이트는 제공하지않습니다.", DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
+        }
+        if (StringUtils.hasText(userResponse.getRefreshToken())) {
+            createCookie(response, userResponse.getRefreshToken());
+            return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), settingHeader(userResponse.getAccessToken()), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), settingHeader(userResponse.getAccessToken()) ,HttpStatus.OK);
+    }
+
+    
+    /**
+     * 토큰을 검증 및 aceessToken 재발급
+     * */
     @GetMapping("/verify")
     @Operation(summary = "accessToken 재발급", description = "access 토큰을 검증합니다.")
     public ResponseEntity<DefaultResponse> resourceCheck(HttpServletRequest request) {
@@ -42,7 +98,9 @@ public class AuthController {
         }
         return new ResponseEntity<>(new DefaultResponse("complete", 200),settingHeader(jwtTokenProvider.createAccessToken(refreshToken)), HttpStatus.OK);
     }
-
+    /**
+     * refresh 토큰 재발급
+     * */
     @PostMapping("/reissue")
     @Operation(summary = "refresh 토큰 재발급", description = "이름과 비밀번호를 입력해주세요")
     public ResponseEntity<DefaultResponse> createRefreshAuthenticationToken(HttpServletRequest request) {
@@ -54,8 +112,8 @@ public class AuthController {
         if (jwtTokenProvider.validateToken(refreshToken)) {
             return new ResponseEntity<>(new DefaultResponse<>("refresh token expired", 204), HttpStatus.OK);
         }
-        String token = memberService.issueRefreshToken(findMember.get());
-        return new ResponseEntity<>(new DefaultResponse<>("complete", 200), settingHeader(token), HttpStatus.OK);
+        /*String token = memberService.issueRefreshToken(findMember.get());*/
+        return new ResponseEntity<>(new DefaultResponse<>("complete", 200), HttpStatus.OK);
     }
 
     private Optional<Member> getMember(HttpServletRequest request) {
@@ -64,10 +122,17 @@ public class AuthController {
         Optional<Member> findMember = memberService.findById(authentication.getName());
         return findMember;
     }
-
     private HttpHeaders settingHeader(String token) {
         final HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(token);
         return headers;
+    }
+
+    private void createCookie(HttpServletResponse response, String refreshToken) {
+        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(30 * 24 * 60 * 60); // 30일
+        cookie.setPath("/");
+        response.addCookie(cookie);
     }
 }

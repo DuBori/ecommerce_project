@@ -3,6 +3,9 @@ package com.duboribu.ecommerce.auth.util;
 import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
+import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
+import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.PrincipalDetails;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -11,26 +14,21 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider implements InitializingBean {
-    private final String AUTHORITIES_KEY ="auth";
+    private final MemberJpaRepository memberJpaRepository;
     private final String AUTHORITY_DELIMITER =",";
-
     private Key key;
     @Value("${custom.jwt.token.key}")
     private String secret;
@@ -45,34 +43,44 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     // 권한 가져오기
-    public Authentication getAuthentication(final String token) {
-        Claims body = Jwts.parserBuilder()
+    public Authentication getAuthentication(final String accessToken) {
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token)
+                .parseClaimsJws(accessToken)
                 .getBody();
-        List<SimpleGrantedAuthority> collect = Arrays.stream(body.get(AUTHORITIES_KEY).toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-        UserDto user = new UserDto(body.getId(), body.getSubject(), collect);
-        return new UsernamePasswordAuthenticationToken(user, token, collect);
+
+        if (claims.get("userId") == null && claims.get("nickName") == null && claims.get("role") == null) {
+            return null;
+        }
+        String userId = claims.get("userId").toString();
+        Optional<Member> findMember = memberJpaRepository.findById(userId);
+        if (findMember.isEmpty()) {
+            return null;
+        }
+        UserDetails user = new PrincipalDetails(findMember.get());
+        return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
 
     // 토큰 생성
-    public String createAccessToken(final Authentication authentication) {
+    public String createAccessToken(final UserDto userDto) {
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
-                .setSubject(authentication.getName())
-                .claim(AUTHORITIES_KEY, toString(authentication.getAuthorities()))
+                .setSubject(userDto.getUsername())
+                .claim("role", userDto.getRoleType())
+                .claim("name", userDto.getName())
+                .claim("id", userDto.getUsername())
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
                 .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds)))
                 .compact();
+
     }
     // 리프레시 토큰 생성
-    public String createRefreshToken() {
+    public String createRefreshToken(String userId) {
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
+                .setSubject(userId + "_refresh")
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
                 .setExpiration(Timestamp.valueOf(now.plusMinutes(refreshTokenValidityInMilliseconds)))
@@ -98,12 +106,6 @@ public class JwtTokenProvider implements InitializingBean {
         }
     }
 
-    private String toString(final Collection<? extends GrantedAuthority> grantedAuthorities) {
-        return grantedAuthorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(AUTHORITY_DELIMITER));
-    }
-
     public String createAccessToken(String refreshToken) {
         Claims claims = getClaims(refreshToken);
         final LocalDateTime now = LocalDateTime.now();
@@ -116,8 +118,9 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
     private Claims getClaims(String refreshToken) {
-        return Jwts.parser()
+        return Jwts.parserBuilder()
                 .setSigningKey(key)
+                .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
     }

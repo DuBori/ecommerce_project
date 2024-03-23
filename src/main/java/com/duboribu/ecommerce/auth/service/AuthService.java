@@ -6,7 +6,6 @@ import com.duboribu.ecommerce.entity.Member;
 import com.duboribu.ecommerce.entity.MemberToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,14 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberTokenService memberTokenService;
-    private final MemberService memberService;
-    private final BCryptPasswordEncoder encoder;
     @Transactional
     public JwtTokenResponse createToken(Member member) {
         if (member.getMemberToken() != null) {
             memberTokenService.delete(member.getMemberToken());
         }
-        String refreshToken = jwtTokenProvider.createRefreshToken();
+        String refreshToken = jwtTokenProvider.createRefreshToken(member.getId());
         member.updateToken(memberTokenService.save(new MemberToken(refreshToken)));
         String accessToken = jwtTokenProvider.createAccessToken(refreshToken);
         return new JwtTokenResponse(accessToken, refreshToken);

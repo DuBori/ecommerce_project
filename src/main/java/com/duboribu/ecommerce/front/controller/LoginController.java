@@ -25,7 +25,7 @@ public class LoginController {
     @PostMapping("/login")
     public String signIn(UserDto userDto) {
         log.info("login userDto : {}", userDto);
-        try {
+        /*try {
             Call<DefaultResponse<UserResponse>> defaultResponseCall = restInterface.signIn(userDto);
             Response<DefaultResponse<UserResponse>> execute = defaultResponseCall.execute();
             DefaultResponse<UserResponse> body = execute.body();
@@ -35,7 +35,7 @@ public class LoginController {
             }
         } catch (Exception e) {
 
-        }
+        }*/
         return null;
     }
 
@@ -48,7 +48,7 @@ public class LoginController {
     public String signUp(UserDto userDto) {
         log.info("sign up userDto : {}", userDto);
         try {
-            Call<DefaultResponse<UserResponse>> responseBodyCall = restInterface.signUp("application/json", userDto);
+            Call<DefaultResponse<UserResponse>> responseBodyCall = restInterface.signUp(userDto);
             Response<DefaultResponse<UserResponse>> execute = responseBodyCall.execute();
             DefaultResponse<UserResponse> body = execute.body();
             if (body.getResCode() == 200) {

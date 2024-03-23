@@ -43,17 +43,19 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers("/swagger-ui/**",
-                                "/auth/**", "/join/**","/main", "/swagger-ui.html/**","/login/**",
+                                "/auth/**","/main/**","/login/**",
                                 "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
                                 "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
                                 "/fonts/**")
                         .permitAll()
+                        .requestMatchers("/swagger-ui.html/**").hasAnyAuthority(RoleType.ROLE_USER.name())
                         .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 -> oauth2.userInfoEndpoint(endPoint -> endPoint.userService(customOauth2UserService))
                         .successHandler(authenticationSuccessHandler)
-                        .failureHandler(authenticationFailureHandler))
+                        .failureHandler(authenticationFailureHandler)
+                )
                 .addFilterBefore(new JwtCustomFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(jwtExceptionFilter, JwtCustomFilter.class)
                 .build();
@@ -77,6 +79,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
+        configuration.addExposedHeader("Authorization");
         configuration.addAllowedHeader("Authorization"); // 허용할 헤더 설정
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

@@ -24,11 +24,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     private final MemberService memberService;
-
     @Override
     @Transactional
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("oatuh 진입=====");
         OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService = new DefaultOAuth2UserService();
         OAuth2User oAuth2User = oAuth2UserService.loadUser(userRequest);
 
@@ -53,7 +51,6 @@ public class CustomOauth2UserService implements OAuth2UserService<OAuth2UserRequ
         }
         // 기존 유저
         oAuthMap.put("exist", true);
-
         return new DefaultOAuth2User(Collections.singleton(new SimpleGrantedAuthority(findMember.get().getRole().getRoleType().name())),
                 oAuthMap, "email");
     }
