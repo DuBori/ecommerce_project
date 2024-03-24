@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -26,18 +25,23 @@ public class JwtCustomFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("Token 검증 필터 진입");
-        String headerToken = request.getHeader(AUTHORIZATION_HEADER);
+        // 추후에 수정 필요부분 모두 검증로직타버림
+        /*String headerToken = request.getHeader(AUTHORIZATION_HEADER);
         // 토큰 검사 생략(모두 허용 URL의 경우 토큰 검사 통과)
         if (!StringUtils.hasText(headerToken)) {
             doFilter(request, response, filterChain);
             return;
-        }
+        }*/
         String accessToken = "";
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
             if (AUTHORIZATION_HEADER.equals(cookie.getName())) {
                 accessToken = cookie.getValue();
             }
+        }
+        if (accessToken.isEmpty()) {
+            doFilter(request, response, filterChain);
+            return;
         }
         log.info("accessToken : {}", accessToken);
         String requestURI = request.getRequestURI();

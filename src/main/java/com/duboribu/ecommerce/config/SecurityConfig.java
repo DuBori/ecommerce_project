@@ -1,6 +1,5 @@
 package com.duboribu.ecommerce.config;
 
-import com.duboribu.ecommerce.auth.JwtExceptionFilter;
 import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import com.duboribu.ecommerce.enums.RoleType;
@@ -84,7 +83,7 @@ public class SecurityConfig {
                         .toStaticResources()
                         .atCommonLocations()
                 ).requestMatchers("/fonts/**", "/sass/**", "/Source/**",
-                        "/assets/**", "/forms/**","/v3/**");
+                         "/assets/**", "/forms/**","/v3/**");
 
     }
     @Bean

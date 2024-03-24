@@ -1,5 +1,6 @@
-package com.duboribu.ecommerce.auth;
+package com.duboribu.ecommerce.config;
 
+import com.duboribu.ecommerce.auth.JwtException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
