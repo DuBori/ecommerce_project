@@ -24,6 +24,7 @@ import com.duboribu.ecommerce.enums.SocialType;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,32 @@ public class MemberService implements UserDetailsService {
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberTokenService memberTokenService;
     private final EntityManager em;
-    private final String NaverRedirectUri = "http://localhost:8880/login/oauth2/code/naver";
-    private final String NaverAccessTokenUri = "https://nid.naver.com/oauth2.0/token";
-    private final String NaverUserInfoUri = "https://openapi.naver.com/v1/nid/me";
+    @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+    private String kakaoClientId;
+
+    @Value("${spring.security.oauth2.client.registration.kakao.redirect-uri}")
+    private String kakaoRedirectUri;
+
+    @Value("${spring.security.oauth2.client.provider.kakao.token_uri}")
+    private String kakaoTokenUri;
+
+    @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
+    private String kakaoUserInfoUri;
+
+    @Value("${spring.security.oauth2.client.registration.naver.client-id}")
+    private String naverClientId;
+
+    @Value("${spring.security.oauth2.client.registration.naver.client-secret}")
+    private String naverClientSecret;
+
+    @Value("${spring.security.oauth2.client.registration.naver.redirect-uri}")
+    private String naverRedirectUri;
+
+    @Value("${spring.security.oauth2.client.provider.naver.token_uri}")
+    private String naverTokenUri;
+
+    @Value("${spring.security.oauth2.client.provider.naver.user-info-uri}")
+    private String naverUserInfoUri;
 
     @Transactional
     public UserResponse join(UserDto userDto) {
@@ -59,7 +83,7 @@ public class MemberService implements UserDetailsService {
         final Role user = roleService.findById(RoleType.ROLE_USER);
         Member saveMember = memberJpaRepository.save(userDto.toEntity(user));
         em.flush();
-        return new UserResponse(userDto, new JwtTokenResponse(issueRefreshToken(saveMember), jwtTokenProvider.createAccessToken(userDto)));
+        return new UserResponse(userDto, new JwtTokenResponse(jwtTokenProvider.createAccessToken(userDto), issueRefreshToken(saveMember)));
     }
     private void encodePassword(UserDto userDto) {
         userDto.setPassword(encoder.encode(userDto.getPassword()));
@@ -111,7 +135,7 @@ public class MemberService implements UserDetailsService {
             if (!jwtTokenProvider.validateToken(member.getMemberToken().getRefreshToken())) {
                 return new UserResponse(userDto, new JwtTokenResponse(jwtTokenProvider.createAccessToken(userDto), issueRefreshToken(member)));
             }
-            String accessToken = jwtTokenProvider.createAccessToken(member.getMemberToken().getRefreshToken());
+            String accessToken = jwtTokenProvider.createAccessToken(userDto);
             return new UserResponse(userDto, new JwtTokenResponse(accessToken, null));
         } catch (Exception e) {
             log.error("Exception : {}", e.getMessage());
@@ -126,8 +150,8 @@ public class MemberService implements UserDetailsService {
     }
 
     private NaverToken getUserTokenByNaverCode(String code) {
-        NaverTokenRequest kaKaoRequestProfile = new NaverTokenRequest("fjEP_mtQ7ytXMesU8cpA", NaverRedirectUri, "DBycsiFFZN", code);
-        ResponseEntity<NaverToken> response = RestUtil.post(NaverAccessTokenUri, kaKaoRequestProfile,  new HttpHeaders(), NaverToken.class);
+        NaverTokenRequest kaKaoRequestProfile = new NaverTokenRequest(naverClientId, naverRedirectUri, naverClientSecret, code);
+        ResponseEntity<NaverToken> response = RestUtil.post(naverTokenUri, kaKaoRequestProfile,  new HttpHeaders(), NaverToken.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return response.getBody();
         }
@@ -136,7 +160,7 @@ public class MemberService implements UserDetailsService {
     private NaverProfile findNaverProfile(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        ResponseEntity<NaverProfile> response = RestUtil.get(NaverUserInfoUri, headers, NaverProfile.class);
+        ResponseEntity<NaverProfile> response = RestUtil.get(naverUserInfoUri, headers, NaverProfile.class);
         if (response.getStatusCode() == HttpStatus.OK && "success".equals(response.getBody().getMessage())) {
             return response.getBody();
         }
@@ -152,19 +176,19 @@ public class MemberService implements UserDetailsService {
     }
 
     private KakaoToken getKaKaoTokenByCode(String code) {
-        KaKaoTokenRequst kaKaoTokenRequst = new KaKaoTokenRequst("20eaea6eeefe7c1565e9b78ae5ba3537", "http://localhost:8080/auth/oauth2/code/kakao", code);
+        KaKaoTokenRequst kaKaoTokenRequst = new KaKaoTokenRequst(kakaoClientId, kakaoRedirectUri, code);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/x-www-form-urlencoded;charset=utf-8");
-        ResponseEntity<KakaoToken> response = RestUtil.post("https://kauth.kakao.com/oauth/token", kaKaoTokenRequst, headers, KakaoToken.class);
+        ResponseEntity<KakaoToken> response = RestUtil.post(kakaoTokenUri, kaKaoTokenRequst, headers, KakaoToken.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return response.getBody();
         }
         throw new IllegalArgumentException();
     }
-    public KakaoProfile findProfile(String accessToken) {
+    private KakaoProfile findProfile(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", "Bearer " + accessToken);
-        ResponseEntity<KakaoProfile> response = RestUtil.get("https://kapi.kakao.com/v2/user/me", headers, KakaoProfile.class);
+        ResponseEntity<KakaoProfile> response = RestUtil.get(kakaoUserInfoUri, headers, KakaoProfile.class);
         if (response.getStatusCode() == HttpStatus.OK) {
             return response.getBody();
         }
@@ -173,5 +197,24 @@ public class MemberService implements UserDetailsService {
 
     private GooGleProfile googleProcess(String code) {
         return new GooGleProfile(code);
+    }
+    @Transactional
+    public UserResponse login(UserDto userDto) {
+        Optional<Member> findMember = memberJpaRepository.findById(userDto.getUsername());
+        if (findMember.isEmpty()) {
+            return null;
+        }
+        Member member = findMember.get();
+        if (!encoder.matches(userDto.getPassword(), member.getPwd())) {
+            return null;
+        }
+        String refreshToken = member.getMemberToken().getRefreshToken();
+        if (!jwtTokenProvider.validateToken(refreshToken)) {
+            String createRefreshToken = jwtTokenProvider.createRefreshToken(member.getId());
+            String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType());
+            return new UserResponse(userDto, new JwtTokenResponse(accessToken, createRefreshToken));
+        }
+        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType());
+        return new UserResponse(userDto, new JwtTokenResponse(accessToken, null));
     }
 }

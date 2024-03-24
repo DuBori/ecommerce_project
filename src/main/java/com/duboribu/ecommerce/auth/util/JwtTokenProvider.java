@@ -6,6 +6,7 @@ import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
 import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
 import com.duboribu.ecommerce.entity.Member;
 import com.duboribu.ecommerce.entity.PrincipalDetails;
+import com.duboribu.ecommerce.enums.RoleType;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
@@ -16,11 +17,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Optional;
 
 @Component
@@ -41,7 +45,7 @@ public class JwtTokenProvider implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
-
+    @Transactional
     // 권한 가져오기
     public Authentication getAuthentication(final String accessToken) {
         Claims claims = Jwts.parserBuilder()
@@ -50,10 +54,10 @@ public class JwtTokenProvider implements InitializingBean {
                 .parseClaimsJws(accessToken)
                 .getBody();
 
-        if (claims.get("userId") == null && claims.get("nickName") == null && claims.get("role") == null) {
+        if (claims.get("id") == null && claims.get("name") == null && claims.get("role") == null) {
             return null;
         }
-        String userId = claims.get("userId").toString();
+        String userId = claims.get("id").toString();
         Optional<Member> findMember = memberJpaRepository.findById(userId);
         if (findMember.isEmpty()) {
             return null;
@@ -64,6 +68,9 @@ public class JwtTokenProvider implements InitializingBean {
 
     // 토큰 생성
     public String createAccessToken(final UserDto userDto) {
+        if (!StringUtils.hasText(userDto.getLoginType())) {
+            return null;
+        }
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
                 .setSubject(userDto.getUsername())
@@ -81,6 +88,7 @@ public class JwtTokenProvider implements InitializingBean {
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
                 .setSubject(userId + "_refresh")
+                .claim("id", userId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
                 .setExpiration(Timestamp.valueOf(now.plusMinutes(refreshTokenValidityInMilliseconds)))
@@ -106,11 +114,13 @@ public class JwtTokenProvider implements InitializingBean {
         }
     }
 
-    public String createAccessToken(String refreshToken) {
-        Claims claims = getClaims(refreshToken);
+    public String createAccessToken(String userId, String userName, RoleType role) {
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
-                .setSubject(claims.getSubject())
+                .setSubject(userId)
+                .claim("role", role)
+                .claim("name", userName)
+                .claim("id", userId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
                 .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds)))
@@ -123,6 +133,16 @@ public class JwtTokenProvider implements InitializingBean {
                 .build()
                 .parseClaimsJws(refreshToken)
                 .getBody();
+    }
+    //엑세스 토큰의 만료시간
+    public Long getExpiration(String accessToken){
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        long now = new Date().getTime();
+        return expiration.getTime() - now;
     }
 }
 

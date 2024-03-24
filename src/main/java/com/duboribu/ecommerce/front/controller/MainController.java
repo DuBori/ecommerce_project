@@ -15,7 +15,6 @@ public class MainController {
     @RequestMapping("")
     public String main(HttpServletRequest request, HttpServletResponse response) {
         return "index";
-
     }
 
 }

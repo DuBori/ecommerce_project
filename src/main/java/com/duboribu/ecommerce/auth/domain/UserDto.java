@@ -6,10 +6,6 @@ import com.duboribu.ecommerce.entity.Member;
 import com.duboribu.ecommerce.entity.Role;
 import com.duboribu.ecommerce.enums.RoleType;
 import lombok.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -20,15 +16,15 @@ public class UserDto {
     private String username;
     private String password = "xxx";
     private String name;
-    private RoleType roleType;
-    private List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-    private UserType userType;
+    private RoleType roleType = RoleType.ROLE_USER;
+    private UserType userType = UserType.LOGIN_MEMBER;
+    private String loginType;
 
     public UserDto(SocialProfile socialProfile, UserType userType) {
         this.username = socialProfile.getEmail();
         this.name = socialProfile.getName();
         this.userType = userType;
-
+        this.loginType = "social";
     }
 
     public Member toEntity(Role role) {
