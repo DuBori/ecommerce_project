@@ -53,7 +53,7 @@
                 </ul>
             </div>
             <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
+                <a href="/login"><i class="fa fa-user"></i>로그인</a>
             </div>
         </div>
         <nav class="humberger__menu__nav mobile-menu">
@@ -119,7 +119,7 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="#"><i class="fa fa-user"></i> Login</a>
+                                <a href="/login"><i class="fa fa-user"></i> 로그인</a>
                             </div>
                         </div>
                     </div>
@@ -777,6 +777,32 @@
 </body>
 </html>
 <script>
-    console.log('저장된 토큰:', localStorage.getItem('accessToken'));
-    console.log('저장된 토큰:', localStorage.getItem('accessToken'));
+    // 쿠키에서 값을 가져오는 함수
+    function getCookieValue(cookieName) {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(cookieName + '=')) {
+                return cookie.substring(cookieName.length + 1);
+            }
+        }
+        return null;
+    }
+
+    // 헤더에 값을 설정하는 함수
+    function setHeader(headerName, headerValue) {
+        // 여기에서는 예시로 XMLHttpRequest를 사용하겠습니다.
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', '/main', true);
+        xhr.setRequestHeader(headerName, headerValue);
+        xhr.send();
+    }
+
+    // 페이지가 로드될 때 실행
+    window.addEventListener('DOMContentLoaded', function() {
+        const cookieValue = getCookieValue('Authorization');
+        if (cookieValue) {
+            setHeader('Authorization', cookieValue);
+        }
+    });
 </script>
