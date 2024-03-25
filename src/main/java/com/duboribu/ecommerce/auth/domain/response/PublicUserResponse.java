@@ -1,10 +1,12 @@
 package com.duboribu.ecommerce.auth.domain.response;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Getter
 @ToString
+@NoArgsConstructor
 public class PublicUserResponse {
     private String id;
     private String name;
