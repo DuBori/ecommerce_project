@@ -6,7 +6,7 @@ import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.domain.response.PublicUserResponse;
 import com.duboribu.ecommerce.auth.domain.response.UserResponse;
 import com.duboribu.ecommerce.auth.service.MemberService;
-import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
+import com.duboribu.ecommerce.auth.service.MemberTokenService;
 import com.duboribu.ecommerce.entity.Member;
 import com.duboribu.ecommerce.enums.SocialType;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,7 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +30,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     private final MemberService memberService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final MemberTokenService memberTokenService;
+    public static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
      * 일반 유저 회원가입 및 리프레시 토큰 저장
@@ -64,8 +64,29 @@ public class AuthController {
         if (userResponse == null) {
             return new ResponseEntity<>(new DefaultResponse<>("아이디 또는 비밀번호가 잘못되었습니다", DefaultResponse.SYSTEM_ERR), HttpStatus.FOUND);
         }
-        createCookie(response, new JwtTokenResponse(userResponse.getAccessToken(), userResponse.getRefreshToken()));
-        return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), settingHeader(userResponse.getAccessToken()), HttpStatus.FOUND);
+        JwtTokenResponse tokenResponse = userResponse.getTokenResponse();
+        createCookie(response, new JwtTokenResponse(tokenResponse.getAccessToken(), userResponse.getTokenResponse().getRefreshToken()));
+        return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), HttpStatus.FOUND);
+    }
+    /**
+     * 로그아웃
+     */
+    @GetMapping("/logout")
+    public ResponseEntity<DefaultResponse> logOut(HttpServletRequest request,HttpServletResponse response) {
+        log.info("로그아웃 실행");
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("Authorization")) {
+                    cookie.setPath("/");
+                    cookie.setValue("");
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
+        return new ResponseEntity<>(new DefaultResponse<>("로그아웃 완료", 200), HttpStatus.OK);
     }
     /**
      * 통합 소셜 로그인
@@ -80,36 +101,42 @@ public class AuthController {
         if (userResponse == null) {
             return new ResponseEntity<>(new DefaultResponse<>("해당 사이트는 제공하지않습니다.", DefaultResponse.SYSTEM_ERR), HttpStatus.FOUND);
         }
-        createCookie(response, new JwtTokenResponse(userResponse.getAccessToken(), userResponse.getRefreshToken()));
-        return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), settingHeader(userResponse.getAccessToken()) ,HttpStatus.FOUND);
+        JwtTokenResponse tokenResponse = userResponse.getTokenResponse();
+        createCookie(response, new JwtTokenResponse(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken()));
+        return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), settingHeader(tokenResponse.getAccessToken()) ,HttpStatus.FOUND);
     }
 
-    
+
     /**
      * 토큰을 검증 및 aceessToken 재발급
      * */
     @GetMapping("/verify")
     @Operation(summary = "accessToken 재발급", description = "access 토큰을 검증합니다.")
-    public ResponseEntity<DefaultResponse> resourceCheck(HttpServletRequest request) {
-        Optional<Member> findMember = getMember(request);
-        if (findMember.isEmpty()) {
-            return new ResponseEntity<>(new DefaultResponse("non member", DefaultResponse.NON_MEMBER_ERR), HttpStatus.OK);
+    public ResponseEntity<DefaultResponse<PublicUserResponse>> resourceCheck(HttpServletRequest request, HttpServletResponse response) {
+        String accessToken = "";
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+            if (AUTHORIZATION_HEADER.equals(cookie.getName())) {
+                accessToken = cookie.getValue();
+            }
         }
-        Member member = findMember.get();
-        String refreshToken = findMember.get().getMemberToken().getRefreshToken();
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
-            return new ResponseEntity<>(new DefaultResponse<>("refresh token expired", DefaultResponse.NON_TOKEN), HttpStatus.OK);
+        UserResponse userResponse = memberTokenService.validateToken(accessToken);
+        if (userResponse == null) {
+            return new ResponseEntity<>(new DefaultResponse<>("토큰없음", DefaultResponse.NON_TOKEN),HttpStatus.OK);
         }
-        String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType());
-        return new ResponseEntity<>(new DefaultResponse("complete", 200),settingHeader(accessToken), HttpStatus.OK);
+        if (userResponse.isTokenExist()) {
+            createCookie(response, userResponse.getTokenResponse());
+        }
+        return new ResponseEntity<>(new DefaultResponse(new PublicUserResponse(new UserResponse(userResponse.getId(), userResponse.getName()))), HttpStatus.OK);
     }
+
     /**
      * refresh 토큰 재발급
      * */
     @PostMapping("/reissue")
     @Operation(summary = "refresh 토큰 재발급", description = "이름과 비밀번호를 입력해주세요")
     public ResponseEntity<DefaultResponse> createRefreshAuthenticationToken(HttpServletRequest request) {
-        Optional<Member> findMember = getMember(request);
+        /*Optional<Member> findMember = getMember(request);
         if (findMember.isEmpty()) {
             return new ResponseEntity<>(new DefaultResponse("non member", 202), HttpStatus.OK);
         }
@@ -117,23 +144,12 @@ public class AuthController {
         if (jwtTokenProvider.validateToken(refreshToken)) {
             return new ResponseEntity<>(new DefaultResponse<>("refresh token expired", 204), HttpStatus.OK);
         }
-        /*String token = memberService.issueRefreshToken(findMember.get());*/
+        *//*String token = memberService.issueRefreshToken(findMember.get());*/
         return new ResponseEntity<>(new DefaultResponse<>("complete", 200), HttpStatus.OK);
     }
 
-    private Optional<Member> getMember(HttpServletRequest request) {
-        String accessToken = request.getHeader("Authorization");
-        Authentication authentication = jwtTokenProvider.getAuthentication(resolveToken(accessToken));
-        Optional<Member> findMember = memberService.findById(authentication.getName());
-        return findMember;
-    }
-    private String resolveToken(String bearerToken) {
-        log.info("bearerToken {}", bearerToken);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
-        }
-        return null;
-    }
+
+
     private HttpHeaders settingHeader(String token) {
         final HttpHeaders headers = new HttpHeaders();
         if (StringUtils.hasText(token)) {

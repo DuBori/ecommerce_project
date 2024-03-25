@@ -53,7 +53,8 @@
                 </ul>
             </div>
             <div class="header__top__right__auth">
-                <a href="/login"><i class="fa fa-user"></i>로그인</a>
+                <a class="logoutLink" th:href="@{/auth/logout}" ><i class="fa fa-sign-out"></i> 로그아웃</a>
+                <a class="loginLink" th:href="@{/login}"><i class="fa fa-user"></i> 로그인</a>
             </div>
         </div>
         <nav class="humberger__menu__nav mobile-menu">
@@ -119,8 +120,13 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <a href="/login"><i class="fa fa-user"></i> 로그인</a>
+                                <a class="loginInfo" style="display: none;"><i class="fa fa-user"></i> </a>
                             </div>
+                            <div class="header__top__right__auth">
+                                <a class="logoutLink" th:href="@{/auth/logout}" style="display: none;"><i class="fa"></i> 로그아웃</a>
+                                <a class="loginLink" th:href="@{/login}" style="display: none;"><i class="fa fa-user"></i> 로그인</a>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -776,33 +782,64 @@
 
 </body>
 </html>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    // 쿠키에서 값을 가져오는 함수
-    function getCookieValue(cookieName) {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(cookieName + '=')) {
-                return cookie.substring(cookieName.length + 1);
+    $(document).ready(function() {
+        let userId, name;
+        function verifyAccessToken() {
+            $.ajax({
+                url: '/auth/verify',
+                type: 'GET',
+                success: function(data) {
+                    if (data.resCode == 200) {
+                        userId = data.body.id;
+                        name = data.body.name;
+                    } else if (data.resCode == 204) {
+                        console.log("토큰없음");
+                    }
+                    toggleLoginLogout(userId);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+        }
+        // 페이지가 로드될 때와 새로고침할 때 실행
+        verifyAccessToken();
+
+        function toggleLoginLogout(userId) {
+            if (userId) {
+                $('.loginInfo').text(userId);
+                // userId가 존재하면 로그아웃 링크를 표시합니다.
+                $('.loginInfo').css('display', 'block')
+                $('.loginLink').removeClass('block');
+                $('.logoutLink').css('display', 'block')
+            } else {
+                // userId가 존재하지 않으면 로그인 링크를 표시합니다.
+                $('.loginLink').css('display', 'block')
+                $('.logoutLink').removeClass('block');
+                $('.loginInfo').removeClass('block');
+                $('.loginInfo').text("");
             }
         }
-        return null;
-    }
-
-    // 헤더에 값을 설정하는 함수
-    function setHeader(headerName, headerValue) {
-        // 여기에서는 예시로 XMLHttpRequest를 사용하겠습니다.
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', '/main', true);
-        xhr.setRequestHeader(headerName, headerValue);
-        xhr.send();
-    }
-
-    // 페이지가 로드될 때 실행
-    window.addEventListener('DOMContentLoaded', function() {
-        const cookieValue = getCookieValue('Authorization');
-        if (cookieValue) {
-            setHeader('Authorization', cookieValue);
+        function logout() {
+            $.ajax({
+                url: '/auth/logout',
+                type: 'GET',
+                success: function(response) {
+                    console.log('로그아웃 완료:', response.message);
+                    userId = null;
+                    name = null;
+                    location.reload();
+                },
+                error: function(xhr, status, error) {
+                    console.error('로그아웃 실패:', error);
+                }
+            });
         }
+        $('.logoutLink').click(function(event) {
+            event.preventDefault(); // 링크의 기본 동작을 막음
+            logout(); // 로그아웃 함수 실행
+        });
     });
 </script>

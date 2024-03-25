@@ -37,9 +37,9 @@ public class JwtTokenProvider implements InitializingBean {
     @Value("${custom.jwt.token.key}")
     private String secret;
     @Value("${custom.jwt.access-token-validity-in-milliseconds}")
-    private int accessTokenValidityInMilliseconds;
+    private long accessTokenValidityInMilliseconds;
     @Value("${custom.jwt.refresh-token-validity-in-milliseconds}")
-    private int refreshTokenValidityInMilliseconds;
+    private long refreshTokenValidityInMilliseconds;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -79,7 +79,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .claim("id", userDto.getUsername())
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
-                .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds)))
+                .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds / (60 * 1000))))
                 .compact();
 
     }
@@ -91,7 +91,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .claim("id", userId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
-                .setExpiration(Timestamp.valueOf(now.plusMinutes(refreshTokenValidityInMilliseconds)))
+                .setExpiration(Timestamp.valueOf(now.plusMinutes(refreshTokenValidityInMilliseconds / (60 * 1000))))
                 .compact();
     }
     
@@ -106,7 +106,7 @@ public class JwtTokenProvider implements InitializingBean {
         } catch (SecurityException | MalformedJwtException e) {
             throw new JwtException(JwtUserExceptionType.WRONG_JWT_SIGN);
         } catch (ExpiredJwtException e) {
-            return false;
+            throw new JwtException(JwtUserExceptionType.EXPIRED_JWT_TOKEN);
         } catch (UnsupportedJwtException e) {
             throw new JwtException(JwtUserExceptionType.UN_SUPPORTED_JWT_TOKEN);
         } catch (IllegalArgumentException e) {
@@ -123,17 +123,10 @@ public class JwtTokenProvider implements InitializingBean {
                 .claim("id", userId)
                 .signWith(key, SignatureAlgorithm.HS256)
                 .setIssuedAt(Timestamp.valueOf(now))
-                .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds)))
+                .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds / (60 * 1000))))
                 .compact();
     }
 
-    private Claims getClaims(String refreshToken) {
-        return Jwts.parserBuilder()
-                .setSigningKey(key)
-                .build()
-                .parseClaimsJws(refreshToken)
-                .getBody();
-    }
     //엑세스 토큰의 만료시간
     public Long getExpiration(String accessToken){
         Date expiration = Jwts.parserBuilder().setSigningKey(key)
@@ -143,6 +136,15 @@ public class JwtTokenProvider implements InitializingBean {
                 .getExpiration();
         long now = new Date().getTime();
         return expiration.getTime() - now;
+    }
+    public boolean isExpired(String accessToken) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(key)
+                .build()
+                .parseClaimsJws(accessToken)
+                .getBody()
+                .getExpiration();
+        Date now = new Date();
+        return expiration.before(now);
     }
 }
 

@@ -57,4 +57,8 @@ public class Member {
     public void updateToken(MemberToken memberToken) {
         this.memberToken = memberToken;
     }
+
+    public UserDto getMemberDto() {
+        return new UserDto(id, null, name, role.getRoleType(), null, null);
+    }
 }
