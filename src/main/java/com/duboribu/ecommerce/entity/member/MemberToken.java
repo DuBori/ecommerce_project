@@ -1,5 +1,6 @@
-package com.duboribu.ecommerce.entity;
+package com.duboribu.ecommerce.entity.member;
 
+import com.duboribu.ecommerce.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +11,7 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MemberToken {
+public class MemberToken  extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "MEMBER_TOKEN_ID")

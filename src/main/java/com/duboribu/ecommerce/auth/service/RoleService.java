@@ -1,8 +1,8 @@
 package com.duboribu.ecommerce.auth.service;
 
-import com.duboribu.ecommerce.auth.repository.RoleJpaRepository;
-import com.duboribu.ecommerce.entity.Role;
+import com.duboribu.ecommerce.entity.member.Role;
 import com.duboribu.ecommerce.enums.RoleType;
+import com.duboribu.ecommerce.repository.RoleJpaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

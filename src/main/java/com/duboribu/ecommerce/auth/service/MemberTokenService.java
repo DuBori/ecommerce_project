@@ -4,11 +4,11 @@ import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.domain.response.UserResponse;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
-import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
-import com.duboribu.ecommerce.auth.repository.MemberTokenJpaRepository;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
-import com.duboribu.ecommerce.entity.Member;
-import com.duboribu.ecommerce.entity.MemberToken;
+import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.entity.member.MemberToken;
+import com.duboribu.ecommerce.repository.MemberJpaRepository;
+import com.duboribu.ecommerce.repository.MemberTokenJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -35,20 +35,21 @@ public class MemberTokenService {
     @Transactional
     public UserResponse validateToken(String accessToken) {
         if (!StringUtils.hasText(accessToken)) {
-            return null;
+            throw new JwtException(JwtUserExceptionType.NON_TOKEN);
         }
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
         Optional<Member> findMember = memberJpaRepository.findById(authentication.getName());
         if (findMember.isEmpty()) {
-            throw new JwtException(JwtUserExceptionType.ILLEGAL_JWT_TOKEN);
+            throw new JwtException(JwtUserExceptionType.NON_USER);
         }
         Member member = findMember.get();
         String refreshToken = member.getMemberToken().getRefreshToken();
         if (jwtTokenProvider.isExpired(accessToken) && jwtTokenProvider.validateToken(refreshToken)) {
-            return new UserResponse(member.getMemberDto(), new JwtTokenResponse(jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType()), null));
+            String createAccessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType());
+            return new UserResponse(member.getMemberDto(), new JwtTokenResponse(createAccessToken, null), jwtTokenProvider.getExpiration(createAccessToken));
         }
         if (!jwtTokenProvider.isExpired(accessToken)) {
-            return new UserResponse(member.getMemberDto(), null);
+            return new UserResponse(member.getMemberDto(), null, jwtTokenProvider.getExpiration(accessToken));
         }
         throw new JwtException(JwtUserExceptionType.EXPIRED_JWT_TOKEN);
     }

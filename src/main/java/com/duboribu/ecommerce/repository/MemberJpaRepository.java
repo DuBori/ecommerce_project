@@ -1,8 +1,7 @@
-package com.duboribu.ecommerce.auth.repository;
+package com.duboribu.ecommerce.repository;
 
-import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
