@@ -5,7 +5,6 @@ import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.domain.response.UserResponse;
 import com.duboribu.ecommerce.auth.enums.UserType;
-import com.duboribu.ecommerce.auth.repository.MemberJpaRepository;
 import com.duboribu.ecommerce.auth.social.GooGleProfile;
 import com.duboribu.ecommerce.auth.social.SocialProfile;
 import com.duboribu.ecommerce.auth.social.kakao.dto.request.KaKaoTokenRequst;
@@ -15,12 +14,13 @@ import com.duboribu.ecommerce.auth.social.naver.request.NaverTokenRequest;
 import com.duboribu.ecommerce.auth.social.naver.response.NaverProfile;
 import com.duboribu.ecommerce.auth.social.naver.response.NaverToken;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
-import com.duboribu.ecommerce.entity.Member;
-import com.duboribu.ecommerce.entity.MemberToken;
-import com.duboribu.ecommerce.entity.PrincipalDetails;
-import com.duboribu.ecommerce.entity.Role;
+import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.entity.member.MemberToken;
+import com.duboribu.ecommerce.entity.member.PrincipalDetails;
+import com.duboribu.ecommerce.entity.member.Role;
 import com.duboribu.ecommerce.enums.RoleType;
 import com.duboribu.ecommerce.enums.SocialType;
+import com.duboribu.ecommerce.repository.MemberJpaRepository;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -132,7 +132,7 @@ public class MemberService implements UserDetailsService {
             }
             Member member = findMember.get();
             UserDto userDto = new UserDto(socialProfile, UserType.LOGIN_MEMBER);
-            if (!jwtTokenProvider.validateToken(member.getMemberToken().getRefreshToken())) {
+            if (jwtTokenProvider.isExpired(member.getMemberToken().getRefreshToken())) {
                 return new UserResponse(userDto, new JwtTokenResponse(jwtTokenProvider.createAccessToken(userDto), issueRefreshToken(member)));
             }
             String accessToken = jwtTokenProvider.createAccessToken(userDto);
@@ -209,7 +209,7 @@ public class MemberService implements UserDetailsService {
             return null;
         }
         String refreshToken = member.getMemberToken().getRefreshToken();
-        if (!jwtTokenProvider.validateToken(refreshToken)) {
+        if (jwtTokenProvider.isExpired(refreshToken)) {
             String createRefreshToken = jwtTokenProvider.createRefreshToken(member.getId());
             String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType());
             return new UserResponse(userDto, new JwtTokenResponse(accessToken, createRefreshToken));

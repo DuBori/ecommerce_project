@@ -1,6 +1,7 @@
-package com.duboribu.ecommerce.entity;
+package com.duboribu.ecommerce.entity.member;
 
 import com.duboribu.ecommerce.auth.domain.UserDto;
+import com.duboribu.ecommerce.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.ToString;
 @Getter
 @ToString(of = {"id", "name"})
 @NoArgsConstructor
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @Column(name = "member_id")
     private String id;

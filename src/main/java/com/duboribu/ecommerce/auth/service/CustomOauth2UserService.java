@@ -1,7 +1,7 @@
 package com.duboribu.ecommerce.auth.service;
 
 import com.duboribu.ecommerce.auth.domain.request.OAuth2Attribute;
-import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.member.Member;
 import com.duboribu.ecommerce.enums.RoleType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

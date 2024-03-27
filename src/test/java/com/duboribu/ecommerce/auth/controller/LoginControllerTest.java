@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.auth.controller;
 
-import com.duboribu.ecommerce.entity.Member;
+import com.duboribu.ecommerce.entity.member.Member;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

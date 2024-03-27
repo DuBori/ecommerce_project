@@ -10,8 +10,10 @@ import lombok.ToString;
 public class PublicUserResponse {
     private String id;
     private String name;
+    private Long expirationTime;
     public PublicUserResponse(UserResponse userResponse) {
         id = userResponse.getId();
         name = userResponse.getName();;
+        expirationTime = userResponse.getExpirationTime();
     }
 }

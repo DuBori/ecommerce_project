@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.entity;
+package com.duboribu.ecommerce.entity.member;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

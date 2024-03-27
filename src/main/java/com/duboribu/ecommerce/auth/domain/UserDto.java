@@ -2,8 +2,8 @@ package com.duboribu.ecommerce.auth.domain;
 
 import com.duboribu.ecommerce.auth.enums.UserType;
 import com.duboribu.ecommerce.auth.social.SocialProfile;
-import com.duboribu.ecommerce.entity.Member;
-import com.duboribu.ecommerce.entity.Role;
+import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.entity.member.Role;
 import com.duboribu.ecommerce.enums.RoleType;
 import lombok.*;
 

@@ -13,6 +13,7 @@ public class UserResponse {
     private String name;
     private UserType code;
     private JwtTokenResponse tokenResponse;
+    private Long expirationTime;
     public UserResponse(UserDto userDto) {
         id = userDto.getUsername();
         name = userDto.getName();
@@ -24,10 +25,17 @@ public class UserResponse {
         name = userDto.getName();
         tokenResponse = response;
     }
+    public UserResponse(UserDto userDto, JwtTokenResponse response, Long expirationTime) {
+        id = userDto.getUsername();
+        name = userDto.getName();
+        tokenResponse = response;
+        this.expirationTime = expirationTime;
+    }
 
-    public UserResponse(String id, String name) {
+    public UserResponse(String id, String name, Long expirationTime) {
         this.id = id;
         this.name = name;
+        this.expirationTime = expirationTime;
     }
 
     public boolean isTokenExist() {
