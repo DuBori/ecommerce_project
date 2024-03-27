@@ -29,6 +29,7 @@ public class Price extends BaseEntity{
     public Price(BigDecimal value, Item item) {
         this.value = value;
         this.item = item;
+        item.getPrices().add(this);
     }
 
     public Price(BigDecimal value, LocalDateTime startDate, LocalDateTime endDate, Item item) {
