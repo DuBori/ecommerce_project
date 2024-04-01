@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.front.controller;
+package com.duboribu.ecommerce.front.login.controller;
 
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.auth.domain.UserDto;

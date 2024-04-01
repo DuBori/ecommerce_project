@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.front.controller;
+package com.duboribu.ecommerce.front.main.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

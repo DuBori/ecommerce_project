@@ -1,6 +1,7 @@
 package com.duboribu.ecommerce.entity;
 
 import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.enums.OrderState;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.ToString;
@@ -17,6 +18,8 @@ public class Order extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Enumerated(value = EnumType.STRING)
+    private OrderState state;
     @ManyToOne
     @JoinColumn(name = "member_id")
     private Member member;
@@ -27,9 +30,7 @@ public class Order extends BaseEntity{
 
     public Order() {
     }
-    public void addOrderItem(OrderItem orderItem) {
-        orderItemList.add(orderItem);
-    }
+
     public int getTotalPrice() {
         if (!getOrderItemList().isEmpty()) {
             return getOrderItemList().stream()

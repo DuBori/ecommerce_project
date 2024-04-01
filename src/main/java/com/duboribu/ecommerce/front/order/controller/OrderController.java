@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.order.controller;
+package com.duboribu.ecommerce.front.order.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

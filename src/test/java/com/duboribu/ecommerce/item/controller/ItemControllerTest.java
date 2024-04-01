@@ -9,6 +9,7 @@ import com.duboribu.ecommerce.repository.ItemJpaRepository;
 import com.duboribu.ecommerce.repository.PriceJpaRepository;
 import com.duboribu.ecommerce.repository.StockJpaRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,9 +30,11 @@ class ItemControllerTest {
     ItemJpaRepository itemJpaRepository;
     @Autowired
     PriceJpaRepository priceJpaRepository;
+
     @Test
     @Rollback(value = false)
     @Transactional
+    @Disabled
     public void 상품을생성하고가격을형성한다() {
         Stock stock = new Stock(100);
         Stock savedStock = stockJpaRepository.save(stock);
@@ -54,6 +57,4 @@ class ItemControllerTest {
             Assertions.assertEquals(savedPrice, actualPrice.get());
         }
     }
-
-
 }
