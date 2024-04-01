@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
-import com.duboribu.ecommerce.item.dto.CreateBookRequest;
+import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;

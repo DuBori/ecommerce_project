@@ -34,12 +34,15 @@ public class JwtCustomFilter extends OncePerRequestFilter {
         }*/
         String accessToken = "";
         Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (AUTHORIZATION_HEADER.equals(cookie.getName())) {
-                accessToken = cookie.getValue();
+        if (request.getCookies() != null) {
+            for (Cookie cookie : cookies) {
+                if (AUTHORIZATION_HEADER.equals(cookie.getName())) {
+                    accessToken = cookie.getValue();
+                }
             }
         }
         if (accessToken.isEmpty()) {
+            log.info("여긴상관없다");
             doFilter(request, response, filterChain);
             return;
         }

@@ -24,10 +24,10 @@ public class IpWhiteListInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        if (!protectedIp.equals(remotAddr)) {
+        /*if (!protectedIp.equals(remotAddr)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN, "접근 제한된 ip입니다.");
             return false;
-        }
+        }*/
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
 }

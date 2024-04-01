@@ -11,10 +11,14 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 
 public class RestUtil {
-    private static final RestTemplate restTemplate = new RestTemplate();
+    private static final RestTemplate restTemplate = getRestTemplate();
+
+    private static RestTemplate getRestTemplate() {
+        return new RestTemplate();
+    }
 
     public static <T> ResponseEntity<T> get(String url, HttpHeaders headers, Class<T> responseType) {
-        HttpEntity<Object> requestEntity = new HttpEntity<>(headers);
+        HttpEntity<Object> requestEntity = new HttpEntity<>(null, headers);
         return restTemplate.exchange(url, HttpMethod.GET, requestEntity, responseType);
     }
 

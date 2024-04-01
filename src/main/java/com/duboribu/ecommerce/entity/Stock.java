@@ -6,8 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.util.Optional;
-
 @Entity
 @Getter
 @EntityListeners(AuditingEntityListener.class)
@@ -24,10 +22,6 @@ public class Stock extends BaseEntity {
 
     public Stock(int count) {
         this.count = count;
-    }
-
-    public Stock(Optional<Item> findItem, int count) {
-        super();
     }
 
     public Stock(Item item, int count) {

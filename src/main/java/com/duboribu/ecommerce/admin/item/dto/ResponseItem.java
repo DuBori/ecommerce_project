@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.item.dto;
+package com.duboribu.ecommerce.admin.item.dto;
 
 import com.duboribu.ecommerce.entity.Book;
 import lombok.Getter;
