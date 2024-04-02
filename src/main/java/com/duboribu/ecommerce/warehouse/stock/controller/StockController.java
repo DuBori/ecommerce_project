@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/stock")
+@RequestMapping("/wms/stock")
 @Slf4j
 public class StockController {
-
     private final StockService stockService;
     @GetMapping("/add")
     public ResponseEntity addStock(CreateStockRequest request) {
