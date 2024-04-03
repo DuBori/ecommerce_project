@@ -14,17 +14,21 @@ import java.util.List;
 public class WmsOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wms_order_id")
     private Long id;
     private String wmsDate; //YYYYMMDD
     private String coCode;
+    @Column(name = "wms_order_id")
+    private Long orderId;
     @OneToMany(mappedBy = "wmsOrder", cascade = CascadeType.ALL)
     private List<WmsOrderItem> wmsOrderItem = new ArrayList<>();
 
-    public WmsOrder(Long id, String wmsDate, String coCode, List<WmsOrderItem> wmsOrderItem) {
-        this.id = id;
+    public WmsOrder(Long orderId, String wmsDate, String coCode, List<WmsOrderItem> wmsOrderItem) {
+        this.orderId = orderId;
         this.wmsDate = wmsDate;
         this.coCode = coCode;
-        this.wmsOrderItem = wmsOrderItem;
+        if (!wmsOrderItem.isEmpty()) {
+            wmsOrderItem.forEach(it -> it.matchOrder(this));
+        }
+        this.wmsOrderItem.addAll(wmsOrderItem);
     }
 }

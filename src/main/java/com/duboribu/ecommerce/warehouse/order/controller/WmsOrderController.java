@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
-@RestController(value = "WmsOrderController")
+@RestController
 @RequiredArgsConstructor
 @RequestMapping("/wms/order")
-public class OrderController {
+public class WmsOrderController {
     private final WmsOrderService wmsOrderService;
 
     /**
