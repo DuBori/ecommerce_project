@@ -24,4 +24,12 @@ public class WmsOrderItem {
         this.id = id;
         this.state = state;
     }
+
+    public void updateOrderState(OrderState newOrderState) {
+        state = newOrderState;
+    }
+
+    public void matchOrder(WmsOrder wmsOrder) {
+        this.wmsOrder = wmsOrder;
+    }
 }

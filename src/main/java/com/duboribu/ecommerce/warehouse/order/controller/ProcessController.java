@@ -1,7 +1,7 @@
 package com.duboribu.ecommerce.warehouse.order.controller;
 
-import com.duboribu.ecommerce.warehouse.order.dto.WmsOrderInfo;
 import com.duboribu.ecommerce.warehouse.order.dto.request.ProcessDeliveryRequest;
+import com.duboribu.ecommerce.warehouse.order.dto.response.UpdateWmsOrderResponse;
 import com.duboribu.ecommerce.warehouse.order.service.WmsOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -19,7 +19,7 @@ public class ProcessController {
      * 프로세스 진행
      * */
     @PostMapping("/process")
-    public List<WmsOrderInfo> processList(ProcessDeliveryRequest request) {
-        return wmsOrderService.processList(request);
+    public List<UpdateWmsOrderResponse> updateOrderStates(ProcessDeliveryRequest request) {
+        return wmsOrderService.updateOrderStates(request);
     }
 }

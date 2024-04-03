@@ -16,7 +16,7 @@ public enum OrderState {
     private final String desc;
     public static OrderState getMatchState(String state) {
         return Arrays.stream(values())
-                .filter(it -> it.equals(state))
+                .filter(it -> it.name().equals(state))
                 .findFirst()
                 .get();
     }
