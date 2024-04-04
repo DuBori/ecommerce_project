@@ -1,12 +1,14 @@
 package com.duboribu.ecommerce.warehouse.order.dto.request;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
 public class SelectDeliveryRequest {
     private String date; // YYYYMMDD
     private String coCode;
@@ -21,5 +23,9 @@ public class SelectDeliveryRequest {
         this.date = date;
         this.coCode = coCode;
         this.page = page;
+    }
+
+    public int getPage() {
+        return page;
     }
 }

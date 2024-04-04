@@ -24,15 +24,16 @@ public class WmsOrderCustomRepositoryImpl implements WmsOrderCustomRepository {
         if (!StringUtils.hasText(request.getDate())) {
             return Collections.emptyList();
         }
-        return jpaQueryFactory.select(new QUpdateWmsOrderResponse(wmsOrder.wmsDate, wmsOrderItem.id, wmsOrderItem.state))
+        return jpaQueryFactory.select(new QUpdateWmsOrderResponse(wmsOrder.wmsDate, wmsOrder.coCode, wmsOrderItem.id, wmsOrderItem.state))
                 .from(wmsOrder)
                 .innerJoin(wmsOrderItem)
+                .on(wmsOrder.orderId.eq(wmsOrderItem.wmsOrder.id))
                 .where(
                         wmsOrder.wmsDate.eq(request.getDate()),
                         wmsOrder.coCode.eq(request.getCoCode())
                         )
                 .offset(pageable.getOffset())
-                .limit(pageable.getPageSize() <= 0 ? 500 : pageable.getPageSize())
+                .limit(pageable.getPageSize())
                 .fetch();
     }
 }
