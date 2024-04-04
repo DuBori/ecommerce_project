@@ -1,5 +1,7 @@
 package com.duboribu.ecommerce.warehouse.order.service;
 
+import com.duboribu.ecommerce.Utils.eamil.EmailService;
+import com.duboribu.ecommerce.Utils.eamil.dto.EmailMessage;
 import com.duboribu.ecommerce.warehouse.entity.WmsOrder;
 import com.duboribu.ecommerce.warehouse.entity.WmsOrderItem;
 import com.duboribu.ecommerce.warehouse.enums.OrderState;
@@ -8,18 +10,16 @@ import com.duboribu.ecommerce.warehouse.order.dto.request.ProcessDeliveryRequest
 import com.duboribu.ecommerce.warehouse.order.dto.response.UpdateWmsOrderResponse;
 import com.duboribu.ecommerce.warehouse.order.repository.WmsOrderItemJpaRepository;
 import com.duboribu.ecommerce.warehouse.order.repository.WmsOrderJpaRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,7 +31,10 @@ class WmsOrderServiceTest {
     @Autowired
     WmsOrderItemJpaRepository wmsOrderItemJpaRepository;
 
+    @Autowired
+    EmailService emailService;
 
+    @BeforeAll
     public void init() {
         CreateDeliveryRequest request = new CreateDeliveryRequest("20240402", "TEST",
                 Collections.singletonList(new CreateDeliveryRequest.OrderInfo(1L, null, 1,
@@ -85,30 +88,31 @@ class WmsOrderServiceTest {
 
     @Test
     @Transactional
-    @Rollback(value = false)
     public void 발주등록건프로세스를진행한다() {
-        CreateDeliveryRequest request3 = new CreateDeliveryRequest("20240402", "TEST",
-                Collections.singletonList(new CreateDeliveryRequest.OrderInfo(1L, null, 1,
-                        new CreateDeliveryRequest.OrderInfo.DeliveryInfo("12345", "테스트"))));
-        CreateDeliveryRequest.OrderInfo orderInfo3 = request3.getOrderList().get(0);
-        WmsOrder wmsOrder3 = orderInfo3.toEntity();
-        WmsOrder save3 = wmsOrderJpaRepository.save(wmsOrder3);
-        assertEquals(orderInfo3.getOrderId(), save3.getId());
-
-
         CreateDeliveryRequest request2 = new CreateDeliveryRequest("20240402", "TEST",
-                Collections.singletonList(new CreateDeliveryRequest.OrderInfo(1L, save3.getWmsOrderItem().get(0).getId(), 1,
+                Collections.singletonList(new CreateDeliveryRequest.OrderInfo(1L, 2L, 1,
                         new CreateDeliveryRequest.OrderInfo.DeliveryInfo("12345", "테스트"))));
         CreateDeliveryRequest.OrderInfo orderInfo = request2.getOrderList().get(0);
 
-        ProcessDeliveryRequest request = new ProcessDeliveryRequest("DELIVERY_READY", Collections.singletonList(new ProcessDeliveryRequest.CoDeliveryInfo(save3.getWmsOrderItem().get(0).getId(), "TEST")));
+        ProcessDeliveryRequest request = new ProcessDeliveryRequest("DELIVERY_READY", Arrays.asList(new ProcessDeliveryRequest.CoDeliveryInfo(2L, "TEST"),
+                new ProcessDeliveryRequest.CoDeliveryInfo(3L, "TEST"),
+                new ProcessDeliveryRequest.CoDeliveryInfo(4L, "TEST2")));
         String newOrderStateRequest = request.getNewOrderState();
         OrderState matchState = OrderState.getMatchState(newOrderStateRequest);
 
         List<ProcessDeliveryRequest.CoDeliveryInfo> orderItemId = request.getOrderItemId();
         if (!orderItemId.isEmpty()) {
             List<UpdateWmsOrderResponse> updateWmsOrderResponses = updateOrderItemState(matchState, orderItemId);
-            System.out.println("updateWmsOrderResponses = " + updateWmsOrderResponses);
+
+            Map<String, List<UpdateWmsOrderResponse>> collect = updateWmsOrderResponses.stream()
+                    .filter(it -> "fail".equals(it.getResult()))
+                    .collect(Collectors.groupingBy(UpdateWmsOrderResponse::getCoCode));
+            if (!collect.isEmpty()) {
+                String 실패건 = collect.values().stream()
+                        .map(Object::toString)
+                        .collect(Collectors.joining(","));
+                emailService.sendMailForWms(new EmailMessage("wjdgus8576@naver.com", "test", "실패 건  : " + 실패건));
+            }
         }
     }
 
@@ -129,9 +133,9 @@ class WmsOrderServiceTest {
         if (findWmsOrderItem.isPresent()) {
             WmsOrderItem wmsOrderItem = findWmsOrderItem.get();
             wmsOrderItem.updateOrderState(newOrderState);
-            return new UpdateWmsOrderResponse("success", companyOrderId, newOrderState);
+            return new UpdateWmsOrderResponse("success", companyCode, companyOrderId, newOrderState);
         }
-        return new UpdateWmsOrderResponse("fail", companyOrderId, newOrderState);
+        return new UpdateWmsOrderResponse("fail", companyCode, companyOrderId, newOrderState);
     }
 
 }

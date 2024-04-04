@@ -1,12 +1,10 @@
 package com.duboribu.ecommerce.auth.controller;
 
-import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.domain.response.PublicUserResponse;
 import com.duboribu.ecommerce.auth.domain.response.UserResponse;
-import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
 import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.service.MemberService;
 import com.duboribu.ecommerce.auth.service.MemberTokenService;
@@ -119,20 +117,11 @@ public class AuthController {
     public ResponseEntity<DefaultResponse<PublicUserResponse>> resourceCheck(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = getAccessToken(request);
         UserResponse userResponse = null;
-        try {
-            userResponse = memberTokenService.validateToken(accessToken);
-            if (userResponse.isTokenExist()) {
-                createCookie(response, userResponse.getTokenResponse());
-            }
-        } catch (JwtException e) {
-            if (e.getCode() == JwtUserExceptionType.NON_TOKEN.getCode()) {
-                return new ResponseEntity<>(new DefaultResponse<>("토큰이 없습니다.", DefaultResponse.NON_TOKEN), HttpStatus.OK);
-            } else if (e.getCode() == JwtUserExceptionType.NON_USER.getCode()) {
-                return new ResponseEntity<>(new DefaultResponse<>("회원이 아닙니다.", DefaultResponse.NON_MEMBER_ERR), HttpStatus.OK);
-            } else  {
-                return new ResponseEntity<>(new DefaultResponse<>("토큰이 만료됐습니다.", DefaultResponse.EXPIRED_REFRESH_TOKEN), HttpStatus.OK);
-            }
+        userResponse = memberTokenService.validateToken(accessToken);
+        if (userResponse.isTokenExist()) {
+            createCookie(response, userResponse.getTokenResponse());
         }
+
         return new ResponseEntity<>(new DefaultResponse(new PublicUserResponse(new UserResponse(userResponse.getId(), userResponse.getName(), userResponse.getExpirationTime()))), HttpStatus.OK);
     }
 

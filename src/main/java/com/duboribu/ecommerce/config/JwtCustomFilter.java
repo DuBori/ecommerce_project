@@ -42,7 +42,6 @@ public class JwtCustomFilter extends OncePerRequestFilter {
             }
         }
         if (accessToken.isEmpty()) {
-            log.info("여긴상관없다");
             doFilter(request, response, filterChain);
             return;
         }

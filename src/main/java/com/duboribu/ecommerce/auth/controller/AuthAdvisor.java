@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@RestControllerAdvice("com.ecommerce.auth")
-public class Advisor {
+@RestControllerAdvice("com.duboribu.ecommerce.auth")
+public class AuthAdvisor {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<DefaultResponse> exceptionHandler(final JwtException e) {
         log.info(e.getMessage());
