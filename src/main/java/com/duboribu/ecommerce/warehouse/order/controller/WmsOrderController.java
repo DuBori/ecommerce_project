@@ -63,8 +63,7 @@ public class WmsOrderController {
      * 리스트 바코드 확인
      * */
     @GetMapping("/barcode")
-    public ResponseEntity<byte[]> qrToTistory(){
-
+    public ResponseEntity<byte[]> qrToHistory() {
         String barcodeData = "test";
         byte[] barcodeBytes = null;
 
