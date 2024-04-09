@@ -17,11 +17,11 @@ public class ProcessDeliveryRequest {
     @Getter
     @ToString
     public static class CoDeliveryInfo {
-        private Long orderItemId;
+        private Long companyOrderId;
         private String coCode;
 
-        public Long getOrderItemId() {
-            return orderItemId;
+        public Long getCompanyOrderId() {
+            return companyOrderId;
         }
 
         public String getCoCode() {
@@ -29,7 +29,7 @@ public class ProcessDeliveryRequest {
         }
 
         public CoDeliveryInfo(Long orderItemId, String coCode) {
-            this.orderItemId = orderItemId;
+            this.companyOrderId = orderItemId;
             this.coCode = coCode;
         }
     }

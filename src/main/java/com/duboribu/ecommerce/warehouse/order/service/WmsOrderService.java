@@ -73,7 +73,7 @@ public class WmsOrderService {
         if (!StringUtils.hasText(request.getNewOrderState())) {
             throw new WmsException(WmsExceptionType.WMS_STATE_REQUIRED);
         }
-        if (request.getOrderItemId().isEmpty()) {
+        if (request.getOrderItemId() == null) {
             throw new WmsException(WmsExceptionType.WMS_LIST_EMPTY);
         }
         String newOrderStateRequest = request.getNewOrderState();
@@ -88,7 +88,7 @@ public class WmsOrderService {
     private List<UpdateWmsOrderResponse> updateOrderItemState(OrderState matchState, List<ProcessDeliveryRequest.CoDeliveryInfo> orderItemId) {
         List<UpdateWmsOrderResponse> list = new ArrayList<>();
         for (ProcessDeliveryRequest.CoDeliveryInfo info  : orderItemId) {
-            UpdateWmsOrderResponse updateWmsOrderResponse = updateWmsOrder(info.getOrderItemId(), info.getCoCode(), matchState);
+            UpdateWmsOrderResponse updateWmsOrderResponse = updateWmsOrder(info.getCompanyOrderId(), info.getCoCode(), matchState);
             list.add(updateWmsOrderResponse);
         }
         sendMassageFailsForConfirm(list);

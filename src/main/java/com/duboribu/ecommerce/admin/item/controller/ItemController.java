@@ -1,27 +1,68 @@
 package com.duboribu.ecommerce.admin.item.controller;
 
 import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
+import com.duboribu.ecommerce.admin.item.dto.ResponseBook;
+import com.duboribu.ecommerce.admin.item.repository.AdminItemCustomRepository;
 import com.duboribu.ecommerce.admin.item.service.ItemService;
+import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@RestController(value = "adminItemController")
+@Controller(value = "adminItemController")
 @RequiredArgsConstructor
 @RequestMapping("/admin/item")
 @Slf4j
 public class ItemController {
-
     private final ItemService itemService;
+    private final AdminItemCustomRepository adminItemCustomRepository;
 
     /**
-     * 상품 생성요청
+     * 상품 조회
      * */
+    @GetMapping("/list")
+    public String list() {
+        return "/admin/item/list";
+    }
+
+    /**
+     * 상품 상세
+     **/
+    @GetMapping("/view/{id}")
+    public String detailPage(@PathVariable Long id, Model model) {
+        ResponseBook byBookId = adminItemCustomRepository.findByBookId(id);
+        log.info("byBook : {}", byBookId);
+        model.addAttribute("item", byBookId);
+        return "/admin/item/view";
+    }
+
+    /**
+     * 상품 생성
+     * */
+    @GetMapping("/create")
+    public String createItemPage() {
+        return "/admin/item/create";
+    }
+    
+
     @PostMapping("/create")
-    public void createItem(CreateBookRequest request) {
-        itemService.createItem(request);
+    public ResponseEntity<DefaultResponse> createItem(@RequestBody CreateBookRequest request) {
+        log.info("createBookReq : {}", request);
+        ResponseBook responseItem = itemService.createItem(request);
+        return new ResponseEntity<>(new DefaultResponse(responseItem), HttpStatus.OK);
+    }
+
+    /**
+     * 상품 수정
+     * */
+    @PostMapping("/update")
+    public String updateItem(CreateBookRequest request) {
+        /*return "redirect:/admin/item/view" + item.getId();*/
+        return null;
     }
 
     /**

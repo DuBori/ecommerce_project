@@ -119,7 +119,7 @@ class WmsOrderServiceTest {
     private List<UpdateWmsOrderResponse> updateOrderItemState(OrderState matchState, List<ProcessDeliveryRequest.CoDeliveryInfo> orderItemId) {
         List<UpdateWmsOrderResponse> list = new ArrayList<>();
         for (ProcessDeliveryRequest.CoDeliveryInfo info : orderItemId) {
-            UpdateWmsOrderResponse updateWmsOrderResponse = updateWmsOrder(info.getOrderItemId(), info.getCoCode(), matchState);
+            UpdateWmsOrderResponse updateWmsOrderResponse = updateWmsOrder(info.getCompanyOrderId(), info.getCoCode(), matchState);
             list.add(updateWmsOrderResponse);
         }
         return list;
