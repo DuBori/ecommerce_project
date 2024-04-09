@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 상세 정보</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="container">
+    <h1>상품 상세 정보</h1>
+    <div th:if="${item}">
+        <p>ID: <span th:text="${item.id}"></span></p>
+        <p>Title: <span th:text="${item.title}"></span></p>
+        <p>Author: <span th:text="${item.author}"></span></p>
+        <p>Publisher: <span th:text="${item.publisher}"></span></p>
+        <p>Price: <span th:text="${item.price}"></span></p>
+    </div>
+    <div th:unless="${item}">
+        <p>상품 정보를 찾을 수 없습니다.</p>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
