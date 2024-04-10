@@ -18,6 +18,7 @@ import java.math.BigDecimal;
 public class ItemService {
     private final ItemJpaRepository itemJpaRepository;
     private final PriceJpaRepository priceJpaRepository;
+
     @Transactional
     public ResponseBook createItem(CreateBookRequest request) {
         Book book = new Book(request);
@@ -28,11 +29,13 @@ public class ItemService {
         return new ResponseBook(savedBook);
     }
 
+    @Transactional
     public boolean isExist(Long itemId) {
         log.info("{}", itemJpaRepository.existsById(itemId));
         return itemJpaRepository.existsById(itemId);
     }
 
+    @Transactional
     public ResponseBook findById(Long id) {
         return null;
     }

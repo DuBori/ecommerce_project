@@ -2,11 +2,13 @@ package com.duboribu.ecommerce.admin.item.controller;
 
 import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
 import com.duboribu.ecommerce.admin.item.dto.ResponseBook;
+import com.duboribu.ecommerce.admin.item.dto.SearchItemRequest;
 import com.duboribu.ecommerce.admin.item.repository.AdminItemCustomRepository;
 import com.duboribu.ecommerce.admin.item.service.ItemService;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +27,8 @@ public class ItemController {
      * 상품 조회
      * */
     @GetMapping("/list")
-    public String list() {
+    public String list(SearchItemRequest searchItemRequest, Model model) {
+        model.addAttribute("products", adminItemCustomRepository.list(searchItemRequest, PageRequest.of(searchItemRequest.getPage(), searchItemRequest.getPageSize())));
         return "/admin/item/list";
     }
 
