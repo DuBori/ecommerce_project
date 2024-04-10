@@ -1,10 +1,82 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>상품 리스트</title>
+    <style>
+        /* CSS 스타일링 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            color: #333;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        li h2 {
+            margin-top: 0;
+        }
+        span.price {
+            font-weight: bold;
+            color: #007bff;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #007bff;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            margin-right: 5px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
+<h1>상품 리스트</h1>
+<ul id="product-list">
+    <!-- 상품 리스트 반복 -->
+    <li th:each="product : ${products}">
+        <h2 th:text="${product.title}"></h2>
+        <p th:text="${product.author}"></p>
+        <p th:text="${product.publisher}"></p>
+        <p>가격: <span class="price" th:text="${product.price}"></span>원</p>
+    </li>
+</ul>
 
+<!--<div class="pagination">
+    &lt;!&ndash; 페이지네이션 &ndash;&gt;
+    <a th:href="@{${pageInfo.firstPageUrl}}" th:if="${!pageInfo.first}" class="page-link">&laquo;</a>
+    <a th:href="@{${pageInfo.previousPageUrl}}" th:if="${!pageInfo.first}" class="page-link">이전</a>
+    <span th:text="${pageInfo.currentPage} + ' / ' + ${pageInfo.totalPages}"></span>
+    <a th:href="@{${pageInfo.nextPageUrl}}" th:if="${!pageInfo.last}" class="page-link">다음</a>
+    <a th:href="@{${pageInfo.lastPageUrl}}" th:if="${!pageInfo.last}" class="page-link">&raquo;</a>
+</div>-->
+
+<!-- 뒤로가기 링크 -->
+<a href="javascript:history.back()">뒤로가기</a>
+
+<!-- 상품 생성 버튼 -->
+<button onclick="location.href='/admin/item/create'">상품 생성</button>
+<script>
+    // JavaScript 코드
+    // 여기에 필요한 JavaScript 코드를 추가할 수 있습니다.
+    // 예: API 호출, 이벤트 핸들링 등
+</script>
 </body>
 </html>
