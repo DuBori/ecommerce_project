@@ -12,6 +12,7 @@ public class UserResponse {
     private String id;
     private String name;
     private UserType code;
+    private String role;
     private JwtTokenResponse tokenResponse;
     private Long expirationTime;
     public UserResponse(UserDto userDto) {
@@ -23,11 +24,13 @@ public class UserResponse {
     public UserResponse(UserDto userDto, JwtTokenResponse response) {
         id = userDto.getUsername();
         name = userDto.getName();
+        role = userDto.getRoleType().getDesc();
         tokenResponse = response;
     }
     public UserResponse(UserDto userDto, JwtTokenResponse response, Long expirationTime) {
         id = userDto.getUsername();
         name = userDto.getName();
+        role = userDto.getRoleType().getDesc();
         tokenResponse = response;
         this.expirationTime = expirationTime;
     }

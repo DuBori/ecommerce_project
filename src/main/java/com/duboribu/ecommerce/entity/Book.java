@@ -31,6 +31,7 @@ public class Book extends Item {
     }
 
     public Book(CreateBookRequest request) {
+        super(request.getFilePath());
         this.title = request.getTitle();
         this.author = request.getAuthor();
         this.publisher = request.getPublisher();

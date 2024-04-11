@@ -23,10 +23,16 @@ public abstract class Item extends BaseEntity{
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private Stock stock;
 
+    private String filePath;
+
     public Item(String productCode, Stock stock) {
         this.productCode = productCode;
         this.stock = stock;
         stock.matchItem(this);
+    }
+
+    public Item(String filePath) {
+        this.filePath = filePath;
     }
 
     public void updatePrice(List<Price> prices) {

@@ -80,8 +80,20 @@ public class MemberService implements UserDetailsService {
             return null;
         }
         encodePassword(userDto);
-        final Role user = roleService.findById(RoleType.ROLE_USER);
-        Member saveMember = memberJpaRepository.save(userDto.toEntity(user));
+        final Role role = roleService.findById(RoleType.ROLE_USER);
+        Member saveMember = memberJpaRepository.save(userDto.toEntity(role));
+        em.flush();
+        return new UserResponse(userDto, new JwtTokenResponse(jwtTokenProvider.createAccessToken(userDto), issueRefreshToken(saveMember)));
+    }
+    @Transactional
+    public UserResponse joinAdmin(UserDto userDto) {
+        if (!memberJpaRepository.findById(userDto.getUsername()).isEmpty()) {
+            return null;
+        }
+        encodePassword(userDto);
+        final Role role = roleService.findById(RoleType.ROLE_ADMIN);
+        log.info("amdin role : {}", role);
+        Member saveMember = memberJpaRepository.save(userDto.toEntity(role));
         em.flush();
         return new UserResponse(userDto, new JwtTokenResponse(jwtTokenProvider.createAccessToken(userDto), issueRefreshToken(saveMember)));
     }
@@ -215,6 +227,9 @@ public class MemberService implements UserDetailsService {
             return new UserResponse(userDto, new JwtTokenResponse(accessToken, createRefreshToken));
         }
         String accessToken = jwtTokenProvider.createAccessToken(member.getId(), member.getName(), member.getRole().getRoleType());
-        return new UserResponse(userDto, new JwtTokenResponse(accessToken, null));
+        UserDto memberDto = member.getMemberDto();
+        return new UserResponse(memberDto, new JwtTokenResponse(accessToken, null));
     }
+
+
 }

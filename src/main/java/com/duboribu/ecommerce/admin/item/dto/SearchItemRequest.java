@@ -8,9 +8,9 @@ import lombok.ToString;
 @Setter
 @ToString
 public class SearchItemRequest {
-    private String name;
-    private String author;
+    private String searchType;
+    private String keyword;
     private int page;
-    private int pageSize = 20;
+    private int pageSize = 2;
 
 }

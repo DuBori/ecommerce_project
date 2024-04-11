@@ -789,6 +789,7 @@
         const storedExpiration = sessionStorage.getItem('expiration');
 
         if (storedExpiration !== null) {
+            let now = new Date;
             expiration = new Date(now.getTime() + storedExpiration);
         }
 
