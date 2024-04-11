@@ -43,11 +43,13 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers(
-                                "/auth/**","/main/**","/login/**", "/fonts/**","/wms/**", "/image/**", "/images/**")
+                                "/auth/**","/main/**","/login/**",
+                                "/fonts/**","/wms/**", "/image/**",
+                                "/images/**", "/admin/login")
                         .permitAll()
                         .requestMatchers("/swagger-ui/index.html", "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
                                 "/webjars/**", "/v3/api-docs/**").hasAnyAuthority(RoleType.ROLE_USER.name())
-                        .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name(), RoleType.ROLE_USER.name())
+                        .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 ->

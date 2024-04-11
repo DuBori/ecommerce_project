@@ -10,5 +10,75 @@
     <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
     Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
   </div>
+  <script>
+    $(document).ready(function() {
+
+      let userId, name, expiration;
+      const storedExpiration = sessionStorage.getItem('expiration');
+
+      if (storedExpiration !== null) {
+        let now = new Date;
+        expiration = new Date(now.getTime() + storedExpiration);
+      }
+
+      verifyAccessToken();
+      function verifyAccessToken() {
+        // 만료 시간이 저장되어 있고, 만료 시간이 현재 시간보다 5분 이전이라면 토큰을 검증합니다.
+        if (userId == null || userId === undefined || expiration.getTime() < (new Date().getTime() - 5 * 60 * 1000)) {
+          $.ajax({
+            url: '/auth/verify',
+            type: 'GET',
+            success: function(data) {
+
+              if (data.resCode === 200) {
+                userId = data.body.id;
+                name = data.body.name;
+                sessionStorage.setItem('expiration', data.body.expirationTime);
+                sessionStorage.setItem('userId', data.body.id);
+                sessionStorage.setItem('name', data.body.name);
+                sessionStorage.setItem('role', data.body.role);
+              } else if (data.resCode === 204 || data.resCode === 202 || data.resCode === 205) {
+                location.href = "/admin/login";
+              }
+              settingLoginInfo();
+            },
+            error: function(xhr, status, error) {
+              console.error('Error:', error);
+            }
+          });
+        }
+      }
+
+      function settingLoginInfo() {
+        let userId = sessionStorage.getItem('userId');
+        let name = sessionStorage.getItem('name');
+        let role = sessionStorage.getItem('role');
+        if (userId && name && role) {
+          $("span.userAdmin").text(userId)
+          $("h6.adminName").text(name)
+          $("span.adminRole").text(role)
+        }
+      }
+      function logout() {
+        $.ajax({
+          url: '/auth/logout',
+          type: 'GET',
+          success: function(response) {
+            console.log('로그아웃 완료:', response.message);
+            sessionStorage.clear();
+            location.reload();
+          },
+          error: function(xhr, status, error) {
+            console.error('로그아웃 실패:', error);
+          }
+        });
+      }
+      $('.logoutLink').click(function(event) {
+        event.preventDefault(); // 링크의 기본 동작을 막음
+        logout(); // 로그아웃 함수 실행
+      });
+    });
+  </script>
 </footer><!-- End Footer -->
   <!-- Template Main JS File -->
+

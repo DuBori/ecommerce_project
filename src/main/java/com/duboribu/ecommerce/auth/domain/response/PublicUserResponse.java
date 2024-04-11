@@ -10,10 +10,12 @@ import lombok.ToString;
 public class PublicUserResponse {
     private String id;
     private String name;
+    private String role;
     private Long expirationTime;
     public PublicUserResponse(UserResponse userResponse) {
         id = userResponse.getId();
-        name = userResponse.getName();;
+        name = userResponse.getName();
+        role = userResponse.getRole();
         expirationTime = userResponse.getExpirationTime();
     }
 }

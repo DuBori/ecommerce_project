@@ -8,7 +8,7 @@ import lombok.ToString;
 
 @Entity
 @Getter
-@ToString
+@ToString(of = "{roleType}")
 public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
