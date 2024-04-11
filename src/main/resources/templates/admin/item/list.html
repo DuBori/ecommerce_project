@@ -4,79 +4,177 @@
     <meta charset="UTF-8">
     <title>상품 리스트</title>
     <style>
-        /* CSS 스타일링 */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+        .container {
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center; /* 요소들을 가운데 정렬하기 위해 추가 */
         }
-        h1 {
+
+        .container h1 {
             color: #333;
         }
-        ul {
+
+        .container ul {
             list-style-type: none;
             padding: 0;
         }
-        li {
+
+        .container li {
             margin-bottom: 20px;
-            border: 1px solid #ccc;
+            border: 1px solid #dee2e6;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center; /* 내용을 왼쪽 정렬하기 위해 추가 */
+        }
+
+        .container li h2 {
+            margin: 0;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .container p {
+            margin: 0;
             padding: 10px;
         }
-        li h2 {
-            margin-top: 0;
-        }
-        span.price {
+
+        .container span.price {
             font-weight: bold;
             color: #007bff;
         }
-        .pagination {
+
+        .container .pagination {
             margin-top: 20px;
+            display: flex;
+            justify-content: center;
         }
-        .pagination a {
+
+        .container .pagination li {
+            display: inline-block;
+        }
+
+        .container .pagination a {
             display: inline-block;
             padding: 8px 16px;
             text-decoration: none;
-            color: #007bff;
-            border: 1px solid #007bff;
+            border: 1px solid;
             border-radius: 4px;
-            margin-right: 5px;
         }
-        .pagination a.active {
+
+        .container .pagination a.active {
             background-color: #007bff;
             color: #fff;
+        }
+
+        .container .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container .create-btn {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .container .create-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .container .search-form {
+            margin-bottom: 20px;
+        }
+
+        .container .search-type,
+        .container .search-keyword {
+            padding: 8px;
+            width: 200px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .container .search-keyword {
+            margin-right: 5px;
+        }
+
+        .container .search-btn {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .container .search-btn:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-<h1>상품 리스트</h1>
-<ul id="product-list">
-    <!-- 상품 리스트 반복 -->
-    <li th:each="product : ${products}">
-        <h2 th:text="${product.title}"></h2>
-        <p th:text="${product.author}"></p>
-        <p th:text="${product.publisher}"></p>
-        <p>가격: <span class="price" th:text="${product.price}"></span>원</p>
-    </li>
-</ul>
+<div th:replace="admin/common/header :: header"></div>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
 
-<!--<div class="pagination">
-    &lt;!&ndash; 페이지네이션 &ndash;&gt;
-    <a th:href="@{${pageInfo.firstPageUrl}}" th:if="${!pageInfo.first}" class="page-link">&laquo;</a>
-    <a th:href="@{${pageInfo.previousPageUrl}}" th:if="${!pageInfo.first}" class="page-link">이전</a>
-    <span th:text="${pageInfo.currentPage} + ' / ' + ${pageInfo.totalPages}"></span>
-    <a th:href="@{${pageInfo.nextPageUrl}}" th:if="${!pageInfo.last}" class="page-link">다음</a>
-    <a th:href="@{${pageInfo.lastPageUrl}}" th:if="${!pageInfo.last}" class="page-link">&raquo;</a>
-</div>-->
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
 
-<!-- 뒤로가기 링크 -->
-<a href="javascript:history.back()">뒤로가기</a>
+<div class="container">
+    <h1>상품 리스트</h1>
 
-<!-- 상품 생성 버튼 -->
-<button onclick="location.href='/admin/item/create'">상품 생성</button>
-<script>
-    // JavaScript 코드
-    // 여기에 필요한 JavaScript 코드를 추가할 수 있습니다.
-    // 예: API 호출, 이벤트 핸들링 등
-</script>
+    <form method="GET" class="search-form">
+        <select name="searchType" class="search-type">
+            <option value="title">상품 이름</option>
+            <option value="author">저자</option>
+            <option value="price">가격</option>
+        </select>
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요" class="search-keyword">
+        <button type="submit" class="search-btn">검색</button>
+    </form>
+
+    <ul id="product-list">
+        <!-- 상품 리스트 반복 -->
+        <li th:each="product : ${list}">
+            <h2 th:text="${product.title}"></h2>
+            <p th:text="${product.author}"></p>
+            <p th:text="${product.publisher}"></p>
+            <img th:src="${product.filePath}">
+            <p>가격: <span class="price" th:text="${product.price}"></span>원</p>
+        </li>
+    </ul>
+
+    <!-- 상품 생성 버튼 -->
+    <button class="create-btn" onclick="location.href='/admin/item/create'">상품 생성</button>
+
+    <!-- 페이징 -->
+    <ul class="pagination">
+        <li class="page-item" th:class="${list.first ? 'disabled' : ''}">
+            <a class="page-link" th:href="@{${'/admin/item/list?page=' + (list.number - 1)}}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">이전</span>
+            </a>
+        </li>
+        <li th:each="pageNumber : ${#numbers.sequence(0, list.totalPages - 1)}" th:class="${pageNumber == list.number ? 'page-item active' : 'page-item'}">
+            <a class="page-link" th:href="@{${'/admin/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+        </li>
+        <li class="page-item" th:class="${list.number >= list.totalPages - 1 ? 'disabled' : ''}">
+            <a class="page-link" th:href="@{${'/admin/item/list?page=' + (list.number + 1)}}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">다음</span>
+            </a>
+        </li>
+    </ul>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
 </body>
 </html>

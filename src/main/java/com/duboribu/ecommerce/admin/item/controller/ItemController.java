@@ -8,6 +8,7 @@ import com.duboribu.ecommerce.admin.item.service.ItemService;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +29,8 @@ public class ItemController {
      * */
     @GetMapping("/list")
     public String list(SearchItemRequest searchItemRequest, Model model) {
-        model.addAttribute("products", adminItemCustomRepository.list(searchItemRequest, PageRequest.of(searchItemRequest.getPage(), searchItemRequest.getPageSize())));
+        Page<ResponseBook> list = adminItemCustomRepository.list(searchItemRequest, PageRequest.of(searchItemRequest.getPage(), searchItemRequest.getPageSize()));
+        model.addAttribute("list", list);
         return "/admin/item/list";
     }
 
@@ -38,7 +40,6 @@ public class ItemController {
     @GetMapping("/view/{id}")
     public String detailPage(@PathVariable Long id, Model model) {
         ResponseBook byBookId = adminItemCustomRepository.findByBookId(id);
-        log.info("byBook : {}", byBookId);
         model.addAttribute("item", byBookId);
         return "/admin/item/view";
     }

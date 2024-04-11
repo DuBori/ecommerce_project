@@ -1,137 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>상품 등록</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 등록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<div th:replace="admin/common/header :: header"></div>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+
 <div class="container">
-  <h1>상품 등록</h1>
-  <form id="productForm">
-    <div class="form-group">
-      <label for="title">상품명:</label>
-      <input type="text" id="title" name="title" required>
-    </div>
-    <div class="form-group">
-      <label for="author">저자:</label>
-      <input type="text" id="author" name="author" required>
-    </div>
-    <div class="form-group">
-      <label for="publisher">출판사:</label>
-      <input type="text" id="publisher" name="publisher" required>
-    </div>
-    <div class="form-group">
-      <label for="price">가격:</label>
-      <input type="number" id="price" name="price" required>
-    </div>
-    <button type="submit">등록</button>
-  </form>
-  <div id="message"></div>
+    <h1>상품 등록</h1>
+    <form id="productForm">
+        <div class="form-group">
+            <label for="title">상품명:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="author">저자:</label>
+            <input type="text" id="author" name="author" required>
+        </div>
+        <div class="form-group">
+            <label for="publisher">출판사:</label>
+            <input type="text" id="publisher" name="publisher" required>
+        </div>
+        <div class="form-group">
+            <label for="price">가격:</label>
+            <input type="number" id="price" name="price" required>
+        </div>
+        <input type="hidden" name="filePath" id="filePath">
+        <input type="file" id="imageInput">
+        <div id="imageContainer"></div>
+        <button type="submit">등록</button>
+    </form>
+    <div id="message"></div>
 </div>
+
+<div th:replace="admin/common/footer :: footer"></div>
 </body>
 </html>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
-  }
-
-  .container {
-    max-width: 500px;
-    margin: 50px auto;
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-
-  h1 {
-    text-align: center;
-  }
-
-  .form-group {
-    margin-bottom: 20px;
-  }
-
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 3px;
-  }
-
-  button[type="submit"] {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 3px;
-    cursor: pointer;
-  }
-
-  button[type="submit"]:hover {
-    background-color: #0056b3;
-  }
-
-  #error {
-    color: red;
-    margin-top: 10px;
-  }
-</style>
-<script>
-  document.getElementById('productForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-
-    var title = document.getElementById('title').value;
-    var author = document.getElementById('author').value;
-    var publisher = document.getElementById('publisher').value;
-    var price = document.getElementById('price').value;
-
-    if (!title || !author || !publisher || !price) {
-      document.getElementById('message').innerHTML = '<div id="error">상품 정보를 모두 입력하세요.</div>';
-      return;
+    .container {
+        max-width: 800px;
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
 
-    var formData = {
-      title: title,
-      author: author,
-      publisher: publisher,
-      price: price
-    };
+    .container h1 {
+        text-align: center;
+    }
 
-    // AJAX를 사용하여 서버로 데이터를 전송
-    fetch('/admin/item/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-            .then(function(response) {
-              if (!response.ok) {
-                throw new Error('상품 등록에 실패했습니다.');
-              }
-              return response.json();
-            })
-            .then(function(data) {
-              if (data.resCode == 200) {
-                alert("상품이 성공적으로 등록되었습니다.");
-                document.location.href = '/admin/item/view/' + data.body.id;
-              }
-            })
-            .catch(function(error) {
-              // 오류 메시지 표시
-              document.getElementById('message').innerHTML = '<div id="error">' + error.message + '</div>';
+    .container .form-group {
+        margin-bottom: 20px;
+    }
+
+    .container label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .container input[type="text"],
+    .container input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    .container button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        text-align: center; /* 버튼 가운데 정렬 */
+        display: block; /* 블록 요소로 변경하여 가로폭을 100%로 설정 */
+        margin: 0 auto; /* 가운데 정렬을 위한 마진 설정 */
+    }
+
+    .container button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    .container #message {
+        color: red;
+        margin-top: 10px;
+    }
+</style>
+<script>
+    $(document).ready(function() {
+        // 파일 입력(input) 요소에 change 이벤트 리스너 추가
+        $('#imageInput').on('change', function(event) {
+            var file = event.target.files[0]; // 선택된 파일 가져오기
+            var reader = new FileReader();
+
+            reader.onload = function(event) {
+                var base64Data = event.target.result; // 파일의 내용을 Base64 데이터 URL로 가져옴
+                var image = $('<img>').attr('src', base64Data);
+
+                uploadImage(file);
+
+                $('#imageContainer').html(image);
+            };
+
+
+            reader.readAsDataURL(file);
+        });
+
+        function uploadImage(file) {
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('path', 'item');
+
+            $.ajax({
+                url: '/image/upload',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(data) {
+                    $('#filePath').val(data.body);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error uploading image:', error);
+                }
             });
-  });
+        }
 
+        $('#productForm').on('submit', function(event) {
+            event.preventDefault();
+
+            var title = $('#title').val();
+            var author = $('#author').val();
+            var publisher = $('#publisher').val();
+            var price = $('#price').val();
+            var filePath = $('#filePath').val();
+
+            if (!title || !author || !publisher || !price || !filePath) {
+                $('#message').html('<div id="error">상품 정보를 모두 입력하세요.</div>');
+                return;
+            }
+
+            var formData = {
+                title: title,
+                author: author,
+                publisher: publisher,
+                price: price,
+                filePath: filePath
+            };
+
+            // AJAX를 사용하여 서버로 데이터를 전송
+            $.ajax({
+                url: '/admin/item/create',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(data) {
+                    if (data.resCode == 200) {
+                        alert("상품이 성공적으로 등록되었습니다.");
+                        document.location.href = '/admin/item/view/' + data.body.id;
+                    }
+                },
+                error: function(xhr, status, error) {
+                    // 오류 메시지 표시
+                    $('#message').html('<div id="error">상품 등록에 실패했습니다.</div>');
+                }
+            });
+        });
+    });
 </script>

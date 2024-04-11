@@ -43,7 +43,7 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers(
-                                "/auth/**","/main/**","/login/**", "/fonts/**","/wms/**")
+                                "/auth/**","/main/**","/login/**", "/fonts/**","/wms/**", "/image/**", "/images/**")
                         .permitAll()
                         .requestMatchers("/swagger-ui/index.html", "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
                                 "/webjars/**", "/v3/api-docs/**").hasAnyAuthority(RoleType.ROLE_USER.name())
@@ -67,7 +67,8 @@ public class SecurityConfig {
                         .toStaticResources()
                         .atCommonLocations()
                 ).requestMatchers("/fonts/**", "/sass/**", "/Source/**",
-                         "/assets/**", "/forms/**","/v3/**");
+                         "/assets/**", "/forms/**","/v3/**", "/resources/**",
+                        "/images/**");
 
     }
     @Bean
