@@ -143,13 +143,14 @@
     </form>
 
     <ul id="product-list">
-        <!-- 상품 리스트 반복 -->
         <li th:each="product : ${list}">
-            <h2 th:text="${product.title}"></h2>
-            <p th:text="${product.author}"></p>
-            <p th:text="${product.publisher}"></p>
-            <img th:src="${product.filePath}">
-            <p>가격: <span class="price" th:text="${product.price}"></span>원</p>
+            <a th:href="@{/admin/item/view/{id}(id=${product.id})}">
+                <h2 th:text="${product.title}"></h2>
+                <p th:text="${product.author}"></p>
+                <p th:text="${product.publisher}"></p>
+                <img th:src="${product.filePath}" width="600" height="600">
+                <p>가격: <span class="price" th:text="${product.price}"></span>원</p>
+            </a>
         </li>
     </ul>
 

@@ -15,6 +15,6 @@ public class OrderController {
     @GetMapping("/view/{itemCode}")
     public String detailOrderPage(@PathVariable String itemCode) {
 
-        return "shop-details";
+        return "front/shop-details";
     }
 }

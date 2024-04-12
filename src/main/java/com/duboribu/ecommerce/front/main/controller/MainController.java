@@ -1,10 +1,11 @@
 package com.duboribu.ecommerce.front.main.controller;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.duboribu.ecommerce.front.service.FoItemService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -12,9 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @Slf4j
 public class MainController {
-    @RequestMapping("")
-    public String main(HttpServletRequest request, HttpServletResponse response) {
-        return "index";
+    private final FoItemService foItemService;
+    @GetMapping
+    public String main(Model model) {
+        model.addAttribute("normalList", foItemService.normalList());
+        return "front/index";
     }
+
+
 
 }

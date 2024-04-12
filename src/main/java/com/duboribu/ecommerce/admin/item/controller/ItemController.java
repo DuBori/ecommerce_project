@@ -3,8 +3,9 @@ package com.duboribu.ecommerce.admin.item.controller;
 import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
 import com.duboribu.ecommerce.admin.item.dto.ResponseBook;
 import com.duboribu.ecommerce.admin.item.dto.SearchItemRequest;
+import com.duboribu.ecommerce.admin.item.dto.UpdateBookRequest;
 import com.duboribu.ecommerce.admin.item.repository.AdminItemCustomRepository;
-import com.duboribu.ecommerce.admin.item.service.ItemService;
+import com.duboribu.ecommerce.admin.item.service.AdminItemService;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/admin/item")
 @Slf4j
 public class ItemController {
-    private final ItemService itemService;
+    private final AdminItemService adminItemService;
     private final AdminItemCustomRepository adminItemCustomRepository;
 
     /**
@@ -56,7 +57,7 @@ public class ItemController {
     @PostMapping("/create")
     public ResponseEntity<DefaultResponse> createItem(@RequestBody CreateBookRequest request) {
         log.info("createBookReq : {}", request);
-        ResponseBook responseItem = itemService.createItem(request);
+        ResponseBook responseItem = adminItemService.createItem(request);
         return new ResponseEntity<>(new DefaultResponse(responseItem), HttpStatus.OK);
     }
 
@@ -64,9 +65,9 @@ public class ItemController {
      * 상품 수정
      * */
     @PostMapping("/update")
-    public String updateItem(CreateBookRequest request) {
-        /*return "redirect:/admin/item/view" + item.getId();*/
-        return null;
+    public String updateItem(UpdateBookRequest request) {
+        Long bookId = adminItemService.updateBook(request);
+        return "redirect:/admin/item/view/" + bookId;
     }
 
     /**
@@ -74,7 +75,7 @@ public class ItemController {
      */
     @GetMapping("/exist/{id}")
     public ResponseEntity<Boolean> existItem(@PathVariable Long id) {
-        return new ResponseEntity<>(itemService.isExist(id), HttpStatus.OK);
+        return new ResponseEntity<>(adminItemService.isExist(id), HttpStatus.OK);
     }
 
 }
