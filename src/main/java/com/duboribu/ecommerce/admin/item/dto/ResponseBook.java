@@ -23,6 +23,7 @@ public class ResponseBook {
         this.publisher = savedBook.getAuthor();
         BigDecimal value = savedBook.getPrices().get(0).getValue();
         price = value.intValue();
+        this.filePath = savedBook.getFilePath();
     }
     @QueryProjection
     public ResponseBook(Long id, String title, String author, String publisher, String filePath, int price) {
@@ -33,4 +34,5 @@ public class ResponseBook {
         this.filePath = filePath;
         this.price = price;
     }
+
 }

@@ -1,11 +1,14 @@
 package com.duboribu.ecommerce.entity;
 
 import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
+import com.duboribu.ecommerce.admin.item.dto.UpdateBookRequest;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.math.BigDecimal;
 
 // Book 엔티티
 @Entity
@@ -36,4 +39,16 @@ public class Book extends Item {
         this.author = request.getAuthor();
         this.publisher = request.getPublisher();
     }
+
+    public void updateItem(UpdateBookRequest request) {
+        if (request.getId() <= 0) {
+            throw new IllegalArgumentException("상품 수정 에러");
+        }
+        super.updateFilePath(request.getFilePath());
+        super.getPrices().get(0).updatePrice(new BigDecimal(request.getPrice()));
+        this.title = request.getTitle();
+        this.author = request.getAuthor();
+        this.publisher = request.getPublisher();
+    }
+
 }

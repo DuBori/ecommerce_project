@@ -42,4 +42,8 @@ public class Price extends BaseEntity{
     public void matchItem(Item item) {
         this.item = item;
     }
+
+    public void updatePrice(BigDecimal newPrice) {
+        this.value = newPrice;
+    }
 }

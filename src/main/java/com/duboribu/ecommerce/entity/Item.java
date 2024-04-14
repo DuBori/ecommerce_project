@@ -42,4 +42,8 @@ public abstract class Item extends BaseEntity{
                     .forEach(price -> price.matchItem(this));
         }
     }
+
+    protected void updateFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 }

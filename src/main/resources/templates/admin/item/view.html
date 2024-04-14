@@ -1,24 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상품 상세 정보</title>
+    <style>
+        /* 컨테이너와 내부 컨테이너 스타일 */
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .inner-container {
+            width: 80%;
+            margin: 5% auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 제목 스타일 */
+        .inner-container h1 {
+            color: #333;
+            padding: 20px;
+            margin: 0;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+        }
+
+        /* 수평 구분선 스타일 */
+        .inner-container hr {
+            margin: 0;
+        }
+
+        /* 내용 스타일 */
+        .inner-container .content {
+            display: flex;
+            align-items: flex-start; /* 아이템을 위쪽으로 정렬 */
+            width: 100%;
+        }
+
+        /* 이미지와 버튼 영역 스타일 */
+        .inner-container .image-and-buttons {
+            display: flex;
+            flex-direction: column; /* 이미지 및 버튼을 수직으로 배치 */
+            align-items: center; /* 수직으로 가운데 정렬 */
+            margin-right: 20px; /* 폼 영역과의 간격 추가 */
+        }
+
+        /* 이미지 영역 스타일 */
+        .inner-container .image {
+            text-align: center;
+        }
+
+        /* 이미지 스타일 */
+        .inner-container .image img {
+            max-width: 800px; /* 이미지 최대 너비 설정 */
+            max-height: 800px; /* 이미지 최대 높이 설정 */
+            width: auto; /* 이미지 너비 자동 조정 */
+            height: auto; /* 이미지 높이 자동 조정 */
+        }
+
+        /* 버튼 영역 스타일 */
+        .inner-container .buttons {
+            display: flex;
+            margin-top: 10px; /* 버튼과 이미지 사이 간격 추가 */
+            justify-content: center; /* 버튼 가운데 정렬 */
+        }
+
+        /* 버튼 스타일 */
+        .inner-container .buttons button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-right: 10px; /* 버튼 간 간격 추가 */
+        }
+
+        .inner-container .buttons button:last-child {
+            margin-right: 0; /* 마지막 버튼의 오른쪽 마진 제거 */
+        }
+
+        /* 폼 영역 스타일 */
+        .inner-container .form {
+            flex: 1;
+            padding: 20px;
+        }
+
+        /* 폼 그룹 스타일 */
+        .inner-container .form-group {
+            margin-bottom: 20px;
+        }
+
+        /* 폼 라벨 스타일 */
+        .inner-container .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        /* 폼 입력란 스타일 */
+        .inner-container .form-group input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        /* 수정 버튼 영역 스타일 */
+        .inner-container .modify-button {
+            margin-top: 20px; /* 수정 버튼과의 간격 추가 */
+            text-align: right; /* 수정 버튼을 오른쪽으로 정렬 */
+        }
+
+        /* 수정 버튼 스타일 */
+        .inner-container .modify-button button {
+            background-color: #28a745; /* 수정 버튼 배경색 변경 */
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .inner-container .modify-button button:hover {
+            background-color: #218838; /* 수정 버튼 호버 배경색 변경 */
+        }
+
+        /* 파일 업로드 입력란 스타일 */
+        .btn-modify {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px; /* 더 작은 패딩 사용 */
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-modify:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+</head>
 <div th:replace="admin/common/header :: header"></div>
 <body>
 <!-- ======= top ======= -->
 <div th:replace="admin/common/top :: top"></div>
+
 <!-- ======= 네비게이션 ======= -->
 <div th:replace="admin/common/sidebar :: sidebar"></div>
 <div class="container">
-    <h1>상품 상세 정보</h1>
-    <div th:if="${item}">
-        <p>ID: <span th:text="${item.id}"></span></p>
-        <p>Title: <span th:text="${item.title}"></span></p>
-        <p>Author: <span th:text="${item.author}"></span></p>
-        <p>Publisher: <span th:text="${item.publisher}"></span></p>
-        <p>Price: <span th:text="${item.price}"></span></p>
-    </div>
-    <div th:unless="${item}">
-        <p>상품 정보를 찾을 수 없습니다.</p>
+    <div class="inner-container">
+        <h1>상품 정보</h1>
+        <hr>
+        <div class="content">
+            <div class="image-and-buttons">
+                <div class="image" id="imageContainer">
+                    <img th:src="${item.filePath}" alt="상품 이미지" width="400" height="400">
+                </div>
+                <div class="buttons">
+                    <input type="file" id="imageInput" data-path="item" class="btn-modify" >
+                    <button type="button" class="btn-delete">삭제</button>
+                </div>
+            </div>
+            <div class="form">
+                <form id ="formUpdate" action="/admin/item/update" method="post">
+                    <input type="hidden" id="id" name="id" th:value="${item.id}" readonly>
+                    <div class="form-group">
+                        <label for="title">Title:</label>
+                        <input type="text" id="title" name="title" th:value="${item.title}">
+                    </div>
+                    <div class="form-group">
+                        <label for="author">Author:</label>
+                        <input type="text" id="author" name="author" th:value="${item.author}">
+                    </div>
+                    <div class="form-group">
+                        <label for="publisher">Publisher:</label>
+                        <input type="text" id="publisher" name="publisher" th:value="${item.publisher}">
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price:</label>
+                        <input type="text" id="price" name="price" th:value="${item.price}">
+                    </div>
+                    <div class="modify-button">
+                        <button type="submit" class="btn-modify">수정</button>
+                    </div>
+                    <input type="hidden" name="filePath" id="filePath" th:value="${item.filePath}">
+                </form>
+            </div>
+        </div>
+        <div class="button">
+            <button type="button" class="btn-modify" onclick="location.href='/admin/item/list'">뒤로가기</button>
+        </div>
     </div>
 </div>
 <div th:replace="admin/common/footer :: footer"></div>
 </body>
 </html>
+<script>
+    $(function () {
+        $("button.btn-delete").on("click", function () {
+            if ($('#imageContainer img').length > 0) {
+                $('#imageContainer img').remove();
+                $("#filePath").val("");
+            }
+        });
+    })
+</script>

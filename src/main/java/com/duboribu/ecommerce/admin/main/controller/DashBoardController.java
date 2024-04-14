@@ -6,22 +6,24 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class DashBoardController {
-    @RequestMapping
+    @GetMapping
     public String main() {
         return "/admin/index";
     }
 
-    @RequestMapping("/login")
+    @GetMapping("/login")
     public String adminLoginPage() {
         return "/admin/login";
     }
-    @RequestMapping("/singOut")
+
+    @GetMapping("/singOut")
     public String adminSingOut() {
         try {
             ResponseEntity<DefaultResponse> response = RestUtil.get("http://localhost:8080/auth/logout", null, DefaultResponse.class);
@@ -33,5 +35,10 @@ public class DashBoardController {
             log.error("{}", e.getMessage());
         }
         throw new IllegalArgumentException("로그아웃 에러");
+    }
+
+    @GetMapping("/profile")
+    public String adminProfile() {
+        return "/admin/users-profile";
     }
 }

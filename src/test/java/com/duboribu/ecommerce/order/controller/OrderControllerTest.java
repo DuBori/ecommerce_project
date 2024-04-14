@@ -2,7 +2,7 @@ package com.duboribu.ecommerce.order.controller;
 
 import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
 import com.duboribu.ecommerce.admin.item.dto.CreateStockRequest;
-import com.duboribu.ecommerce.admin.item.service.ItemService;
+import com.duboribu.ecommerce.admin.item.service.AdminItemService;
 import com.duboribu.ecommerce.entity.Book;
 import com.duboribu.ecommerce.entity.Order;
 import com.duboribu.ecommerce.entity.OrderItem;
@@ -23,7 +23,7 @@ import java.util.Optional;
 @SpringBootTest
 class OrderControllerTest {
     @Autowired
-    private ItemService itemService;
+    private AdminItemService adminItemService;
     @Autowired
     private StockService stockService;
     @Autowired
@@ -36,7 +36,7 @@ class OrderControllerTest {
     @BeforeEach
     @Transactional
     public void 상품을생성하고재고를설정한다() {
-        itemService.createItem(new CreateBookRequest("study", "테스터", "출출판사", 500));
+        adminItemService.createItem(new CreateBookRequest("study", "테스터", "출출판사", 500));
         Optional<Book> findBook = bookJpaRepository.findByTitle("study");
         stockService.addStock(new CreateStockRequest(findBook.get().getId(), 100));
     }
