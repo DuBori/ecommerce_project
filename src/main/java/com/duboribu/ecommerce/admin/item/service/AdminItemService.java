@@ -34,7 +34,6 @@ public class AdminItemService {
 
     @Transactional
     public boolean isExist(Long itemId) {
-        log.info("{}", itemJpaRepository.existsById(itemId));
         return itemJpaRepository.existsById(itemId);
     }
 

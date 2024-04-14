@@ -15,6 +15,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/item")
 public class FoItemController {
     private final FoItemService foItemService;
+
+    @GetMapping("/list")
+    public String list(Model model) {
+        model.addAttribute("normalList", foItemService.normalList());
+        return "front/shop-grid";
+    }
+
     @GetMapping("/view/{id}")
     public String itemPage(@PathVariable Long id, Model model) {
         FoItemView attributeValue = foItemService.loadItemViewResponse(id);
@@ -22,4 +29,5 @@ public class FoItemController {
         model.addAttribute("item", attributeValue);
         return "front/shop-details";
     }
+
 }

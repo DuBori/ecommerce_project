@@ -49,8 +49,7 @@ public class SecurityConfig {
                                 "/images/**", "/admin/login")
                         .permitAll()
                         .requestMatchers("/swagger-ui/index.html", "/swagger/**", "/v2/api-docs", "/swagger-resources/**",
-                                "/webjars/**", "/v3/api-docs/**").hasAnyAuthority(RoleType.ROLE_USER.name())
-                        .requestMatchers("/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
+                                "/webjars/**", "/v3/api-docs/**", "/admin/**").hasAnyAuthority(RoleType.ROLE_ADMIN.name())
                         .anyRequest()
                         .authenticated())
                 .oauth2Login(oauth2 ->
