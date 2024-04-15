@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="admin/common/header :: header"></div>
+<style>
+  .container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .container input[type="text"] {
+    width: calc(100% - 22px); /* input 너비에서 padding 고려하여 조정 */
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+  .container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+<body>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+<div class="container">
+  <h2>Create Category</h2>
+  <label for="parentCategory">Parent Category ID:</label>
+  <input type="text" id="parentCategory" name="parentCategory">
+  <label for="categoryName">Category Name:</label>
+  <input type="text" id="categoryName" name="categoryName">
+  <label for="categoryState">Category State:</label>
+  <input type="text" id="categoryState" name="categoryState">
+  <button type="button" onclick="submitForm()">Submit</button>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
+</body>
+<script>
+  function submitForm() {
+    var parentId = document.getElementById("parentCategory").value;
+    var name = document.getElementById("categoryName").value;
+    var state = document.getElementById("categoryState").value;
+
+    // Create an object to hold the form data
+    var formData = {
+      parentId: parentId,
+      name: name,
+      state: state
+    };
+
+    // Send the form data to the server using AJAX or any other method you prefer
+    // For demonstration, we'll just log the form data to the console
+    console.log(formData);
+  }
+</script>
+</html>

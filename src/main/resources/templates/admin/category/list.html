@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="admin/common/header :: header"></div>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .container .category-search {
+        margin-bottom: 20px;
+    }
+
+    .container .checkbox-list label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .container .category-registration button {
+        display: block;
+        margin: 20px auto;
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .container .category-registration button:hover {
+        background-color: #0056b3;
+    }
+
+    .container .category-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .container .category-list li {
+        margin-bottom: 20px;
+        border: 1px solid #dee2e6;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+    }
+
+    .container .category-list h2,
+    .container .category-list p {
+        margin: 0;
+        padding: 10px;
+    }
+
+    .container .category-list h2 {
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 4px 4px 0 0;
+    }
+
+    .container .category-list p:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .container .pagination {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .container .pagination li {
+        display: inline-block;
+    }
+
+    .container .pagination a {
+        display: inline-block;
+        padding: 8px 16px;
+        text-decoration: none;
+        border: 1px solid;
+        border-radius: 4px;
+    }
+
+    .container .pagination a.active {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    .container .pagination a:hover {
+        background-color: #f1f1f1;
+    }
+</style>
+<body>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+<div class="container">
+    <!-- Category Search -->
+    <div class="category-search">
+        <input type="text" placeholder="Search Category...">
+        <button type="button">Search</button>
+    </div>
+
+    <ul id="category-list" th:each="category : ${list}">
+        <li>
+            <h2 th:text="${category.id}"></h2>
+            <p th:text="${category.name}"></p>
+            <p th:text="${category.state}"></p>
+        </li>
+    </ul>
+    <th:block th:if="${not list.empty}">
+        <!-- 페이징 코드 -->
+        <ul class="pagination">
+            <!-- 이전 페이지로 가는 링크 -->
+            <li class="page-item" th:class="${list.first ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{${'/admin/category/list?page=' + (list.number - 1)}}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">이전</span>
+                </a>
+            </li>
+            <!-- 페이지 번호를 나타내는 링크 -->
+            <li th:each="pageNumber : ${#numbers.sequence(0, list.totalPages - 1)}" th:class="${pageNumber == list.number ? 'page-item active' : 'page-item'}">
+                <a class="page-link" th:href="@{${'/admin/category/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+            </li>
+            <!-- 다음 페이지로 가는 링크 -->
+            <li class="page-item" th:class="${list.number >= list.totalPages - 1 ? 'disabled' : ''}">
+                <a class="page-link" th:href="@{${'/admin/category/list?page=' + (list.number + 1)}}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">다음</span>
+                </a>
+            </li>
+        </ul>
+    </th:block>
+    <div class="category-registration">
+        <button type="button" onclick="location.href='/admin/category/create'">Register Category</button>
+    </div>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
+</body>
+</html>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Script for handling category registration button click
+        document.getElementById("registerCategoryBtn").addEventListener("click", function () {
+            // Here you can add your logic to handle category registration
+            alert("Category registration button clicked!");
+        });
+    });
+</script>
