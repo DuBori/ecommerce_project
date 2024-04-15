@@ -22,8 +22,10 @@ public abstract class Item extends BaseEntity{
     private List<Price> prices = new ArrayList<>();
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private Stock stock;
-
     private String filePath;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     public Item(String productCode, Stock stock) {
         this.productCode = productCode;
