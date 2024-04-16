@@ -40,33 +40,16 @@
 <!-- ======= 네비게이션 ======= -->
 <div th:replace="admin/common/sidebar :: sidebar"></div>
 <div class="container">
-  <h2>Create Category</h2>
-  <label for="parentCategory">Parent Category ID:</label>
-  <input type="text" id="parentCategory" name="parentCategory">
-  <label for="categoryName">Category Name:</label>
-  <input type="text" id="categoryName" name="categoryName">
-  <label for="categoryState">Category State:</label>
-  <input type="text" id="categoryState" name="categoryState">
-  <button type="button" onclick="submitForm()">Submit</button>
+  <form id="categoryForm" action="/admin/category/create" method="post">
+    <label for="parentCategory">Parent Category ID:</label>
+    <input type="text" id="parentCategory" name="parentId">
+    <label for="categoryName">Category Name:</label>
+    <input type="text" id="categoryName" name="name">
+    <label for="categoryState">Category State:</label>
+    <input type="text" id="categoryState" name="state">
+    <button type="submit" id="submitBtn">Submit</button>
+  </form>
 </div>
 <div th:replace="admin/common/footer :: footer"></div>
 </body>
-<script>
-  function submitForm() {
-    var parentId = document.getElementById("parentCategory").value;
-    var name = document.getElementById("categoryName").value;
-    var state = document.getElementById("categoryState").value;
-
-    // Create an object to hold the form data
-    var formData = {
-      parentId: parentId,
-      name: name,
-      state: state
-    };
-
-    // Send the form data to the server using AJAX or any other method you prefer
-    // For demonstration, we'll just log the form data to the console
-    console.log(formData);
-  }
-</script>
 </html>

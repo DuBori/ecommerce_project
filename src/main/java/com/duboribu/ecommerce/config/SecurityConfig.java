@@ -43,7 +43,7 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers(
-                                "/auth/**","/main/**","/login/**",
+                                "/auth/**","/","/login/**",
                                 "/item/**", "/order/**",
                                 "/fonts/**","/wms/**", "/image/**",
                                 "/images/**", "/admin/login")

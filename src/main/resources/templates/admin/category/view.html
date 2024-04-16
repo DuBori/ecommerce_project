@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<div th:replace="admin/common/header :: header"></div>
+<style>
+  .container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .container .category-detail {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .container .category-info p {
+    margin: 10px 0;
+  }
+
+  .container .category-info strong {
+    font-weight: bold;
+  }
+
+</style>
+<body>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+<div class="container">
+  <div class="category-detail">
+    <h2>카테고리 상세</h2>
+    <div class="category-info">
+      <p><strong>ID:</strong> <span th:text="${category.id}"></span></p>
+      <p><strong>Name:</strong> <span th:text="${category.name}"></span></p>
+      <p><strong>State:</strong> <span th:text="${category.state}"></span></p>
+      <!-- 카테고리의 다른 정보들을 여기에 추가하세요 -->
+    </div>
+  </div>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
+</body>
+</html>

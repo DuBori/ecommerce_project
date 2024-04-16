@@ -107,13 +107,13 @@
     </div>
 
     <ul id="category-list" th:each="category : ${list}">
-        <li>
+        <li class="category-item" data-category-id="${category.id}" th:data-category-url="@{'/admin/category/view/' + ${category.id}}">
             <h2 th:text="${category.id}"></h2>
             <p th:text="${category.name}"></p>
             <p th:text="${category.state}"></p>
         </li>
     </ul>
-    <th:block th:if="${not list.empty}">
+    <th:block th:if="${list != null}">
         <!-- 페이징 코드 -->
         <ul class="pagination">
             <!-- 이전 페이지로 가는 링크 -->
@@ -149,6 +149,12 @@
         document.getElementById("registerCategoryBtn").addEventListener("click", function () {
             // Here you can add your logic to handle category registration
             alert("Category registration button clicked!");
+        });
+    });
+    $(function() {
+        $(".category-item").click(function() {
+            var url = $(this).data("category-url");
+            window.location.href = url;
         });
     });
 </script>

@@ -27,9 +27,11 @@ public class CategoryResponse {
 
     public CategoryResponse(Category save) {
         id = save.getId();
-        parentId = save.getParent().getId();
         name = save.getName();
         state = save.getState();
+        if (save.getParent() != null) {
+            parentId = save.getParent().getId();
+        }
     }
 
     public void matchedList(List<CategoryResponse> list) {
