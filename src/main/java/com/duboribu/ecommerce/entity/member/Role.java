@@ -4,11 +4,9 @@ import com.duboribu.ecommerce.entity.BaseEntity;
 import com.duboribu.ecommerce.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Getter;
-import lombok.ToString;
 
 @Entity
 @Getter
-@ToString(of = "{roleType}")
 public class Role extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

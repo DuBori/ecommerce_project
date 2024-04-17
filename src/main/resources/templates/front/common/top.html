@@ -35,17 +35,14 @@
         <nav class="humberger__menu__nav mobile-menu">
             <ul>
                 <li class="active"><a href="/">Home</a></li>
-                <li><a href="/item/list">Shop</a></li>
-                <li><a href="#">Pages</a>
+                <li><a href="/item/list">상품</a>
                     <ul class="header__menu__dropdown">
-                        <li><a href="./shop-details.html">Shop Details</a></li>
-                        <li><a href="shoping-cart.html">Shoping Cart</a></li>
-                        <li><a href="checkout.html">Check Out</a></li>
-                        <li><a href="blog-details.html">Blog Details</a></li>
-                    </ul>
-                </li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact.html">Contact</a></li>
+                        <li><a href="./shop-details.html">상품 상세</a></li>
+                        <li><a href="shoping-cart.html">베스트 상품</a></li>
+                        <li><a href="checkout.html">할인 상품</a></li>
+                    </ul></li>
+                <li><a href="blog.html">공지사항</a></li>
+                <li><a href="contact.html">고객문의</a></li>
             </ul>
         </nav>
         <div id="mobile-menu-wrap"></div>
@@ -116,18 +113,17 @@
                 <div class="col-lg-6">
                     <nav class="header__menu">
                         <ul>
-                            <li><a href="index.html">Home</a></li>
-                            <li class="active"><a href="/item/list">Shop</a></li>
-                            <li><a href="#">Pages</a>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="/item/list">상품</a>
                                 <ul class="header__menu__dropdown">
-                                    <li><a href="./shop-details.html">Shop Details</a></li>
-                                    <li><a href="shoping-cart.html">Shoping Cart</a></li>
-                                    <li><a href="checkout.html">Check Out</a></li>
-                                    <li><a href="blog-details.html">Blog Details</a></li>
+                                    <li><a href="./shop-details.html">상품 상세</a></li>
+                                    <li><a href="shoping-cart.html">베스트 상품</a></li>
+                                    <li><a href="checkout.html">할인 상품</a></li>
                                 </ul>
                             </li>
-                            <li><a href="blog.html">Blog</a></li>
-                            <li><a href="contact.html">Contact</a></li>
+                            <li><a href="blog.html">공지사항</a></li>
+                            <li><a href="contact.html">고객문의</a></li>
+                            <li><a href="/">개발자 정보</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -137,7 +133,7 @@
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
                             <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
                         </ul>
-                        <div class="header__cart__price">item: <span>$150.00</span></div>
+                        <div class="header__cart__price"></div>
                     </div>
                 </div>
             </div>
@@ -147,57 +143,70 @@
         </div>
     </header>
     <!-- Header Section End -->
-
     <!-- Hero Section Begin -->
-    <section class="hero hero-normal">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="hero__categories">
-                        <div class="hero__categories__all">
-                            <i class="fa fa-bars"></i>
-                            <span>All departments</span>
-                        </div>
-                        <ul>
-                            <li><a href="#">Fresh Meat</a></li>
-                            <li><a href="#">Vegetables</a></li>
-                            <li><a href="#">Fruit & Nut Gifts</a></li>
-                            <li><a href="#">Fresh Berries</a></li>
-                            <li><a href="#">Ocean Foods</a></li>
-                            <li><a href="#">Butter & Eggs</a></li>
-                            <li><a href="#">Fastfood</a></li>
-                            <li><a href="#">Fresh Onion</a></li>
-                            <li><a href="#">Papayaya & Crisps</a></li>
-                            <li><a href="#">Oatmeal</a></li>
-                            <li><a href="#">Fresh Bananas</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-9">
-                    <div class="hero__search">
-                        <div class="hero__search__form">
-                            <form action="#">
-                                <div class="hero__search__categories">
-                                    All Categories
-                                    <span class="arrow_carrot-down"></span>
-                                </div>
-                                <input type="text" placeholder="What do yo u need?">
-                                <button type="submit" class="site-btn">SEARCH</button>
-                            </form>
-                        </div>
-                        <div class="hero__search__phone">
-                            <div class="hero__search__phone__icon">
-                                <i class="fa fa-phone"></i>
+    <div th:if="categoryList != null">
+        <section class="hero">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="hero__categories">
+                            <div class="hero__categories__all">
+                                <i class="fa fa-bars"></i>
+                                <span>카테고리</span>
                             </div>
-                            <div class="hero__search__phone__text">
-                                <h5>+65 11.188.888</h5>
-                                <span>support 24/7 time</span>
+                            <ul>
+                                <li th:each="category: ${categoryList}">
+                                    <a th:href="@{/item/{category}/list(category=${category.code})}" th:text="${category.name}"></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="hero__search">
+                            <div class="hero__search__form">
+                                <form action="#">
+                                    <div class="hero__search__categories">
+                                        <span class="arrow_carrot-down"></span>
+                                    </div>
+                                    <input type="text" placeholder="찾는 도서를 알려주세요">
+                                    <button type="submit" class="site-btn">검색</button>
+                                </form>
+                            </div>
+                            <div class="hero__search__phone">
+                                <div class="hero__search__phone__icon">
+                                    <i class="fa fa-phone"></i>
+                                </div>
+                                <div class="hero__search__phone__text">
+                                    <h5>010-4080-7843</h5>
+                                    <span>support time 09:00 - 18:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero__item set-bg" data-setbg="/images/hero/banner.png">
+                            <div class="hero__text">
+                                <h2>Book Sales</h2>
+                                <p>Many Book and Delivery Available</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <!-- Hero Section End -->
+        </section>
+        <!-- Hero Section End -->
+
+        <!-- Categories Section Begin -->
+        <section class="categories">
+            <div class="container">
+                <div class="row">
+                    <div class="categories__slider owl-carousel">
+                        <div class="col-lg-3" th:each="normal : ${normalList}">
+                            <div class="categories__item set-bg" th:attr="data-setbg=@{${normal.filePath}}">
+                                <h5><a th:href="@{/item/view/{id}(id=${normal.id})}"  th:text="${normal.name}"></a></h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
 </div>

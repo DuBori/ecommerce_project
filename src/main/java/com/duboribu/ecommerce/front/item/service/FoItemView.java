@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.front.service;
+package com.duboribu.ecommerce.front.item.service;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

@@ -24,6 +24,20 @@
     font-weight: bold;
   }
 
+  /* 삭제 버튼 스타일 */
+  .delete-button {
+    background-color: #ff5733;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+  }
+
+  .delete-button:hover {
+    background-color: #d62714;
+  }
+
 </style>
 <body>
 <!-- ======= top ======= -->
@@ -36,11 +50,25 @@
     <div class="category-info">
       <p><strong>ID:</strong> <span th:text="${category.id}"></span></p>
       <p><strong>Name:</strong> <span th:text="${category.name}"></span></p>
+      <p><strong>Code:</strong> <span th:text="${category.code}"></span></p>
       <p><strong>State:</strong> <span th:text="${category.state}"></span></p>
       <!-- 카테고리의 다른 정보들을 여기에 추가하세요 -->
     </div>
+    <!-- 삭제 폼 -->
+    <form id="deleteForm" action="/admin/category/delete" method="post">
+      <input type="hidden" name="id" th:value="${category.id}" />
+      <button class="delete-button" type="button" onclick="confirmDelete()">삭제</button>
+    </form>
   </div>
 </div>
 <div th:replace="admin/common/footer :: footer"></div>
+
+<script>
+  function confirmDelete() {
+    if (confirm("정말로 이 카테고리를 삭제하시겠습니까?")) {
+      document.getElementById("deleteForm").submit();
+    }
+  }
+</script>
 </body>
 </html>

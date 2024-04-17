@@ -5,6 +5,7 @@ import com.duboribu.ecommerce.admin.category.dto.QCategoryResponse;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -15,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.duboribu.ecommerce.entity.QCategory.category;
-
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class CategoryCustomJpaRepositoryImpl implements CategoryCustomJpaRepository {
@@ -24,14 +25,14 @@ public class CategoryCustomJpaRepositoryImpl implements CategoryCustomJpaReposit
     @Override
     public Page<CategoryResponse> list(Pageable pageable) {
         // 부모 카테고리
-        List<CategoryResponse> rootCategory = jpaQueryFactory.select(new QCategoryResponse(category.id, category.parent.id, category.name, category.state))
+        List<CategoryResponse> rootCategory = jpaQueryFactory.select(new QCategoryResponse(category.id, category.parent.id, category.name, category.code, category.state))
                 .from(category)
                 .where(category.parent.isNull())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
         // 자식 카테고리
-        List<CategoryResponse> childCategory = jpaQueryFactory.select(new QCategoryResponse(category.id, category.parent.id, category.name, category.state))
+        List<CategoryResponse> childCategory = jpaQueryFactory.select(new QCategoryResponse(category.id, category.parent.id, category.name, category.code, category.state))
                 .from(category)
                 .where(category.parent.isNotNull())
                 .fetch();
@@ -51,7 +52,8 @@ public class CategoryCustomJpaRepositoryImpl implements CategoryCustomJpaReposit
     private List<CategoryResponse> findChildren(CategoryResponse parent, List<CategoryResponse> childCategory) {
         List<CategoryResponse> children = new ArrayList<>();
         for (CategoryResponse child : childCategory) {
-            if (child.getParentId().equals(parent)) {
+            log.debug("CategoryResponse :{}", child);
+            if (child.getParentId().equals(parent.getId())) {
                 List<CategoryResponse> grandChildren = findChildren(child, childCategory);
                 child.matchedList(grandChildren);
                 children.add(child);
@@ -62,7 +64,7 @@ public class CategoryCustomJpaRepositoryImpl implements CategoryCustomJpaReposit
 
     @Override
     public Optional<CategoryResponse> findById(Long id) {
-        CategoryResponse categoryResponse = jpaQueryFactory.select(new QCategoryResponse(category.id, category.parent.id, category.name, category.state))
+        CategoryResponse categoryResponse = jpaQueryFactory.select(new QCategoryResponse(category.id, category.parent.id, category.name, category.code, category.state))
                 .from(category)
                 .where(category.id.eq(id))
                 .fetchOne();

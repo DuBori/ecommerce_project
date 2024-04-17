@@ -1,7 +1,7 @@
 package com.duboribu.ecommerce.front.item.controller;
 
-import com.duboribu.ecommerce.front.service.FoItemService;
-import com.duboribu.ecommerce.front.service.FoItemView;
+import com.duboribu.ecommerce.front.item.service.FoItemService;
+import com.duboribu.ecommerce.front.item.service.FoItemView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

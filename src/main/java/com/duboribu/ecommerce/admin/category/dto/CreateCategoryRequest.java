@@ -10,5 +10,6 @@ import lombok.ToString;
 public class CreateCategoryRequest {
     private Long parentId;
     private String name;
+    private String code;
     private String state;
 }

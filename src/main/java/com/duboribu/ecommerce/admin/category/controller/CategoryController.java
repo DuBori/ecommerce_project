@@ -42,4 +42,10 @@ public class CategoryController {
         return "redirect:/admin/category/view/"+ categoryResponse.getId();
     }
 
+    @PostMapping("/delete")
+    public String delete(Long id) {
+        adminCategoryService.delete(id);
+        return "redirect:/admin/category";
+    }
+
 }
