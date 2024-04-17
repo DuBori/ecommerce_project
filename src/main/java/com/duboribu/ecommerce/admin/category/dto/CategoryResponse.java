@@ -15,13 +15,15 @@ public class CategoryResponse {
     private Long id;
     private Long parentId;
     private String name;
+    private String code;
     private String state;
     private List<CategoryResponse> categoryChildList;
     @QueryProjection
-    public CategoryResponse(Long id, Long parentId, String name, String state) {
+    public CategoryResponse(Long id, Long parentId, String name, String code, String state) {
         this.id = id;
         this.parentId = parentId;
         this.name = name;
+        this.code = code;
         this.state = state;
     }
 

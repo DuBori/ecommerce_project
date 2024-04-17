@@ -152,7 +152,7 @@ public class AuthController {
     private HttpHeaders settingHeader(String token) {
         final HttpHeaders headers = new HttpHeaders();
         if (StringUtils.hasText(token)) {
-            headers.setLocation(URI.create("/main"));
+            headers.setLocation(URI.create("/"));
             return headers;
         }
         headers.setLocation(URI.create("/login"));

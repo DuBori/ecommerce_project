@@ -16,6 +16,7 @@ public class Category extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String code;
     private String state;
     @ManyToOne
     @JoinColumn(name = "parent_category_id")
@@ -29,6 +30,7 @@ public class Category extends BaseEntity{
 
     public Category(CreateCategoryRequest request) {
         name = request.getName();
+        code = request.getCode();
         state = request.getState();
     }
 

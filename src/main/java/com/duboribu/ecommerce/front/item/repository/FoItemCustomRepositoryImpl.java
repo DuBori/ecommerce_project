@@ -1,9 +1,9 @@
-package com.duboribu.ecommerce.front.repository;
+package com.duboribu.ecommerce.front.item.repository;
 
 import com.duboribu.ecommerce.front.dto.response.FoItemResponse;
 import com.duboribu.ecommerce.front.dto.response.QFoItemResponse;
-import com.duboribu.ecommerce.front.service.FoItemView;
-import com.duboribu.ecommerce.front.service.QFoItemView;
+import com.duboribu.ecommerce.front.item.service.FoItemView;
+import com.duboribu.ecommerce.front.item.service.QFoItemView;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

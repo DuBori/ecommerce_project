@@ -46,4 +46,8 @@ public class AdminCategoryService {
     public CategoryResponse findById(Long id) {
         return categoryCustomJpaRepository.findById(id).get();
     }
+
+    public void delete(Long id) {
+        categoryJpaRepository.deleteById(id);
+    }
 }

@@ -14,11 +14,6 @@
         margin-bottom: 20px;
     }
 
-    .container .checkbox-list label {
-        display: block;
-        margin-bottom: 10px;
-    }
-
     .container .category-registration button {
         display: block;
         margin: 20px auto;
@@ -35,35 +30,39 @@
         background-color: #0056b3;
     }
 
-    .container .category-list {
-        list-style-type: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .container .category-list li {
+    .container .category-item {
+        border: 1px solid #ccc;
+        border-radius: 5px;
         margin-bottom: 20px;
-        border: 1px solid #dee2e6;
-        background-color: #fff;
-        border-radius: 4px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
+        padding: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s;
     }
 
-    .container .category-list h2,
-    .container .category-list p {
-        margin: 0;
-        padding: 10px;
+    .container .category-item:hover {
+        background-color: #f5f5f5;
     }
 
-    .container .category-list h2 {
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 4px 4px 0 0;
+    .container .category-item dl {
+        margin-bottom: 10px; /* Add margin bottom to separate each category */
     }
 
-    .container .category-list p:nth-child(even) {
-        background-color: #f9f9f9;
+    .container .category-item dl dt {
+        font-weight: bold;
+    }
+
+    .container .child-category {
+        margin-top: 10px;
+        padding-left: 20px; /* Indent child categories */
+        list-style-type: none; /* Remove bullet points */
+    }
+
+    .container .child-category dl {
+        margin-top: 10px; /* Add margin top to separate child categories from parent */
+    }
+
+    .container .child-category dl dt {
+        font-weight: bold;
     }
 
     .container .pagination {
@@ -106,13 +105,42 @@
         <button type="button">Search</button>
     </div>
 
-    <ul id="category-list" th:each="category : ${list}">
-        <li class="category-item" data-category-id="${category.id}" th:data-category-url="@{'/admin/category/view/' + ${category.id}}">
-            <h2 th:text="${category.id}"></h2>
-            <p th:text="${category.name}"></p>
-            <p th:text="${category.state}"></p>
+    <ul class="category-list">
+        <!-- 부모 카테고리 리스트 반복 -->
+        <li class="category-item" th:each="category : ${list}" data-category-id="${category.id}" th:data-category-url="@{'/admin/category/view/' + ${category.id}}">
+            <dl>
+                <dt>id</dt>
+                <dd th:text="${category.id}"></dd>
+
+                <dt>이름</dt>
+                <dd th:text="${category.name}"></dd>
+
+                <dt>상태</dt>
+                <dd th:text="${category.state == 'Y' ? '활성화' : '비활성화'}"></dd>
+
+                <!-- 자식 카테고리 리스트 -->
+                <dt>자식 카테고리</dt>
+                <dd>
+                    <ul class="child-category">
+                        <!-- 각 자식 카테고리 아이템 -->
+                        <li th:each="child : ${category.categoryChildList}">
+                            <dl>
+                                <dt>id</dt>
+                                <dd th:text="${child.id}"></dd>
+
+                                <dt>이름</dt>
+                                <dd th:text="${child.name}"></dd>
+
+                                <dt>상태</dt>
+                                <dd th:text="${child.state == 'Y' ? '활성화' : '비활성화'}"></dd>
+                            </dl>
+                        </li>
+                    </ul>
+                </dd>
+            </dl>
         </li>
     </ul>
+
     <th:block th:if="${list != null}">
         <!-- 페이징 코드 -->
         <ul class="pagination">

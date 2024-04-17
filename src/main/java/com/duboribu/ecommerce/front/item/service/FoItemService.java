@@ -1,7 +1,7 @@
-package com.duboribu.ecommerce.front.service;
+package com.duboribu.ecommerce.front.item.service;
 
 import com.duboribu.ecommerce.front.dto.response.FoItemResponse;
-import com.duboribu.ecommerce.front.repository.FoItemCustomRepository;
+import com.duboribu.ecommerce.front.item.repository.FoItemCustomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

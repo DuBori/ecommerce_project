@@ -1,7 +1,7 @@
-package com.duboribu.ecommerce.front.repository;
+package com.duboribu.ecommerce.front.item.repository;
 
 import com.duboribu.ecommerce.front.dto.response.FoItemResponse;
-import com.duboribu.ecommerce.front.service.FoItemView;
+import com.duboribu.ecommerce.front.item.service.FoItemView;
 
 import java.util.List;
 
