@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.front.main.controller;
 
+import com.duboribu.ecommerce.admin.item.dto.SearchItemRequest;
 import com.duboribu.ecommerce.front.category.service.FoCategoryService;
 import com.duboribu.ecommerce.front.item.service.FoItemService;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,10 @@ public class MainController {
     private final FoItemService foItemService;
     private final FoCategoryService foCategoryService;
     @GetMapping
-    public String main(Model model) {
-        model.addAttribute("normalList", foItemService.normalList());
-        model.addAttribute("categoryList", foCategoryService.list("book"));
+    public String main(SearchItemRequest request, Model model) {
+        model.addAttribute("normalList", foItemService.normalList(request));
+        model.addAttribute("mainCategoryList", foCategoryService.list("book"));
         return "front/index";
     }
-
-
 
 }

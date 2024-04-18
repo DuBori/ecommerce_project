@@ -92,7 +92,9 @@
                                 </ul>
                             </div>
                             <div class="header__top__right__auth">
-                                <a class="loginInfo" style="display: none;"><i class="fa fa-user"></i> </a>
+                                <a class="loginInfo" style="display: none;">
+                                    <i class="fa fa-user"></i>
+                                </a>
                             </div>
                             <div class="header__top__right__auth">
                                 <a class="logoutLink" th:href="@{/auth/logout}" style="display: none;"><i class="fa"></i> 로그아웃</a>
@@ -121,9 +123,9 @@
                                     <li><a href="checkout.html">할인 상품</a></li>
                                 </ul>
                             </li>
-                            <li><a href="blog.html">공지사항</a></li>
-                            <li><a href="contact.html">고객문의</a></li>
-                            <li><a href="/">개발자 정보</a></li>
+                            <li><a href="/notice">공지사항</a></li>
+                            <li><a href="/contact">고객문의</a></li>
+                            <li><a href="/develop">개발자 정보</a></li>
                         </ul>
                     </nav>
                 </div>
@@ -144,7 +146,7 @@
     </header>
     <!-- Header Section End -->
     <!-- Hero Section Begin -->
-    <div th:if="categoryList != null">
+    <div th:if="${mainCategoryList != null}">
         <section class="hero">
             <div class="container">
                 <div class="row">
@@ -155,7 +157,7 @@
                                 <span>카테고리</span>
                             </div>
                             <ul>
-                                <li th:each="category: ${categoryList}">
+                                <li th:each="category: ${mainCategoryList}">
                                     <a th:href="@{/item/{category}/list(category=${category.code})}" th:text="${category.name}"></a>
                                 </li>
                             </ul>

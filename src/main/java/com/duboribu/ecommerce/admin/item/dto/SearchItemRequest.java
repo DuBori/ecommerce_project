@@ -11,6 +11,6 @@ public class SearchItemRequest {
     private String searchType;
     private String keyword;
     private int page;
-    private int pageSize = 2;
+    private int pageSize = 20;
 
 }

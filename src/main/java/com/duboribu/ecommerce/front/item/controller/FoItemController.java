@@ -1,5 +1,7 @@
 package com.duboribu.ecommerce.front.item.controller;
 
+import com.duboribu.ecommerce.admin.item.dto.SearchItemRequest;
+import com.duboribu.ecommerce.front.category.service.FoCategoryService;
 import com.duboribu.ecommerce.front.item.service.FoItemService;
 import com.duboribu.ecommerce.front.item.service.FoItemView;
 import lombok.RequiredArgsConstructor;
@@ -15,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/item")
 public class FoItemController {
     private final FoItemService foItemService;
+    private final FoCategoryService foCategoryService;
 
     @GetMapping("/list")
-    public String list(Model model) {
-        model.addAttribute("normalList", foItemService.normalList());
+    public String list(SearchItemRequest request, Model model) {
+        model.addAttribute("allList", foItemService.normalList(request));
+        model.addAttribute("categoryList", foCategoryService.list("book"));
         return "front/shop-grid";
     }
 
