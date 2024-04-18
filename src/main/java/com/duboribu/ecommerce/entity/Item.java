@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
+import com.duboribu.ecommerce.front.enums.State;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -22,10 +23,16 @@ public abstract class Item extends BaseEntity{
     private List<Price> prices = new ArrayList<>();
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private Stock stock;
+    private String comment;
+    private String information;
+    private String weight;
     private String filePath;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     public Item(String productCode, Stock stock) {
         this.productCode = productCode;

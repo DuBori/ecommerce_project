@@ -13,10 +13,9 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <div class="breadcrumb__text">
-                        <h2>Organi Shop</h2>
+                        <h2>상품 리스트</h2>
                         <div class="breadcrumb__option">
-                            <a href="index.html">Home</a>
-                            <span>Shop</span>
+                            <a href="/">Home</a>
                         </div>
                     </div>
                 </div>
@@ -32,21 +31,12 @@
                 <div class="col-lg-3 col-md-5">
                     <div class="sidebar">
                         <div class="sidebar__item">
-                            <h4>Department</h4>
+                            <h4>카테고리</h4>
                             <ul>
-                                <li><a href="#">Fresh Meat</a></li>
-                                <li><a href="#">Vegetables</a></li>
-                                <li><a href="#">Fruit & Nut Gifts</a></li>
-                                <li><a href="#">Fresh Berries</a></li>
-                                <li><a href="#">Ocean Foods</a></li>
-                                <li><a href="#">Butter & Eggs</a></li>
-                                <li><a href="#">Fastfood</a></li>
-                                <li><a href="#">Fresh Onion</a></li>
-                                <li><a href="#">Papayaya & Crisps</a></li>
-                                <li><a href="#">Oatmeal</a></li>
+                                <li th:each="category : ${categoryList}"><a th:href="@{/item/{category}/list(category=${category.code})}" th:text="${category.name}"></a></li>
                             </ul>
                         </div>
-                        <div class="sidebar__item">
+                        <!--<div class="sidebar__item">
                             <h4>Price</h4>
                             <div class="price-range-wrap">
                                 <div class="price-range ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content"
@@ -62,40 +52,40 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="sidebar__item sidebar__item__color--option">
+                        </div>-->
+                        <!--<div class="sidebar__item sidebar__item__color&#45;&#45;option">
                             <h4>Colors</h4>
-                            <div class="sidebar__item__color sidebar__item__color--white">
+                            <div class="sidebar__item__color sidebar__item__color&#45;&#45;white">
                                 <label for="white">
                                     White
                                     <input type="radio" id="white">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--gray">
+                            <div class="sidebar__item__color sidebar__item__color&#45;&#45;gray">
                                 <label for="gray">
                                     Gray
                                     <input type="radio" id="gray">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--red">
+                            <div class="sidebar__item__color sidebar__item__color&#45;&#45;red">
                                 <label for="red">
                                     Red
                                     <input type="radio" id="red">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--black">
+                            <div class="sidebar__item__color sidebar__item__color&#45;&#45;black">
                                 <label for="black">
                                     Black
                                     <input type="radio" id="black">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--blue">
+                            <div class="sidebar__item__color sidebar__item__color&#45;&#45;blue">
                                 <label for="blue">
                                     Blue
                                     <input type="radio" id="blue">
                                 </label>
                             </div>
-                            <div class="sidebar__item__color sidebar__item__color--green">
+                            <div class="sidebar__item__color sidebar__item__color&#45;&#45;green">
                                 <label for="green">
                                     Green
                                     <input type="radio" id="green">
@@ -128,7 +118,7 @@
                                     <input type="radio" id="tiny">
                                 </label>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="sidebar__item">
                             <div class="latest-product__text">
                                 <h4>Latest Products</h4>
@@ -199,15 +189,15 @@
                 <div class="col-lg-9 col-md-7">
                     <div class="product__discount">
                         <div class="section-title product__discount__title">
-                            <h2>Sale Off</h2>
+                            <h2>할인 특가</h2>
                         </div>
                         <div class="row">
                             <div class="product__discount__slider owl-carousel">
 
-                                <div class="col-lg-4" th:each="normal : ${normalList}">
+                                <div class="col-lg-4" th:each="all : ${allList}">
                                     <div class="product__discount__item">
-                                        <div class="product__discount__item__pic set-bg"
-                                             th:attr="data-setbg=@{${normal.filePath}}">
+                                        <div class="product__discount__item__pic set-bg product-link"
+                                             th:attr="data-setbg=@{${all.filePath}}, data-id=@{${all.id}}">
                                             <div class="product__discount__percent">0%</div>
                                             <ul class="product__item__pic__hover">
                                                 <li><a href="#"><i class="fa fa-heart"></i></a></li>
@@ -216,9 +206,9 @@
                                             </ul>
                                         </div>
                                         <div class="product__discount__item__text">
-                                            <span th:text="${normal.name}"></span>
-                                            <h5><a th:href="@{/item/view/{id}(id=${normal.id})}" th:text="${normal.name}"></a></h5>
-                                            <div class="product__item__price" th:text="${normal.price}"><span th:text="${normal.price}"></span></div>
+                                            <span th:text="${all.name}"></span>
+                                            <h5><a th:href="@{/item/view/{id}(id=${all.id})}" th:text="${all.name}"></a></h5>
+                                            <div class="product__item__price" th:text="${all.price}"><span th:text="${all.price}"></span></div>
                                         </div>
                                     </div>
                                 </div>
@@ -238,7 +228,7 @@
                             </div>
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6><span>16</span> Products found</h6>
+                                    <h6>총  <span th:text="${allList.getTotalElements()}"></span>개</h6>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-3">
@@ -250,9 +240,9 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-6" th:each="normal : ${normalList}">
+                        <div class="col-lg-4 col-md-6 col-sm-6" th:each="all : ${allList}">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg" th:attr="data-setbg=@{${normal.filePath}}">
+                                <div class="product__item__pic set-bg product-link" th:attr="data-setbg=@{${all.filePath}}, data-id=@{${all.id}}">
                                     <ul class="product__item__pic__hover">
                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                         <li><a href="#"><i class="fa fa-retweet"></i></a></li>
@@ -260,18 +250,18 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a th:href="@{/item/view/{id}(id=${normal.id})}" th:text="${normal.name}"></a></h6>
-                                    <h5 th:text="${normal.price}"></h5>
+                                    <h6><a th:href="@{/item/view/{id}(id=${all.id})}" th:text="${all.name}"></a></h6>
+                                    <h5 th:text="${all.price}"></h5>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="product__pagination">
-                        <a href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                    </div>
+                    <th:block th:if="${allList != null}">
+                        <div class="product__pagination">
+                            <a href="#" th:each="pageNumber : ${#numbers.sequence(0, allList.totalPages - 1)}" th:href="@{${'/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+                            <a th:href="@{${'/item/list?page=' + (allList.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
+                        </div>
+                    </th:block>
                 </div>
             </div>
         </div>
@@ -281,5 +271,11 @@
     <!-- Footer Section Begin -->
     <div th:replace="front/common/footer :: footer"></div>
 </body>
+<script>
+    $(".product-link").on("click", function (){
+        let id = $(this).data('id');
+        location.href = '/item/view/'+id;
+    });
+</script>
 
 </html>

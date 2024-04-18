@@ -13,6 +13,7 @@ public class CreateBookRequest {
     private String title;
     private String author;
     private String publisher;
+    private String comment;
     private int price;
     private String filePath;
 

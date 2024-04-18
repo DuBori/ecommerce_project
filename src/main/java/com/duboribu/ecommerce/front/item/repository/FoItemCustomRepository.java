@@ -2,11 +2,11 @@ package com.duboribu.ecommerce.front.item.repository;
 
 import com.duboribu.ecommerce.front.dto.response.FoItemResponse;
 import com.duboribu.ecommerce.front.item.service.FoItemView;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface FoItemCustomRepository {
-    List<FoItemResponse> normalList();
+    Page<FoItemResponse> normalList(Pageable pageable);
 
     FoItemView loadItemViewResponse(Long itemId);
 }
