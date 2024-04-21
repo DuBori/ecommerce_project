@@ -1,7 +1,8 @@
 package com.duboribu.ecommerce.enums;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-
+@Getter
 @RequiredArgsConstructor
 public enum OrderState {
     OSI01("결제대기"),

@@ -2,8 +2,12 @@ package com.duboribu.ecommerce.front.item.repository;
 
 import com.duboribu.ecommerce.front.dto.response.FoItemResponse;
 import com.duboribu.ecommerce.front.dto.response.QFoItemResponse;
-import com.duboribu.ecommerce.front.item.service.FoItemView;
-import com.duboribu.ecommerce.front.item.service.QFoItemView;
+import com.duboribu.ecommerce.front.item.dto.FoItemView;
+import com.duboribu.ecommerce.front.item.dto.QFoItemView;
+import com.duboribu.ecommerce.front.order.dto.CreateOrderRequest;
+import com.duboribu.ecommerce.front.order.dto.FoOrderItemView;
+import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
+import com.duboribu.ecommerce.front.order.dto.QFoOrderItemView;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -50,5 +54,39 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
                 .on(book.eq(price.item))
                 .where(book.id.eq(itemId))
                 .fetchOne();
+    }
+
+    @Override
+    public FoOrderResponse itemViewResponses(CreateOrderRequest request) {
+        List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher, book.filePath, price.value, stock.count, book.state, book.comment, book.information, book.weight))
+                .from(book)
+                .innerJoin(stock)
+                .on(book.id.eq(stock.item.id))
+                .innerJoin(price)
+                .on(book.eq(price.item))
+                .where(book.id.in(request.getProductIds()))
+                .fetch();
+
+
+        int totalPrice = 0;
+        for (FoOrderItemView item : list) {
+            for (CreateOrderRequest.OrderItemRequest orderItem : request.getOrderItemRequest()) {
+                if (item.getId().equals(orderItem.getProductId())) {
+                    item.mactchedUntiyPrice(orderItem.getQuantity());
+                    break;
+                }
+            }
+            totalPrice += item.getUnitPrice();
+        }
+
+        return new FoOrderResponse(getProductName(list), totalPrice, list);
+
+    }
+
+    private String getProductName(List<FoOrderItemView> list) {
+        if (list.size() > 1) {
+            return list.get(0).getTitle() + "외 " + (list.size() - 1);
+        }
+        return list.get(0).getTitle();
     }
 }

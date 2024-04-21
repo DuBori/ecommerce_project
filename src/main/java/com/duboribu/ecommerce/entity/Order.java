@@ -20,15 +20,27 @@ public class Order extends BaseEntity{
     private Long id;
     @Enumerated(value = EnumType.STRING)
     private OrderState state;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> orderItemList = new ArrayList<>();
-    @OneToMany(mappedBy = "order")
-    private List<Delivery> delivery = new ArrayList<>();
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    private List<Delivery> deliveryList = new ArrayList<>();
 
+    @OneToOne(mappedBy = "order", fetch = FetchType.LAZY)
+    private Payment payment;
     public Order() {
+    }
+
+    public Order(OrderState state, Member member, Payment payment, List<OrderItem> orderItemList) {
+        this.state = state;
+        this.member = member;
+        this.payment = payment;
+        this.orderItemList = orderItemList;
+        for (OrderItem orderItem: orderItemList) {
+            orderItem.matchedOrderId(this);
+        }
     }
 
     public int getTotalPrice() {

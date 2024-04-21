@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
+import com.duboribu.ecommerce.order.dto.OrderRequestDTO;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -26,4 +27,20 @@ public class Delivery extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
+
+    public Delivery(String address, String sender, String senderPhoneNum, String receiver, String receiverPhoneNum) {
+        this.address = address;
+        this.sender = sender;
+        this.senderPhoneNum = senderPhoneNum;
+        this.receiver = receiver;
+        this.receiverPhoneNum = receiverPhoneNum;
+    }
+
+    public Delivery(OrderRequestDTO orderRequestDTO) {
+        this.address = orderRequestDTO.getBuyerAddr();
+        this.sender = orderRequestDTO.getUserName();
+        this.senderPhoneNum = orderRequestDTO.getPhone();
+        this.receiver = orderRequestDTO.getUserName();
+        this.receiverPhoneNum = orderRequestDTO.getPhone();
+    }
 }

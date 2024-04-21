@@ -1,11 +1,11 @@
 package com.duboribu.ecommerce.auth.controller;
 
+import com.duboribu.ecommerce.Utils.Validator;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.domain.response.PublicUserResponse;
 import com.duboribu.ecommerce.auth.domain.response.UserResponse;
-import com.duboribu.ecommerce.auth.service.CustomOauth2UserService;
 import com.duboribu.ecommerce.auth.service.MemberService;
 import com.duboribu.ecommerce.auth.service.MemberTokenService;
 import com.duboribu.ecommerce.entity.member.Member;
@@ -32,8 +32,7 @@ import java.util.Optional;
 public class AuthController {
     private final MemberService memberService;
     private final MemberTokenService memberTokenService;
-    private final CustomOauth2UserService customOauth2UserService;
-    public static final String AUTHORIZATION_HEADER = "Authorization";
+    /*private final CustomOauth2UserService customOauth2UserService;*/
 
     /**
      * 일반 유저 회원가입 및 리프레시 토큰 저장
@@ -129,7 +128,7 @@ public class AuthController {
     @GetMapping("/verify")
     @Operation(summary = "accessToken 재발급", description = "access 토큰을 검증합니다.")
     public ResponseEntity<DefaultResponse> resourceCheck(HttpServletRequest request, HttpServletResponse response) {
-        String accessToken = getAccessToken(request);
+        String accessToken = Validator.getAccessToken(request);
         UserResponse userResponse = null;
         userResponse = memberTokenService.validateToken(accessToken);
         if (userResponse.isTokenExist()) {
@@ -137,16 +136,6 @@ public class AuthController {
         }
         log.info("user : {}", userResponse);
         return new ResponseEntity<>(new DefaultResponse(new PublicUserResponse(userResponse)), HttpStatus.OK);
-    }
-
-    private String getAccessToken(HttpServletRequest request) {
-        Cookie[] cookies = request.getCookies();
-        for (Cookie cookie : cookies) {
-            if (AUTHORIZATION_HEADER.equals(cookie.getName())) {
-                return cookie.getValue();
-            }
-        }
-        return null;
     }
 
     private HttpHeaders settingHeader(String token) {

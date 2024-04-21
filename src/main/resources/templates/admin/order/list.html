@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="admin/common/header :: header"></div>
+<style>
+  .container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .container .category-search {
+    margin-bottom: 20px;
+  }
+
+  .container .category-registration button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .container .category-registration button:hover {
+    background-color: #0056b3;
+  }
+
+  .container .category-item {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .container .category-item:hover {
+    background-color: #f5f5f5;
+  }
+
+  .container .category-item dl {
+    margin-bottom: 10px; /* Add margin bottom to separate each category */
+  }
+
+  .container .category-item dl dt {
+    font-weight: bold;
+  }
+
+  .container .child-category {
+    margin-top: 10px;
+    padding-left: 20px; /* Indent child categories */
+    list-style-type: none; /* Remove bullet points */
+  }
+
+  .container .child-category dl {
+    margin-top: 10px; /* Add margin top to separate child categories from parent */
+  }
+
+  .container .child-category dl dt {
+    font-weight: bold;
+  }
+
+  .container .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container .pagination li {
+    display: inline-block;
+  }
+
+  .container .pagination a {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid;
+    border-radius: 4px;
+  }
+
+  .container .pagination a.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .container .pagination a:hover {
+    background-color: #f1f1f1;
+  }
+</style>
+<body>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+<div class="container">
+  <!-- Category Search -->
+  <div class="category-search">
+    <input type="text" placeholder="Search Category...">
+    <button type="button">Search</button>
+  </div>
+
+  <ul class="category-list">
+    <!-- 부모 카테고리 리스트 반복 -->
+    <li class="category-item" th:each="order : ${list}">
+      <dl>
+        <dt>id</dt>
+        <dd th:text="${order.orderId}"></dd>
+
+        <dt>이름</dt>
+        <dd th:text="${order.memberName == null ? '비회원' : order.memberName}"></dd>
+
+        <dt>상태</dt>
+        <dd th:text="${order.orderState}"></dd>
+
+      </dl>
+    </li>
+  </ul>
+
+  <th:block th:if="${list != null}">
+    <!-- 페이징 코드 -->
+    <ul class="pagination">
+      <!-- 이전 페이지로 가는 링크 -->
+      <li class="page-item" th:class="${list.first ? 'disabled' : ''}">
+        <a class="page-link" th:href="@{${'/admin/order/list?page=' + (list.number - 1)}}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">이전</span>
+        </a>
+      </li>
+      <!-- 페이지 번호를 나타내는 링크 -->
+      <li th:each="pageNumber : ${#numbers.sequence(0, list.totalPages - 1)}" th:class="${pageNumber == list.number ? 'page-item active' : 'page-item'}">
+        <a class="page-link" th:href="@{${'/admin/order/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+      </li>
+      <!-- 다음 페이지로 가는 링크 -->
+      <li class="page-item" th:class="${list.number >= list.totalPages - 1 ? 'disabled' : ''}">
+        <a class="page-link" th:href="@{${'//admin/order/list?page=' + (list.number + 1)}}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">다음</span>
+        </a>
+      </li>
+    </ul>
+  </th:block>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
+</body>
+</html>
