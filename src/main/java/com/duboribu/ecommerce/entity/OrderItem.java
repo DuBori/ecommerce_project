@@ -40,4 +40,8 @@ public class OrderItem extends BaseEntity{
             stock.changeStock(-count);
         }
     }
+
+    public void matchedOrderId(Order order) {
+        this.order = order;
+    }
 }

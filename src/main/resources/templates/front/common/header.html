@@ -19,4 +19,49 @@
     <link rel="stylesheet" th:href="@{/css/owl.carousel.min.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/slicknav.min.css}" type="text/css">
     <link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <script>
+        function directPurchase(productId, count) {
+            let direct = {};
+            direct[productId] = count;
+            sessionStorage.setItem('directYn', 'Y');
+            sessionStorage.setItem('direct', JSON.stringify(direct));
+        }
+
+        // 상품을 추가할 때 호출되는 함수
+        function addToCart(productId) {
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+
+            // 주문서에 상품 추가
+            if (!cart[productId]) {
+                cart[productId] = 1;
+            }
+            // 변경된 주문서를 SessionStorage에 저장
+            sessionStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        // 주문서를 확인할 때 호출되는 함수
+        function viewCart() {
+            // SessionStorage에서 현재 주문서를 가져옴
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+
+            // 주문서 출력
+            console.log('주문서:');
+            for (let productId in cart) {
+                console.log(`상품 ID: ${productId}, 수량: ${cart[productId]}`);
+            }
+        }
+
+        // 주문서 초기화 함수
+        function clearCart() {
+            // SessionStorage에서 주문서를 삭제
+            sessionStorage.removeItem('cart');
+        }
+
+        function clearDirect() {
+            sessionStorage.removeItem('direct');
+            sessionStorage.removeItem('directYn');
+        }
+    </script>
 </head>

@@ -44,7 +44,7 @@ public class SecurityConfig {
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request.requestMatchers(
                                 "/auth/**","/","/login/**",
-                                "/item/**", "/order/**",
+                                "/item/**", "/order/**", "/orderApi/**",
                                 "/fonts/**","/wms/**", "/image/**",
                                 "/images/**", "/admin/login")
                         .permitAll()

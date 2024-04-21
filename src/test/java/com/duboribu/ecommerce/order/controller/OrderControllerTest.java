@@ -63,7 +63,10 @@ class OrderControllerTest {
     @Test
     public void 주문을검증한다() {
         CreateOrderRequest createOrderRequest = new CreateOrderRequest(5000, 0, null);
+    }
 
-        /*Validator.validate(createOrderRequest);*/
+    @Test
+    public void 주문을한다() {
+
     }
 }

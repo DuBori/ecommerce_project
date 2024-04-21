@@ -59,18 +59,19 @@
                             <i class="fa fa-star-half-o"></i>
                             <span>(18 reviews)</span>
                         </div>
+                        <input type="hidden" name="itemId" th:value="${item.id}">
                         <div class="product__details__price" th:with="publisher=${item.publisher}, author=${item.author}"></div>
                         <p th:text="${item.publisher}"></p>
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="text" value="1">
+                                    <input type="text" name="quantity" value="1">
                                 </div>
                             </div>
                         </div>
-                        <a href="#" class="primary-btn">카트 담기</a>
-                        <a href="#" class="primary-btn">바로 구매</a>
-                        <a href="#" class="heart-icon"><span class="icon_heart_alt"></span></a>
+                        <button  class="primary-btn">카트 담기</button>
+                        <button  class="primary-btn directPurchase">바로 구매</button>
+                        <button href="#" class="heart-icon"><span class="icon_heart_alt"></span></button>
                         <ul>
                             <li><b>판매여부 : </b> <span th:text="${item.state == 'Y' ? '판매중' : '일시품절'}"></span></li>
                             <!--<li><b>배달 : </b> <span> <samp>&lt;!&ndash;Free pickup today&ndash;&gt;</samp></span></li>-->
@@ -217,4 +218,24 @@
     <!-- Footer Section Begin -->
     <div th:replace="front/common/footer :: footer"></div>
 </body>
+<script>
+    $(function () {
+        $(".directPurchase").on("click", function () {
+            let productId = $("input[name=itemId]").val();
+            let quantity = $("input[name=quantity]").val();
+
+            directPurchase(productId, quantity);
+
+            // form 생성
+            let form = $('<form action="/order/checkout" method="POST">' +
+                '<input type="hidden" name="orderItemRequest[0].productId" value="' + productId + '">' +
+                '<input type="hidden" name="orderItemRequest[0].quantity" value="' + quantity + '">' +
+                '</form>');
+
+            // form을 body에 추가하고 자동으로 submit
+            $('body').append(form);
+            form.submit();
+        });
+    })
+</script>
 </html>
