@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 @RequestMapping("/cart")
 public class CartController {
-    @RequestMapping("/")
+    @RequestMapping()
     public String cart() {
-        return null;
+        return "front/shoping-cart";
     }
 }

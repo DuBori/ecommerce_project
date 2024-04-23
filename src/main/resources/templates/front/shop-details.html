@@ -69,7 +69,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button  class="primary-btn">카트 담기</button>
+                        <button th:onclick="'addToCart(\'' + ${item.id} + '\')'" class="primary-btn">카트 담기</button>
                         <button  class="primary-btn directPurchase">바로 구매</button>
                         <button href="#" class="heart-icon"><span class="icon_heart_alt"></span></button>
                         <ul>

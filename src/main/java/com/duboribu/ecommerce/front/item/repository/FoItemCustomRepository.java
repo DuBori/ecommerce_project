@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface FoItemCustomRepository {
-    Page<FoItemResponse> normalList(Pageable pageable);
+    Page<FoItemResponse> normalList(String category, Pageable pageable);
 
     FoItemView loadItemViewResponse(Long itemId);
 
