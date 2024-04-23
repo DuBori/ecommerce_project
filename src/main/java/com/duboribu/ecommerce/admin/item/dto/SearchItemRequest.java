@@ -12,5 +12,9 @@ public class SearchItemRequest {
     private String keyword;
     private int page;
     private int pageSize = 20;
+    private String category;
 
+    public void matchedCategory(String category) {
+        this.category = category;
+    }
 }

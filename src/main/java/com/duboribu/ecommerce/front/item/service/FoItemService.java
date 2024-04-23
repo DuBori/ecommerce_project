@@ -20,9 +20,8 @@ public class FoItemService {
     private final FoItemCustomRepository foItemCustomRepository;
     @Transactional
     public Page<FoItemResponse> normalList(SearchItemRequest request) {
-        return foItemCustomRepository.normalList(PageRequest.of(request.getPage(), request.getPageSize()));
+        return foItemCustomRepository.normalList(request.getCategory(), PageRequest.of(request.getPage(), request.getPageSize()));
     }
-
     @Transactional
     public FoItemView loadItemViewResponse(Long itemId) {
         FoItemView foItemView = foItemCustomRepository.loadItemViewResponse(itemId);

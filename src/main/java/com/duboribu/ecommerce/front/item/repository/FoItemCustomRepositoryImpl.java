@@ -8,6 +8,8 @@ import com.duboribu.ecommerce.front.order.dto.CreateOrderRequest;
 import com.duboribu.ecommerce.front.order.dto.FoOrderItemView;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import com.duboribu.ecommerce.front.order.dto.QFoOrderItemView;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<FoItemResponse> normalList(Pageable pageable) {
+    public Page<FoItemResponse> normalList(String category, Pageable pageable) {
         List<FoItemResponse> list = jpaQueryFactory.select(new QFoItemResponse(item.id, book.title, price.value, item.filePath))
                 .from(item)
                 .innerJoin(book)
@@ -38,10 +41,18 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
                 .on(price.item.id.eq(item.id))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .where(isCategory(category))
                 .fetch();
         JPAQuery<Long> totalCount = jpaQueryFactory.select(item.count())
                 .from(item);
         return PageableExecutionUtils.getPage(list, pageable, totalCount::fetchOne);
+    }
+
+    private Predicate isCategory(String category) {
+        if (StringUtils.hasText(category)) {
+            return item.category.name.eq(category);
+        }
+        return Expressions.asBoolean(true).isTrue();
     }
 
     @Override

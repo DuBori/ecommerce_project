@@ -22,6 +22,24 @@
 
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
     <script>
+        $(function () {
+            // 페이지 로드 시 sessionStorage에서 카트 정보를 가져와서 표시
+            let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+            let cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
+            $("span.shoppingBagSpan").text(cartCount);
+
+            $('li a[href="/cart"]').click(function(e) {
+                e.preventDefault(); // 기본 이벤트 동작 방지
+
+                // 세션 스토리지에서 카트 값을 가져옴
+                let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+
+                let queryString = $.param(cart);
+                // URL에 쿼리 문자열을 추가하여 GET 요청을 생성
+                let url = '/cart?' + queryString;
+                window.location.href = url;
+            });
+        })
         function directPurchase(productId, count) {
             let direct = {};
             direct[productId] = count;
@@ -30,12 +48,30 @@
         }
 
         // 상품을 추가할 때 호출되는 함수
-        function addToCart(productId) {
+        function addToCart(productId, count) {
             let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+            let cartCount = Number($("span.shoppingBagSpan").text() == undefined ? 0 : $("span.shoppingBagSpan").text());
+
+            // 이미 담겨져 있는 상품인지 확인
+            if (cart[productId]) {
+                if (confirm("이미 담겨져 있는 상품입니다. 카트로 이동하시겠습니까?")) {
+                    let queryString = $.param(cart);
+                    // URL에 쿼리 문자열을 추가하여 GET 요청을 생성
+                    let url = '/cart?' + queryString;
+                    window.location.href = url;
+                }
+                return;
+            }
 
             // 주문서에 상품 추가
             if (!cart[productId]) {
-                cart[productId] = 1;
+                if (count) {
+                    cart[productId] = count;
+                } else {
+                    cart[productId] = 1;
+                }
+
+                $("span.shoppingBagSpan").text(cartCount++);
             }
             // 변경된 주문서를 SessionStorage에 저장
             sessionStorage.setItem('cart', JSON.stringify(cart));
