@@ -50,7 +50,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
 
     private Predicate isCategory(String category) {
         if (StringUtils.hasText(category)) {
-            return item.category.name.eq(category);
+            return item.category.code.eq(category);
         }
         return Expressions.asBoolean(true).isTrue();
     }

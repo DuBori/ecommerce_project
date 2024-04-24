@@ -228,7 +228,7 @@
                             </div>
                             <div class="col-lg-4 col-md-4">
                                 <div class="filter__found">
-                                    <h6>총  <span th:text="${allList.getTotalElements()}"></span>개</h6>
+                                    <h6>총  <span th:text="${categoryItems.getTotalElements()}"></span>개</h6>
                                 </div>
                             </div>
                             <div class="col-lg-4 col-md-3">
@@ -243,9 +243,9 @@
                         <h2>카테고리 상품</h2>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-6" th:each="all : ${allList}">
+                        <div class="col-lg-4 col-md-6 col-sm-6" th:each="categoryItem : ${categoryItems}">
                             <div class="product__item">
-                                <div class="product__item__pic set-bg product-link" th:attr="data-setbg=@{${all.filePath}}, data-id=@{${all.id}}">
+                                <div class="product__item__pic set-bg product-link" th:attr="data-setbg=@{${categoryItem.filePath}}, data-id=@{${categoryItem.id}}">
                                     <ul class="product__item__pic__hover">
                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                         <li><a href="#"><i class="fa fa-retweet"></i></a></li>
@@ -253,16 +253,16 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a th:href="@{/item/view/{id}(id=${all.id})}" th:text="${all.name}"></a></h6>
-                                    <h5 th:text="${all.price}"></h5>
+                                    <h6><a th:href="@{/item/view/{id}(id=${categoryItem.id})}" th:text="${categoryItem.name}"></a></h6>
+                                    <h5 th:text="${categoryItem.price}"></h5>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <th:block th:if="${allList != null}">
+                    <th:block th:if="${categoryItems != null}">
                         <div class="product__pagination">
-                            <a href="#" th:each="pageNumber : ${#numbers.sequence(0, allList.totalPages - 1)}" th:href="@{${'/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
-                            <a th:href="@{${'/item/list?page=' + (allList.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
+                            <a href="#" th:each="pageNumber : ${#numbers.sequence(0, categoryItems.totalPages - 1)}" th:href="@{${'/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+                            <a th:href="@{${'/item/list?page=' + (categoryItems.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
                         </div>
                     </th:block>
                 </div>

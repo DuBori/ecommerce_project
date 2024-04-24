@@ -19,7 +19,7 @@ public class MainController {
     private final FoCategoryService foCategoryService;
     @GetMapping
     public String main(SearchItemRequest request, Model model) {
-        model.addAttribute("normalList", foItemService.normalList(request));
+        model.addAttribute("normalList", foItemService.normalList(request, null));
         model.addAttribute("mainCategoryList", foCategoryService.list("book"));
         return "front/index";
     }

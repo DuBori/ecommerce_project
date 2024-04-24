@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="admin/common/header :: header"></div>
+<style>
+  .container {
+    max-width: 800px;
+    margin: 60px auto;
+    padding: 20px;
+    text-align: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .container label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  .container input[type="text"] {
+    width: calc(100% - 22px); /* input 너비에서 padding 고려하여 조정 */
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+  .container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+</style>
+<body>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+
+<div class="container">
+  <h2>Add Stock</h2>
+  <label for="id">Item ID:</label>
+  <input type="text" id="id" name="id"><br><br>
+  <label for="count">Count:</label>
+  <input type="text" id="count" name="count"><br><br>
+  <button id="addStockBtn">Add Stock</button>
+  <p id="responseMessage"></p>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
+</body>
+<script>
+  $(document).ready(function () {
+    $('#addStockBtn').click(function () {
+      // 입력값 가져오기
+      var itemId = $('#id').val();
+      var count = $('#count').val();
+
+      // 입력값이 비어있는지 확인
+      if (!itemId || !count) {
+        $('#responseMessage').text('아이템 ID와 수량을 입력하세요.');
+        return;
+      }
+
+      // CreateStockRequest 객체 생성
+      var stockRequest = {
+        id: parseInt(itemId), // 아이템 ID
+        count: parseInt(count) // 추가할 수량
+      };
+
+      $.ajax({
+        url: '/wms/stock/add', // API 엔드포인트 URL
+        type: 'POST', // POST 요청
+        contentType: 'application/json', // 요청 데이터의 타입은 JSON
+        data: JSON.stringify(stockRequest), // 요청 데이터를 JSON 문자열로 변환하여 전송
+        dataType: 'json',
+        success: function (data) {
+          // 성공적인 응답을 받은 경우
+          $('#responseMessage').text('요청이 성공적으로 완료되었습니다.');
+        },
+        error: function (xhr, status, error) {
+          // 오류 응답을 받은 경우
+          $('#responseMessage').text('오류가 발생했습니다.');
+        }
+      });
+    });
+  });
+</script>
+</html>

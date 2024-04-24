@@ -19,8 +19,9 @@ public abstract class Item extends BaseEntity{
     @GeneratedValue
     private Long id;
     private String productCode;
+    private int price;
     @OneToMany(mappedBy = "item", cascade = CascadeType.PERSIST)
-    private List<Price> prices = new ArrayList<>();
+    private List<Price> prices = new ArrayList<>(); // 할인?
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private Stock stock;
     private String comment;
@@ -40,8 +41,12 @@ public abstract class Item extends BaseEntity{
         stock.matchItem(this);
     }
 
-    public Item(String filePath) {
+    public Item(String filePath, int price, Category category, String state)
+    {
+        this.price = price;
         this.filePath = filePath;
+        this.category = category;
+        this.state = State.getmatcheState(state);
     }
 
     public void updatePrice(List<Price> prices) {

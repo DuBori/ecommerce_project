@@ -17,6 +17,7 @@ public class Price extends BaseEntity{
     private Long id;
 
     private BigDecimal value;
+    private int salePercent;
 
     private LocalDateTime startDate;
 

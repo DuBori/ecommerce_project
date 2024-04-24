@@ -7,6 +7,7 @@ import com.duboribu.ecommerce.admin.item.dto.UpdateBookRequest;
 import com.duboribu.ecommerce.admin.item.repository.AdminItemCustomRepository;
 import com.duboribu.ecommerce.admin.item.service.AdminItemService;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
+import com.duboribu.ecommerce.front.category.service.FoCategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class ItemController {
     private final AdminItemService adminItemService;
     private final AdminItemCustomRepository adminItemCustomRepository;
+    private final FoCategoryService foCategoryService;
 
     /**
      * 상품 조회
@@ -42,6 +44,7 @@ public class ItemController {
     public String detailPage(@PathVariable Long id, Model model) {
         ResponseBook byBookId = adminItemCustomRepository.findByBookId(id);
         model.addAttribute("item", byBookId);
+        model.addAttribute("categoryList", foCategoryService.list("book"));
         return "/admin/item/view";
     }
 
@@ -49,7 +52,8 @@ public class ItemController {
      * 상품 생성
      * */
     @GetMapping("/create")
-    public String createItemPage() {
+    public String createItemPage(Model model) {
+        model.addAttribute("categoryList", foCategoryService.list("book"));
         return "/admin/item/create";
     }
     

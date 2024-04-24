@@ -194,6 +194,14 @@
                         <label for="price">Price:</label>
                         <input type="text" id="price" name="price" th:value="${item.price}">
                     </div>
+                    <div class="form-group">
+                        <label for="category">카테고리:</label>
+                        <select id="category" name="category" required>
+                            <option value="">카테고리를 선택하세요</option>
+                            <option th:each="category : ${categoryList}" th:text="${category.name}" th:value="${category.id}"></option>
+                            <!-- 필요한 만큼 옵션을 추가하세요 -->
+                        </select>
+                    </div>
                     <div class="modify-button">
                         <button type="submit" class="btn-modify">수정</button>
                     </div>
