@@ -16,6 +16,7 @@ public class ResponseBook {
     private String publisher;
     private String filePath;
     private int price;
+    private Long category;
     public ResponseBook(Book savedBook) {
         this.id = savedBook.getId();
         this.title = savedBook.getTitle();
@@ -26,13 +27,14 @@ public class ResponseBook {
         this.filePath = savedBook.getFilePath();
     }
     @QueryProjection
-    public ResponseBook(Long id, String title, String author, String publisher, String filePath, int price) {
+    public ResponseBook(Long id, String title, String author, String publisher, String filePath, int price, Long category) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.filePath = filePath;
         this.price = price;
+        this.category =category;
     }
 
 }

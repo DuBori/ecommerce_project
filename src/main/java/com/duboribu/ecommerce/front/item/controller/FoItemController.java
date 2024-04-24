@@ -21,14 +21,16 @@ public class FoItemController {
 
     @GetMapping("/list")
     public String list(SearchItemRequest request, Model model) {
-        model.addAttribute("allList", foItemService.normalList(request));
+        model.addAttribute("allList", foItemService.normalList(request, null));
+        model.addAttribute("categoryItems", foItemService.normalList(request, null));
         model.addAttribute("categoryList", foCategoryService.list("book"));
         return "front/shop-grid";
     }
     @GetMapping("/{category}/list")
     public String categoryList(@PathVariable String category, SearchItemRequest request, Model model) {
-        request.matchedCategory(category);
-        model.addAttribute("allList", foItemService.normalList(request));
+        model.addAttribute("allList", foItemService.normalList(request, null));
+
+        model.addAttribute("categoryItems", foItemService.normalList(request, category));
         model.addAttribute("categoryList", foCategoryService.list("book"));
         return "front/shop-grid";
     }

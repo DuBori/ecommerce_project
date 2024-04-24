@@ -15,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.math.BigDecimal;
 
 import static com.duboribu.ecommerce.entity.QBook.book;
+import static com.duboribu.ecommerce.entity.QCategory.category;
 import static com.duboribu.ecommerce.entity.QPrice.price;
 
 @Repository
@@ -25,17 +26,19 @@ public class AdminItemCustomRepositoryImpl implements AdminItemCustomRepository 
 
     @Override
     public ResponseBook findByBookId(Long id) {
-        return jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.filePath, price.value.intValue()))
+        return jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.filePath, book.price, category.id))
                 .from(book)
                 .innerJoin(price)
                 .on(book.id.eq(price.item.id))
+                .innerJoin(category)
+                .on(book.category.eq(category))
                 .where(book.id.eq(id))
                 .fetchOne();
     }
 
     @Override
     public Page<ResponseBook> list(SearchItemRequest searchItemRequest, Pageable pageable) {
-        QueryResults<ResponseBook> results = jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.filePath, price.value.intValue()))
+        QueryResults<ResponseBook> results = jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.filePath, book.price, category.id))
                 .from(book)
                 .innerJoin(price)
                 .on(book.id.eq(price.item.id))

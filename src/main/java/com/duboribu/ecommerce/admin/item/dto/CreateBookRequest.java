@@ -15,7 +15,10 @@ public class CreateBookRequest {
     private String publisher;
     private String comment;
     private int price;
+    private Long category;
+    private String state;
     private String filePath;
+
 
     public CreateBookRequest(String title, String author, String publisher, int price) {
         this.title = title;

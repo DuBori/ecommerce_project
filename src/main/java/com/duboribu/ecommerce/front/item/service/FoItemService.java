@@ -19,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class FoItemService {
     private final FoItemCustomRepository foItemCustomRepository;
     @Transactional
-    public Page<FoItemResponse> normalList(SearchItemRequest request) {
+    public Page<FoItemResponse> normalList(SearchItemRequest request, String category) {
+        request.matchedCategory(category);
         return foItemCustomRepository.normalList(request.getCategory(), PageRequest.of(request.getPage(), request.getPageSize()));
     }
     @Transactional
