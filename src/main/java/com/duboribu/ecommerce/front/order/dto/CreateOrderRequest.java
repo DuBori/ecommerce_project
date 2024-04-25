@@ -20,7 +20,13 @@ public class CreateOrderRequest {
     public static class OrderItemRequest {
         private Long productId;
         private int quantity;
+
+        public OrderItemRequest(Long productId, int quantity) {
+            this.productId = productId;
+            this.quantity = quantity;
+        }
     }
+
 
     public List<Long> getProductIds() {
         if (orderItemRequest.isEmpty()) {

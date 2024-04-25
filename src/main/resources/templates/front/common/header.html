@@ -22,22 +22,41 @@
 
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
     <script>
+        let userId, name, expiration;
+        const storedExpiration = sessionStorage.getItem('expiration');
         $(function () {
-            // 페이지 로드 시 sessionStorage에서 카트 정보를 가져와서 표시
             let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
             let cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
             $("span.shoppingBagSpan").text(cartCount);
 
+            // 장바구니 페이지로 이동할 때 카트 정보를 서버에 전송
             $('li a[href="/cart"]').click(function(e) {
                 e.preventDefault(); // 기본 이벤트 동작 방지
 
-                // 세션 스토리지에서 카트 값을 가져옴
                 let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
-
-                let queryString = $.param(cart);
-                // URL에 쿼리 문자열을 추가하여 GET 요청을 생성
-                let url = '/cart?' + queryString;
-                window.location.href = url;
+                let cartRequest = { list: [] };
+                for (const [productId, quantity] of Object.entries(cart)) {
+                    cartRequest.list
+                        .push({ productId: parseInt(productId), quantity: quantity });
+                }
+                if (!userId) {
+                    alert('로그인 후 이용해주세요.');
+                    return;
+                }
+                // AJAX 요청으로 장바구니 페이지로 이동하면서 카트 정보를 전송
+                $.ajax({
+                    url: '/cart/add',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(cartRequest),
+                    success: function(response) {
+                        location.href = '/cart';
+                    },
+                    error: function(xhr, status, error) {
+                        // 오류 처리
+                        console.error("장바구니 페이지로 이동 실패:", error);
+                    }
+                });
             });
         })
         function directPurchase(productId, count) {
@@ -49,16 +68,32 @@
 
         // 상품을 추가할 때 호출되는 함수
         function addToCart(productId, count) {
+            if (!userId) {
+                alert('로그인 후 이용해주세요.');
+                return;
+            }
+
             let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
             let cartCount = Number($("span.shoppingBagSpan").text() == undefined ? 0 : $("span.shoppingBagSpan").text());
 
             // 이미 담겨져 있는 상품인지 확인
             if (cart[productId]) {
                 if (confirm("이미 담겨져 있는 상품입니다. 카트로 이동하시겠습니까?")) {
-                    let queryString = $.param(cart);
-                    // URL에 쿼리 문자열을 추가하여 GET 요청을 생성
-                    let url = '/cart?' + queryString;
-                    window.location.href = url;
+                    l// AJAX 요청으로 장바구니 페이지로 이동하면서 카트 정보를 전송
+                    $.ajax({
+                        url: '/cart/add',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(cartRequest),
+                        success: function(response) {
+                            // 성공적으로 처리된 경우에 대한 처리
+                           location.href = '/cart';
+                        },
+                        error: function(xhr, status, error) {
+                            // 오류 처리
+                            console.error("장바구니 페이지로 이동 실패:", error);
+                        }
+                    });
                 }
                 return;
             }
@@ -72,6 +107,8 @@
                 }
 
                 $("span.shoppingBagSpan").text(cartCount++);
+            } else {
+
             }
             // 변경된 주문서를 SessionStorage에 저장
             sessionStorage.setItem('cart', JSON.stringify(cart));
@@ -99,5 +136,76 @@
             sessionStorage.removeItem('direct');
             sessionStorage.removeItem('directYn');
         }
+
+
+        if (storedExpiration !== null) {
+            let now = new Date;
+            expiration = new Date(now.getTime() + storedExpiration);
+        }
+
+        verifyAccessToken();
+
+        function verifyAccessToken() {
+            // 만료 시간이 저장되어 있고, 만료 시간이 현재 시간보다 5분 이전이라면 토큰을 검증합니다.
+            if (userId == null || userId === undefined || expiration.getTime() < (new Date().getTime() - 5 * 60 * 1000)) {
+                $.ajax({
+                    url: '/auth/verify',
+                    type: 'GET',
+                    success: function (data) {
+                        if (data.resCode == 200) {
+                            userId = data.body.id;
+                            name = data.body.name;
+                            sessionStorage.setItem('expiration', data.body.expirationTime);
+                            sessionStorage.setItem('userId', data.body.id);
+                            sessionStorage.setItem('name', data.body.name);
+                        } else if (data.resCode == 204) {
+                        } else if (data.resCode == 202 || data.resCode == 205) {
+                            location.href = "/login";
+                        }
+                        toggleLoginLogout(userId)
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        }
+
+
+        function toggleLoginLogout(userId) {
+            if (userId) {
+                $('.loginInfo').text(userId);
+                // userId가 존재하면 로그아웃 링크를 표시합니다.
+                $('.loginInfo').css('display', 'block')
+                $('.loginLink').removeClass('block');
+                $('.logoutLink').css('display', 'block')
+            } else {
+                // userId가 존재하지 않으면 로그인 링크를 표시합니다.
+                $('.loginLink').css('display', 'block')
+                $('.logoutLink').removeClass('block');
+                $('.loginInfo').removeClass('block');
+                $('.loginInfo').text("");
+            }
+        }
+
+        function logout() {
+            $.ajax({
+                url: '/auth/logout',
+                type: 'GET',
+                success: function (response) {
+                    console.log('로그아웃 완료:', response.message);
+                    sessionStorage.clear();
+                    location.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error('로그아웃 실패:', error);
+                }
+            });
+        }
+
+        $('.logoutLink').click(function (event) {
+            event.preventDefault(); // 링크의 기본 동작을 막음
+            logout(); // 로그아웃 함수 실행
+        });
     </script>
 </head>
