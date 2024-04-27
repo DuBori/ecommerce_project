@@ -41,7 +41,8 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="list : ${foOrderResponse.list}">
+                                <div th:if="foOrderResponse != null">
+                                    <tr th:each="list : ${foOrderResponse.list}">
                                     <td class="shoping__cart__item">
                                         <img th:src="${list.filePath}" alt="" style="width: 200px; height: 200px">
                                         <h5 th:text="${list.title}"></h5>
@@ -62,6 +63,7 @@
                                         <span class="icon_close"></span>
                                     </td>
                                 </tr>
+                                </div>
                             </tbody>
                         </table>
                     </div>
@@ -90,7 +92,7 @@
                     <div class="shoping__checkout">
                         <h5>총 결제금액</h5>
                         <ul>
-                            <li>Total <span th:text="${foOrderResponse.getTotalPrice()}"></span></li>
+                            <li>Total <div th:if="foOrderResponse != null"><span th:text="${foOrderResponse.getTotalPrice()}"></span></div></li>
                         </ul>
                         <a href="#" class="primary-btn">결제하러 가기</a>
                     </div>

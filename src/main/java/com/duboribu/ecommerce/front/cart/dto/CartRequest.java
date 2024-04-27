@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.front.cart;
+package com.duboribu.ecommerce.front.cart.dto;
 
 import lombok.Getter;
 import lombok.Setter;

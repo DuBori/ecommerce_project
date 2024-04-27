@@ -4,8 +4,10 @@ import com.duboribu.ecommerce.entity.Cart;
 import com.duboribu.ecommerce.entity.CartItem;
 import com.duboribu.ecommerce.entity.Item;
 import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.front.cart.dto.CartRequest;
+import com.duboribu.ecommerce.front.cart.dto.CartsRequest;
+import com.duboribu.ecommerce.front.cart.repository.CartCustomJpaRepository;
 import com.duboribu.ecommerce.front.item.repository.FoItemCustomRepository;
-import com.duboribu.ecommerce.front.order.dto.CreateOrderRequest;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import com.duboribu.ecommerce.repository.CartJpaRepository;
 import com.duboribu.ecommerce.repository.ItemJpaRepository;
@@ -14,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +27,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class FoCartService {
     private final CartJpaRepository cartJpaRepository;
+    private final CartCustomJpaRepository cartCustomJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final ItemJpaRepository itemJpaRepository;
 
@@ -31,15 +35,24 @@ public class FoCartService {
 
 
     @Transactional
-    public void addCategory(String userId, CartsRequest cartRequest) {
+    public boolean addCategory(String userId, CartsRequest cartRequest) {
         Optional<Member> findMember = memberJpaRepository.findById(userId);
-        if (findMember.isPresent()) {
-            Member member = findMember.get();
-            List<CartItem> cartItemList = getCartItems(cartRequest);
-            Cart cart = new Cart(member, cartItemList);
-            cartJpaRepository.save(cart);
+
+        if (findMember.isEmpty()) {
+            throw new IllegalArgumentException("일치하는 회원이 없습니다.");
         }
 
+        Member member = findMember.get();
+
+        //기존 카트가 존재하면 처리해야함
+        if (cartJpaRepository.existsCartByOrderIsNullAndMemberId(userId)) {
+            return cartCustomJpaRepository.mergeIntoByCartRequest(userId, cartRequest.getList());
+        }
+        // 신규카트는 생성해주면됨
+        List<CartItem> cartItemList = getCartItems(cartRequest);
+        Cart cart = new Cart(member, cartItemList);
+        cartJpaRepository.save(cart);
+        return true;
     }
 
     private List<CartItem> getCartItems(CartsRequest cartRequest) {
@@ -53,18 +66,10 @@ public class FoCartService {
         return list;
     }
 
-    /*추후 바꿔야됨 QueryDsl로 확인용도*/
     public FoOrderResponse getCartList(String userId) {
-        Optional<Cart> findCart = cartJpaRepository.findFirstByMember_IdOrderByCreatedAtDesc(userId);
-        if (findCart.isPresent()) {
-            Cart cart = findCart.get();
-            List<CartItem> cartItemList = cart.getCartItemList();
-            List<CreateOrderRequest.OrderItemRequest> list = new ArrayList<>();
-            for (CartItem cartItem : cartItemList) {
-                list.add(new CreateOrderRequest.OrderItemRequest(cartItem.getItem().getId(), cartItem.getQuantity()));
-            }
-            return foItemCustomRepository.itemViewResponses(new CreateOrderRequest(0, 0, list));
+        if (!StringUtils.hasText(userId)) {
+            throw new IllegalArgumentException("계정 정보가 없습니다.");
         }
-        return null;
+        return cartCustomJpaRepository.findCartByUserId(userId);
     }
 }

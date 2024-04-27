@@ -28,10 +28,7 @@ public class OrderItem extends BaseEntity{
     @JoinColumn(name ="item_id")
     private Item item;
     public OrderItem(Item item, Stock stock, int count) {
-        this.netPrice = item.getPrices()
-                .get(0)
-                .getValue()
-                .intValue();
+        this.netPrice = item.getPrice();
         this.dcPrice = 0;
         this.count = count;
         this.item = item;

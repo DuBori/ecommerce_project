@@ -74,12 +74,17 @@
             }
 
             let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+            let cartRequest = { list: [] };
+            for (const [productId, quantity] of Object.entries(cart)) {
+                cartRequest.list
+                    .push({ productId: parseInt(productId), quantity: quantity });
+            }
             let cartCount = Number($("span.shoppingBagSpan").text() == undefined ? 0 : $("span.shoppingBagSpan").text());
 
             // 이미 담겨져 있는 상품인지 확인
             if (cart[productId]) {
                 if (confirm("이미 담겨져 있는 상품입니다. 카트로 이동하시겠습니까?")) {
-                    l// AJAX 요청으로 장바구니 페이지로 이동하면서 카트 정보를 전송
+                    // AJAX 요청으로 장바구니 페이지로 이동하면서 카트 정보를 전송
                     $.ajax({
                         url: '/cart/add',
                         type: 'POST',
@@ -104,12 +109,11 @@
                     cart[productId] = count;
                 } else {
                     cart[productId] = 1;
+                    console.log("productId : " + productId + " , " + "quantity : " + cart[productId]);
+                    cartCount++;
                 }
-
-                $("span.shoppingBagSpan").text(cartCount++);
-            } else {
-
             }
+            $("span.shoppingBagSpan").empty().text(cartCount);
             // 변경된 주문서를 SessionStorage에 저장
             sessionStorage.setItem('cart', JSON.stringify(cart));
         }
