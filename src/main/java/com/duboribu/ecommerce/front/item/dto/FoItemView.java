@@ -5,8 +5,6 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-
 @Getter
 @ToString
 public class FoItemView {
@@ -23,13 +21,13 @@ public class FoItemView {
     private String weight;
     @QueryProjection
     public FoItemView(Long id, String title, String author, String publisher, String filePath,
-                      BigDecimal price, int stockCount, State state, String comment, String information, String weight) {
+                      int price, int stockCount, State state, String comment, String information, String weight) {
         this.id = id;
         this.title = title;
         this.author = author;
         this.publisher = publisher;
         this.filePath = filePath;
-        this.price = price.intValue();
+        this.price = price;
         this.stockCount = stockCount;
         this.state = state.name();
         this.comment = comment;

@@ -57,7 +57,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
 
     @Override
     public FoItemView loadItemViewResponse(Long itemId) {
-        return jpaQueryFactory.select(new QFoItemView(book.id, book.title, book.author, book.publisher, book.filePath, price.value, stock.count, book.state, book.comment, book.information, book.weight))
+        return jpaQueryFactory.select(new QFoItemView(book.id, book.title, book.author, book.publisher, book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
                 .from(book)
                 .innerJoin(stock)
                 .on(book.id.eq(stock.item.id))
@@ -69,12 +69,10 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
 
     @Override
     public FoOrderResponse itemViewResponses(CreateOrderRequest request) {
-        List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher, book.filePath, price.value, stock.count, book.state, book.comment, book.information, book.weight))
+        List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher, book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
                 .from(book)
                 .innerJoin(stock)
                 .on(book.id.eq(stock.item.id))
-                .innerJoin(price)
-                .on(book.eq(price.item))
                 .where(book.id.in(request.getProductIds()))
                 .fetch();
 

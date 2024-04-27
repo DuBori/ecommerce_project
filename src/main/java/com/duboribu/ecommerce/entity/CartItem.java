@@ -12,10 +12,10 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cart_id")
     private Cart cart;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
@@ -26,7 +26,17 @@ public class CartItem {
         this.quantity = quantity;
     }
 
+    public CartItem(Cart cart, Item item, int quantity) {
+        this.cart = cart;
+        this.item = item;
+        this.quantity = quantity;
+    }
+
     public void mactchedCart(Cart cart) {
         this.cart = cart;
+    }
+
+    public void updateQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }

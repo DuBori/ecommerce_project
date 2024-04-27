@@ -1,7 +1,10 @@
-package com.duboribu.ecommerce.front.cart;
+package com.duboribu.ecommerce.front.cart.controller;
 
 import com.duboribu.ecommerce.Utils.Validator;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
+import com.duboribu.ecommerce.front.cart.FoCartService;
+import com.duboribu.ecommerce.front.cart.dto.CartsRequest;
+import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,12 +28,13 @@ public class CartController {
     @GetMapping("")
     private String cartPage(HttpServletRequest request, Model model) {
         String userId = getUserId(request);
-        model.addAttribute("foOrderResponse", foCartService.getCartList(userId));
+        FoOrderResponse cartList = foCartService.getCartList(userId);
+        log.info("cartList : {}", cartList);
+        model.addAttribute("foOrderResponse", cartList);
         return "front/shoping-cart";
     }
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody CartsRequest cartRequest, HttpServletRequest request) {
-
         String userId = getUserId(request);
         if (StringUtils.hasText(userId)) {
             foCartService.addCategory(userId, cartRequest);

@@ -5,8 +5,6 @@ import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.math.BigDecimal;
-
 @Getter
 @ToString
 public class ResponseBook {
@@ -22,8 +20,7 @@ public class ResponseBook {
         this.title = savedBook.getTitle();
         this.author = savedBook.getAuthor();
         this.publisher = savedBook.getAuthor();
-        BigDecimal value = savedBook.getPrices().get(0).getValue();
-        price = value.intValue();
+        price = savedBook.getPrice();
         this.filePath = savedBook.getFilePath();
     }
     @QueryProjection
