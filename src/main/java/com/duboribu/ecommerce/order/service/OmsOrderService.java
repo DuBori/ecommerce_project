@@ -23,6 +23,8 @@ public class OmsOrderService {
     private final StockJpaRepository stockJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final PaymentJpaRepository paymentJpaRepository;
+
+    private final CartJpaRepository cartJpaRepository;
     @Transactional
     public String create(OrderRequestDTO orderRequestDTO) {
         Member member = null;
@@ -53,6 +55,11 @@ public class OmsOrderService {
         order.getDeliveryList().add(new Delivery(orderRequestDTO));
         Order save = orderJpaRepository.save(order);
         payment.metchedOrder(save);
+
+        if ("cart".equals(orderRequestDTO.getCart())) {
+            cartJpaRepository.deleteCartByMemberId(orderRequestDTO.getUserId());
+        }
+
         return payment.getMerchant_uid();
     }
 }

@@ -36,7 +36,9 @@ public class CartItem {
         this.cart = cart;
     }
 
-    public void updateQuantity(int quantity) {
+    public boolean updateQuantity(int quantity) {
         this.quantity = quantity;
+        return true;
+
     }
 }

@@ -9,4 +9,6 @@ public interface CartJpaRepository extends JpaRepository<Cart, Long> {
     boolean existsCartByOrderIsNullAndMemberId(String userId);
 
     Optional<Cart> findByMember_IdAndOrderIsNull(String userId);
+
+    void deleteCartByMemberId(String userId);
 }

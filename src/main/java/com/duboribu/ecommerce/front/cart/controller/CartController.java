@@ -1,22 +1,23 @@
 package com.duboribu.ecommerce.front.cart.controller;
 
 import com.duboribu.ecommerce.Utils.Validator;
+import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import com.duboribu.ecommerce.front.cart.FoCartService;
+import com.duboribu.ecommerce.front.cart.dto.CartQuantityReq;
 import com.duboribu.ecommerce.front.cart.dto.CartsRequest;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
 @Slf4j
 @Controller
 @RequiredArgsConstructor
@@ -42,6 +43,41 @@ public class CartController {
         return ResponseEntity.ok().build();
 
     }
+
+    @PostMapping("/quantity/{unit}")
+    public ResponseEntity<DefaultResponse> updateQuantity(@PathVariable String unit, @RequestBody CartQuantityReq cartQuantityReq, HttpServletRequest request) {
+        String userId = "";
+        try {
+            userId = getUserId(request);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new DefaultResponse("토큰 만료", DefaultResponse.EXPIRED_ACCESS_TOKEN), HttpStatus.OK);
+        }
+
+        if (foCartService.updateQuantity(unit, cartQuantityReq)) {
+            return new ResponseEntity<>(new DefaultResponse("카트 수량 업데이트 완료",DefaultResponse.SUCCESS), HttpStatus.OK);
+        };
+
+        return new ResponseEntity<>(new DefaultResponse(DefaultResponse.SYSTEM_ERR_MSG, DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
+    }
+
+    @PostMapping("/delete/{cartItem}")
+    public ResponseEntity<DefaultResponse> updateQuantity(@PathVariable Long cartItem, HttpServletRequest request) {
+        String userId = "";
+        try {
+            userId = getUserId(request);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new DefaultResponse("토큰 만료", DefaultResponse.EXPIRED_ACCESS_TOKEN), HttpStatus.OK);
+        }
+
+        if (foCartService.deleteCartItem(cartItem)) {
+            return new ResponseEntity<>(new DefaultResponse("카트 상품 삭제 완료",DefaultResponse.SUCCESS), HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>(new DefaultResponse(DefaultResponse.SYSTEM_ERR_MSG, DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
+    }
+
+
+
     private String getUserId(HttpServletRequest request) {
         String accessToken = Validator.getAccessToken(request);
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
