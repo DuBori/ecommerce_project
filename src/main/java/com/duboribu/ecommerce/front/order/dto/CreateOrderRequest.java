@@ -17,6 +17,7 @@ public class CreateOrderRequest {
     @Getter
     @Setter
     @ToString
+    @NoArgsConstructor
     public static class OrderItemRequest {
         private Long productId;
         private int quantity;

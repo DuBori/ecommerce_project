@@ -17,5 +17,6 @@ public class OrderRequestDTO {
     private String buyerAddr;
     private String phone;
     private String email;
+    private String cart;
     private List<OrderItemRequestDto> productItems;
 }

@@ -131,9 +131,20 @@
         }
 
         // 주문서 초기화 함수
-        function clearCart() {
-            // SessionStorage에서 주문서를 삭제
-            sessionStorage.removeItem('cart');
+        function clearCart($itemId) {
+            if ($itemId) {
+                // SessionStorage에서 카트 데이터를 가져옴
+                let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
+
+                // 해당 아이템을 카트에서 제거
+                delete cart[$itemId];
+
+                // 수정된 카트 데이터를 SessionStorage에 저장
+                sessionStorage.setItem('cart', JSON.stringify(cart));
+            } else {
+                // SessionStorage에서 주문서를 삭제
+                sessionStorage.removeItem('cart');
+            }
         }
 
         function clearDirect() {

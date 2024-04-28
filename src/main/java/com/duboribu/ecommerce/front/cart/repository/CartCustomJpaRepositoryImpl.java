@@ -10,6 +10,7 @@ import com.duboribu.ecommerce.front.order.dto.QFoOrderItemView;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -22,15 +23,14 @@ import static com.duboribu.ecommerce.entity.QCart.cart;
 import static com.duboribu.ecommerce.entity.QCartItem.cartItem;
 import static com.duboribu.ecommerce.entity.QItem.item;
 import static com.duboribu.ecommerce.entity.QStock.stock;
-
+@Slf4j
 @Repository
 @RequiredArgsConstructor
 public class CartCustomJpaRepositoryImpl implements CartCustomJpaRepository {
     private final JPAQueryFactory jpaQueryFactory;
     @Override
     public FoOrderResponse findCartByUserId(String userId) {
-
-        List<FoCartItemView> foCartItemView = jpaQueryFactory.select(new QFoCartItemView(item.id, cartItem.quantity))
+        List<FoCartItemView> foCartItemView = jpaQueryFactory.select(new QFoCartItemView(item.id, cartItem.id, cartItem.quantity))
                 .from(cart)
                 .leftJoin(cartItem)
                 .on(cart.eq(cartItem.cart))
@@ -39,27 +39,30 @@ public class CartCustomJpaRepositoryImpl implements CartCustomJpaRepository {
                 .where(cart.order.isNull(), cart.member.id.eq(userId))
                 .fetch();
 
-        if (foCartItemView.isEmpty()) {
-            return null;
-        }
 
         List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher,
                         book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
                 .from(cart)
-                .leftJoin(cartItem)
+                .innerJoin(cartItem)
                 .on(cart.eq(cartItem.cart))
-                .leftJoin(book)
+                .innerJoin(book)
                 .on(cartItem.item.id.eq(book.id))
-                .leftJoin(stock)
+                .innerJoin(stock)
                 .on(stock.item.id.eq(book.id))
                 .where(cart.order.isNull(), cart.member.id.eq(userId))
                 .fetch();
 
+        if (list.isEmpty()) {
+            return null;
+        }
+
         int totalPrice = 0;
         for (FoOrderItemView itemview : list) {
+            log.info("{}", "아이템 세팅");
             for (FoCartItemView cartItemView : foCartItemView) {
                 if (itemview.getId().equals(cartItemView.getItemId())){
                     itemview.mactchedUntiyPrice(cartItemView.getQuantity());
+                    itemview.mactchedCartItemId(cartItemView.getCartItemId());
                     break;
                 }
             }

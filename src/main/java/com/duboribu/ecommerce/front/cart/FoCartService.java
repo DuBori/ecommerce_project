@@ -3,15 +3,15 @@ package com.duboribu.ecommerce.front.cart;
 import com.duboribu.ecommerce.entity.Cart;
 import com.duboribu.ecommerce.entity.CartItem;
 import com.duboribu.ecommerce.entity.Item;
+import com.duboribu.ecommerce.entity.Stock;
 import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.front.cart.dto.CartQuantityReq;
 import com.duboribu.ecommerce.front.cart.dto.CartRequest;
 import com.duboribu.ecommerce.front.cart.dto.CartsRequest;
 import com.duboribu.ecommerce.front.cart.repository.CartCustomJpaRepository;
 import com.duboribu.ecommerce.front.item.repository.FoItemCustomRepository;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
-import com.duboribu.ecommerce.repository.CartJpaRepository;
-import com.duboribu.ecommerce.repository.ItemJpaRepository;
-import com.duboribu.ecommerce.repository.MemberJpaRepository;
+import com.duboribu.ecommerce.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -28,8 +28,11 @@ import java.util.Optional;
 public class FoCartService {
     private final CartJpaRepository cartJpaRepository;
     private final CartCustomJpaRepository cartCustomJpaRepository;
+    private final CartItemJpaRepository cartItemJpaRepository;
     private final MemberJpaRepository memberJpaRepository;
     private final ItemJpaRepository itemJpaRepository;
+    private final StockJpaRepository stockJpaRepository;
+
 
     private final FoItemCustomRepository foItemCustomRepository;
 
@@ -54,7 +57,7 @@ public class FoCartService {
         cartJpaRepository.save(cart);
         return true;
     }
-
+    @Transactional
     private List<CartItem> getCartItems(CartsRequest cartRequest) {
         List<CartItem> list = new ArrayList<>();
         for (CartRequest request : cartRequest.getList()) {
@@ -65,11 +68,49 @@ public class FoCartService {
         }
         return list;
     }
-
+    @Transactional
     public FoOrderResponse getCartList(String userId) {
         if (!StringUtils.hasText(userId)) {
             throw new IllegalArgumentException("계정 정보가 없습니다.");
         }
         return cartCustomJpaRepository.findCartByUserId(userId);
+    }
+    @Transactional
+    public boolean updateQuantity(String unit, CartQuantityReq cartQuantityReq) {
+        int updateCount = 0;
+
+        Optional<CartItem> findCartItem = cartItemJpaRepository.findById(cartQuantityReq.getCartItemId());
+        if (findCartItem.isEmpty()) {
+            return false;
+        }
+
+        Optional<Stock> findStock = stockJpaRepository.findByItem(itemJpaRepository.findById(cartQuantityReq.getItemId()).get());
+        if (findStock.isEmpty()) {
+            log.info("");
+            return false;
+        }
+
+        CartItem cartItem = findCartItem.get();
+
+        if ("inc".equals(unit)) {
+            updateCount = cartItem.getQuantity() + 1;
+        } else {
+            updateCount = cartItem.getQuantity() - 1;
+        }
+
+        Stock stock = findStock.get();
+        if (stock.getCount() < updateCount) {
+            return false;
+        }
+        return cartItem.updateQuantity(updateCount);
+    }
+    @Transactional
+    public boolean deleteCartItem(Long cartItem) {
+        Optional<CartItem> findCartItem = cartItemJpaRepository.findById(cartItem);
+        if (findCartItem.isEmpty()) {
+            return false;
+        }
+        cartItemJpaRepository.delete(findCartItem.get());
+        return true;
     }
 }

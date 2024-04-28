@@ -8,10 +8,12 @@ import lombok.ToString;
 @ToString
 public class FoCartItemView {
     private Long itemId;
+    private Long cartItemId;
     private int quantity;
     @QueryProjection
-    public FoCartItemView(Long itemId, int quantity) {
+    public FoCartItemView(Long itemId, Long cartItemId, int quantity) {
         this.itemId = itemId;
+        this.cartItemId = cartItemId;
         this.quantity = quantity;
     }
 }

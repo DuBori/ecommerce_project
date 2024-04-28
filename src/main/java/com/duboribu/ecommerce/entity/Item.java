@@ -28,7 +28,7 @@ public abstract class Item extends BaseEntity{
     private String information;
     private String weight;
     private String filePath;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
