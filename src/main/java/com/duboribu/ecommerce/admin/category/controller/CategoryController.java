@@ -22,18 +22,18 @@ public class CategoryController {
     @GetMapping("")
     public String list(SearchCategory searchCategory, Model model) {
         model.addAttribute("list", adminCategoryService.list(searchCategory));
-        return "/admin/category/list";
+        return "admin/category/list";
     }
 
     @GetMapping("/view/{id}")
     public String view(@PathVariable Long id, Model model) {
         model.addAttribute("category", adminCategoryService.findById(id));
-        return "/admin/category/view";
+        return "admin/category/view";
     }
 
     @GetMapping("/create")
     public String createPage() {
-        return "/admin/category/create";
+        return "admin/category/create";
     }
 
     @PostMapping("/create")

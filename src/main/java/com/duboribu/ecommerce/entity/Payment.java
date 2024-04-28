@@ -6,11 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @ToString(of = {"merchant_uid", "impUid", "totalPrice"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Payment extends BaseEntity{
+public class Payment extends BaseEntity implements Serializable {
     @Id
     private String merchant_uid;
     private int totalPrice;

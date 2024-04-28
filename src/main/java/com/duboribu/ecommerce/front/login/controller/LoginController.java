@@ -20,7 +20,7 @@ public class LoginController {
     private final RestInterface restInterface;
     @RequestMapping()
     public String loginPage() {
-        return "/login/login";
+        return "login/login";
     }
     @PostMapping("/login")
     public String signIn(UserDto userDto) {
@@ -41,7 +41,7 @@ public class LoginController {
 
     @RequestMapping("/signup")
     public String signUpPage() {
-        return "/login/signup";
+        return "login/signup";
     }
 
     @PostMapping("/signup")

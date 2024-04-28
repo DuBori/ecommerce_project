@@ -8,6 +8,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 // Book 엔티티
@@ -15,7 +16,7 @@ import java.math.BigDecimal;
 @DiscriminatorValue("B")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Book extends Item {
+public class Book extends Item  implements Serializable {
     private String title;
     private String author;
     private String publisher;
