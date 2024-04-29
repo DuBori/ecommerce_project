@@ -32,7 +32,6 @@ import java.util.Optional;
 public class AuthController {
     private final MemberService memberService;
     private final MemberTokenService memberTokenService;
-    /*private final CustomOauth2UserService customOauth2UserService;*/
 
     /**
      * 일반 유저 회원가입 및 리프레시 토큰 저장
@@ -87,7 +86,7 @@ public class AuthController {
     /**
      * 로그아웃
      */
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<DefaultResponse> logOut(HttpServletRequest request,HttpServletResponse response) {
         log.info("로그아웃 실행");
         Cookie[] cookies = request.getCookies();

@@ -40,20 +40,27 @@ public class OrderController {
             log.debug("{}", e.getMessage());
         }
 
+        FoOrderResponse foOrderResponse = getFoOrderResponse(cart, createOrderRequest, getUserId(request));
         if (StringUtils.hasText(cart)) {
-            FoOrderResponse foOrderResponse = foCartService.getCartList(getUserId(request));
-            model.addAttribute("merchant_uid", paymentService.registerUid(foOrderResponse.getTotalPrice()));
-            model.addAttribute("foOrderItemRequest", createOrderRequest);
-            model.addAttribute("foOrderItemView", foOrderResponse);
             model.addAttribute("cart", "cart");
-            return "front/checkout";
         }
-        FoOrderResponse foOrderResponse = foItemService.itemViewResponses(createOrderRequest);
         model.addAttribute("merchant_uid", paymentService.registerUid(foOrderResponse.getTotalPrice()));
         model.addAttribute("foOrderItemRequest", createOrderRequest);
         model.addAttribute("foOrderItemView", foOrderResponse);
         return "front/checkout";
     }
+
+    private FoOrderResponse getFoOrderResponse(String cart, CreateOrderRequest createOrderRequest, String userId) {
+        if (StringUtils.hasText(cart)) {
+            FoOrderResponse cartList = foCartService.getCartList(userId);
+            if (cartList == null) {
+                throw new IllegalArgumentException("카트에 담긴 상품이 없습니다");
+            }
+            return cartList;
+        }
+        return foItemService.itemViewResponses(createOrderRequest);
+    }
+
     @GetMapping("/receipt/{id}")
     public String receiptPage(@PathVariable String id, Model model) {
         FoPaymentView byId = foOrderService.findById(id);
