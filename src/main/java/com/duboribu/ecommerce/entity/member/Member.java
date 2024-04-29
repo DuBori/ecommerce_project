@@ -7,11 +7,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
 @ToString(of = {"id", "name"})
 @NoArgsConstructor
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements Serializable {
     @Id
     @Column(name = "member_id")
     private String id;

@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class DashBoardController {
     @GetMapping
     public String main() {
-        return "/admin/index";
+        return "admin/index";
     }
 
     @GetMapping("/login")
     public String adminLoginPage() {
-        return "/admin/login";
+        return "admin/login";
     }
 
     @GetMapping("/singOut")
@@ -29,7 +29,7 @@ public class DashBoardController {
             ResponseEntity<DefaultResponse> response = RestUtil.get("http://localhost:8080/auth/logout", null, DefaultResponse.class);
             DefaultResponse body = response.getBody();
             if (body.getResCode() == 200) {
-                return "/admin/login";
+                return "admin/login";
             }
         } catch (Exception e) {
             log.error("{}", e.getMessage());
@@ -39,6 +39,6 @@ public class DashBoardController {
 
     @GetMapping("/profile")
     public String adminProfile() {
-        return "/admin/users-profile";
+        return "admin/users-profile";
     }
 }

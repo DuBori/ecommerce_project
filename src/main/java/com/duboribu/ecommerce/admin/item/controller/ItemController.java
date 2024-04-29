@@ -34,7 +34,7 @@ public class ItemController {
     public String list(SearchItemRequest searchItemRequest, Model model) {
         Page<ResponseBook> list = adminItemCustomRepository.list(searchItemRequest, PageRequest.of(searchItemRequest.getPage(), searchItemRequest.getPageSize()));
         model.addAttribute("list", list);
-        return "/admin/item/list";
+        return "admin/item/list";
     }
 
     /**
@@ -45,7 +45,7 @@ public class ItemController {
         ResponseBook byBookId = adminItemCustomRepository.findByBookId(id);
         model.addAttribute("item", byBookId);
         model.addAttribute("categoryList", foCategoryService.list("book"));
-        return "/admin/item/view";
+        return "admin/item/view";
     }
 
     /**
@@ -54,7 +54,7 @@ public class ItemController {
     @GetMapping("/create")
     public String createItemPage(Model model) {
         model.addAttribute("categoryList", foCategoryService.list("book"));
-        return "/admin/item/create";
+        return "admin/item/create";
     }
     
 

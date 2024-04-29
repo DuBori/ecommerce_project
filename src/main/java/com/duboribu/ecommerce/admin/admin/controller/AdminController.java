@@ -14,7 +14,7 @@ public class AdminController {
 
     @GetMapping("/wms/add")
     public String wmsStockAdd() {
-        return "/admin/wms/add";
+        return "admin/wms/add";
     }
 
 }

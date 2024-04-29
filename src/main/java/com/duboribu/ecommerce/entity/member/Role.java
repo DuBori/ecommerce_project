@@ -5,9 +5,11 @@ import com.duboribu.ecommerce.enums.RoleType;
 import jakarta.persistence.*;
 import lombok.Getter;
 
+import java.io.Serializable;
+
 @Entity
 @Getter
-public class Role extends BaseEntity {
+public class Role extends BaseEntity  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ROLE_ID")

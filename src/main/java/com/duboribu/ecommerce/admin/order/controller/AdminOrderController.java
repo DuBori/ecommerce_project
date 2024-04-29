@@ -19,6 +19,6 @@ public class AdminOrderController {
     @GetMapping("/list")
     public String list(SearchOrderRequest request, Model model) {
         model.addAttribute("list", adminOrderCustomRepository.list(PageRequest.of(request.getPage(), request.getPageSize())));
-        return "/admin/order/list";
+        return "admin/order/list";
     }
 }

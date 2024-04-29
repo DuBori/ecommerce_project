@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Getter
 @ToString(of = {"id", "orderItemList"})
 /*@NoArgsConstructor(access = AccessLevel.PROTECTED) 테스트를 위해 잠시 주석*/
-public class Order extends BaseEntity{
+public class Order extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
