@@ -58,7 +58,22 @@
                     }
                 });
             });
+
+            // 찜하기 기능  // 검색기능
+            $('li a[href="/like"], .heart-icon, .site-btn, .footer__widget__social').click(function(e) {
+                e.preventDefault(); // 기본 이벤트 동작 방지
+                alert('아직 지원하지 않아요');
+                return;
+            });
+
+            // 로그아웃 기능
+            $('.logoutLink').click(function (event) {
+                event.preventDefault(); // 링크의 기본 동작을 막음
+                logout(); // 로그아웃 함수 실행
+            });
+
         })
+
         function directPurchase(productId, count) {
             let direct = {};
             direct[productId] = count;
@@ -206,11 +221,15 @@
         function logout() {
             $.ajax({
                 url: '/auth/logout',
-                type: 'GET',
-                success: function (response) {
-                    console.log('로그아웃 완료:', response.message);
-                    sessionStorage.clear();
-                    location.reload();
+                type: 'POST',
+                success: function (data) {
+                    if (data.resCode == 200) {
+                        alert('로그아웃 완료');
+                        sessionStorage.clear();
+                        location.href='/';
+                    } else {
+                        alert('시스템 오류');
+                    }
                 },
                 error: function (xhr, status, error) {
                     console.error('로그아웃 실패:', error);
@@ -218,9 +237,6 @@
             });
         }
 
-        $('.logoutLink').click(function (event) {
-            event.preventDefault(); // 링크의 기본 동작을 막음
-            logout(); // 로그아웃 함수 실행
-        });
+
     </script>
 </head>

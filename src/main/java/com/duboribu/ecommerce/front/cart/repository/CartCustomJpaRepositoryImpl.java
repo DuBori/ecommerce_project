@@ -1,9 +1,9 @@
 package com.duboribu.ecommerce.front.cart.repository;
 
 import com.duboribu.ecommerce.entity.*;
-import com.duboribu.ecommerce.front.cart.dto.CartRequest;
-import com.duboribu.ecommerce.front.cart.dto.FoCartItemView;
-import com.duboribu.ecommerce.front.cart.dto.QFoCartItemView;
+import com.duboribu.ecommerce.front.cart.dto.request.CartRequest;
+import com.duboribu.ecommerce.front.cart.dto.response.FoCartItemView;
+import com.duboribu.ecommerce.front.cart.dto.response.QFoCartItemView;
 import com.duboribu.ecommerce.front.order.dto.FoOrderItemView;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import com.duboribu.ecommerce.front.order.dto.QFoOrderItemView;
@@ -58,7 +58,6 @@ public class CartCustomJpaRepositoryImpl implements CartCustomJpaRepository {
 
         int totalPrice = 0;
         for (FoOrderItemView itemview : list) {
-            log.info("{}", "아이템 세팅");
             for (FoCartItemView cartItemView : foCartItemView) {
                 if (itemview.getId().equals(cartItemView.getItemId())){
                     itemview.mactchedUntiyPrice(cartItemView.getQuantity());

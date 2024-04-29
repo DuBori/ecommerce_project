@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.front.cart.dto;
+package com.duboribu.ecommerce.front.cart.dto.response;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;

@@ -33,7 +33,7 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="shoping__product">Products</th>
+                                    <th class="shoping__product">상품</th>
                                     <th>Price</th>
                                     <th>Quantity</th>
                                     <th>Total</th>
@@ -42,27 +42,32 @@
                             </thead>
                             <tbody>
                                 <div th:if="${foOrderResponse != null}">
-                                    <tr th:if="foOrderResponse.list != null" th:each="list : ${foOrderResponse.list}">
+                                    <tr class="shoping-tr" th:if="foOrderResponse.list != null" th:each="list : ${foOrderResponse.list}">
                                         <td class="shoping__cart__item">
                                             <img th:src="${list.filePath}" alt="" style="width: 200px; height: 200px">
                                             <h5 th:text="${list.title}"></h5>
                                         </td>
-                                        <td class="shoping__cart__price" th:text="${list.price}">
+                                        <td class="shoping__cart__price" th:text="${list.price}" th:attr="data-price=@{${list.price}}">
                                         </td>
                                         <td class="shoping__cart__quantity">
                                             <div class="quantity">
                                                 <div class="pro-cart-qty">
                                                     <span class="dec qtybtn" th:attr="data-itemid=@{${list.id}}, data-cartitemid=@{${list.cartItemId}}">-</span>
-                                                    <input class="quantity" type="text" th:value="${list.quantity}">
+                                                    <input class="quantity" type="text" th:value="${list.quantity}" readonly>
                                                     <span class="inc qtybtn" th:attr="data-itemid=@{${list.id}}, data-cartitemid=@{${list.cartItemId}}">+</span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="shoping__cart__total" th:text="${list.unitPrice}">
+                                        <td class="shoping__cart__total" th:text="${list.unitPrice}" th:attr="data-unitprice=@{${list.unitPrice}}">
                                         </td>
                                         <td class="shoping__cart__item__close deleteCartItem" th:attr="data-itemid=@{${list.id}}, data-cartitemid=@{${list.cartItemId}}">
                                             <span class="icon_close"></span>
                                         </td>
+                                    </tr>
+                                </div>
+                                <div th:if="${foOrderResponse == null}">
+                                    <tr>
+                                        <td>장바구니 상품이 없습니다</td>
                                     </tr>
                                 </div>
                             </tbody>
@@ -75,7 +80,12 @@
                     <div class="shoping__checkout">
                         <h5>총 결제금액</h5>
                         <ul>
-                            <li>Total <div th:if="${foOrderResponse != null}"><span th:if="${foOrderResponse.getTotalPrice() != null}" th:text="${foOrderResponse.getTotalPrice()}"></span></div></li>
+                            <li>Total
+                                <div th:if="${foOrderResponse != null}"><span
+                                        th:if="${foOrderResponse.getTotalPrice() != null}"
+                                        th:text="${foOrderResponse.getTotalPrice()}" class="totalPrice"
+                                        ></span></div>
+                            </li>
                         </ul>
                         <a href="#" class="primary-btn">결제하러 가기</a>
                     </div>
@@ -91,6 +101,15 @@
 </body>
 <script>
     $(".primary-btn").on("click", function () {
+        if (!userId) {
+            alert('로그인 후 이용해주세요.');
+            return;
+        }
+        if ($(".shoping__cart__item").length == 0) {
+            alert("장바구니에 담긴 상품이 없습니다");
+            return
+        }
+
         // form 생성
         let form = $('<form action="/order/checkout" method="POST">' +
             '<input type="hidden" name="cart" value="cart">' +
@@ -111,7 +130,6 @@
             success: function(data) {
                 let code = data.resCode;
                 if (code == 200) {
-                    /*$clickedElement.closest('tr').remove();*/
                     clearCart(itemId);
                     location.reload();
                 } else {
@@ -123,8 +141,22 @@
             }
         });
     });
+
+    function getTotalUnitPrice() {
+        let totalUnitPrice = 0;
+        $('.shoping__cart__total').each(function() {
+            let unitPrice = parseFloat($(this).attr('data-unitprice'));
+            totalUnitPrice += unitPrice;
+        });
+        return totalUnitPrice;
+    }
+
     $(function () {
         let proQty = $('.pro-cart-qty');
+
+        // 총 가격
+        let totalPrice = parseInt($(".totalPrice").data('totalPrice'));
+
         proQty.on('click', '.qtybtn', function () {
             let $button = $(this);
             let oldValue = $button.parent().find('input').val();
@@ -146,6 +178,9 @@
                         if (code == 200) {
                             newVal = parseFloat(newVal) + 1;
                             $button.parent().find('input.quantity').val(newVal);
+                            $button.closest('.shoping-tr').find('.shoping__cart__total').attr('data-unitprice', data.body.unitPrice);
+                            $button.closest('.shoping-tr').find('.shoping__cart__total').text(data.body.unitPrice);
+                            $(".totalPrice").empty().text(getTotalUnitPrice());
                         } else {
                             alert("카트 업데이트 오류발생")
                         }
@@ -169,6 +204,9 @@
                             if (code == 200) {
                                 newVal = parseFloat(newVal) - 1;
                                 $button.parent().find('input.quantity').val(newVal);
+                                $button.closest('.shoping-tr').find('.shoping__cart__total').attr('data-unitprice', data.body.unitPrice);
+                                $button.closest('.shoping-tr').find('.shoping__cart__total').text(data.body.unitPrice);
+                                $(".totalPrice").empty().text(getTotalUnitPrice());
                             } else {
                                 alert("카트 업데이트 오류발생")
                             }

@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
+import com.duboribu.ecommerce.front.cart.dto.response.CartItemResponse;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,9 +39,12 @@ public class CartItem implements Serializable {
         this.cart = cart;
     }
 
-    public boolean updateQuantity(int quantity) {
+    public void updateQuantity(int quantity) {
         this.quantity = quantity;
-        return true;
+    }
 
+    public CartItemResponse toResponse() {
+        return new CartItemResponse(quantity,
+                quantity * item.getPrice());
     }
 }

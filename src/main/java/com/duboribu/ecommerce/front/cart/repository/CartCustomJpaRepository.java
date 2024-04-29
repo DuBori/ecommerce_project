@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.front.cart.repository;
 
-import com.duboribu.ecommerce.front.cart.dto.CartRequest;
+import com.duboribu.ecommerce.front.cart.dto.request.CartRequest;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 
 import java.util.List;

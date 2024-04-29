@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.front.cart.dto;
+package com.duboribu.ecommerce.front.cart.dto.request;
 
 import com.duboribu.ecommerce.front.order.dto.CreateOrderRequest;
 import lombok.Getter;

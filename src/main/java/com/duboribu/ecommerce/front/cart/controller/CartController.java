@@ -4,8 +4,9 @@ import com.duboribu.ecommerce.Utils.Validator;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import com.duboribu.ecommerce.front.cart.FoCartService;
-import com.duboribu.ecommerce.front.cart.dto.CartQuantityReq;
-import com.duboribu.ecommerce.front.cart.dto.CartsRequest;
+import com.duboribu.ecommerce.front.cart.dto.request.CartQuantityReq;
+import com.duboribu.ecommerce.front.cart.dto.request.CartsRequest;
+import com.duboribu.ecommerce.front.cart.dto.response.CartItemResponse;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,6 @@ public class CartController {
     private String cartPage(HttpServletRequest request, Model model) {
         String userId = getUserId(request);
         FoOrderResponse cartList = foCartService.getCartList(userId);
-        log.info("cartList : {}", cartList);
         model.addAttribute("foOrderResponse", cartList);
         return "front/shoping-cart";
     }
@@ -46,18 +46,12 @@ public class CartController {
 
     @PostMapping("/quantity/{unit}")
     public ResponseEntity<DefaultResponse> updateQuantity(@PathVariable String unit, @RequestBody CartQuantityReq cartQuantityReq, HttpServletRequest request) {
-        String userId = "";
         try {
-            userId = getUserId(request);
+            CartItemResponse cartItemResponse = foCartService.updateQuantity(unit, cartQuantityReq);
+            return new ResponseEntity<>(new DefaultResponse(cartItemResponse), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(new DefaultResponse("토큰 만료", DefaultResponse.EXPIRED_ACCESS_TOKEN), HttpStatus.OK);
+            return new ResponseEntity<>(new DefaultResponse(DefaultResponse.SYSTEM_ERR_MSG, DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
         }
-
-        if (foCartService.updateQuantity(unit, cartQuantityReq)) {
-            return new ResponseEntity<>(new DefaultResponse("카트 수량 업데이트 완료",DefaultResponse.SUCCESS), HttpStatus.OK);
-        };
-
-        return new ResponseEntity<>(new DefaultResponse(DefaultResponse.SYSTEM_ERR_MSG, DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
     }
 
     @PostMapping("/delete/{cartItem}")

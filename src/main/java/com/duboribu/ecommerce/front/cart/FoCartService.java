@@ -5,9 +5,10 @@ import com.duboribu.ecommerce.entity.CartItem;
 import com.duboribu.ecommerce.entity.Item;
 import com.duboribu.ecommerce.entity.Stock;
 import com.duboribu.ecommerce.entity.member.Member;
-import com.duboribu.ecommerce.front.cart.dto.CartQuantityReq;
-import com.duboribu.ecommerce.front.cart.dto.CartRequest;
-import com.duboribu.ecommerce.front.cart.dto.CartsRequest;
+import com.duboribu.ecommerce.front.cart.dto.request.CartQuantityReq;
+import com.duboribu.ecommerce.front.cart.dto.request.CartRequest;
+import com.duboribu.ecommerce.front.cart.dto.request.CartsRequest;
+import com.duboribu.ecommerce.front.cart.dto.response.CartItemResponse;
 import com.duboribu.ecommerce.front.cart.repository.CartCustomJpaRepository;
 import com.duboribu.ecommerce.front.item.repository.FoItemCustomRepository;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
@@ -53,11 +54,12 @@ public class FoCartService {
         }
         // 신규카트는 생성해주면됨
         List<CartItem> cartItemList = getCartItems(cartRequest);
+        
         Cart cart = new Cart(member, cartItemList);
         cartJpaRepository.save(cart);
         return true;
     }
-    @Transactional
+
     private List<CartItem> getCartItems(CartsRequest cartRequest) {
         List<CartItem> list = new ArrayList<>();
         for (CartRequest request : cartRequest.getList()) {
@@ -76,18 +78,19 @@ public class FoCartService {
         return cartCustomJpaRepository.findCartByUserId(userId);
     }
     @Transactional
-    public boolean updateQuantity(String unit, CartQuantityReq cartQuantityReq) {
+    public CartItemResponse updateQuantity(String unit, CartQuantityReq cartQuantityReq) {
         int updateCount = 0;
 
         Optional<CartItem> findCartItem = cartItemJpaRepository.findById(cartQuantityReq.getCartItemId());
         if (findCartItem.isEmpty()) {
-            return false;
+            log.error("찾는 장바구니 상품 없음");
+            throw new IllegalArgumentException("찾는 장바구니 상품 없음");
         }
 
         Optional<Stock> findStock = stockJpaRepository.findByItem(itemJpaRepository.findById(cartQuantityReq.getItemId()).get());
         if (findStock.isEmpty()) {
-            log.info("");
-            return false;
+            log.error("찾는 재고 ID가 없음");
+            throw new IllegalArgumentException("찾는 재고 ID가 없음");
         }
 
         CartItem cartItem = findCartItem.get();
@@ -100,9 +103,11 @@ public class FoCartService {
 
         Stock stock = findStock.get();
         if (stock.getCount() < updateCount) {
-            return false;
+            throw new IllegalArgumentException("재고보다 요청개수가 더 많음 구매불가");
         }
-        return cartItem.updateQuantity(updateCount);
+        cartItem.updateQuantity(updateCount);
+
+        return cartItem.toResponse();
     }
     @Transactional
     public boolean deleteCartItem(Long cartItem) {
