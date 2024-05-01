@@ -1,8 +1,10 @@
 
 package com.duboribu.ecommerce.Utils.upload;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -17,24 +19,24 @@ import java.util.UUID;
 public class StorageService {
     @Value("${upload.path}")
     private String uploadPath; // 이미지 업로드 경로
-
+    @Transactional
     public String store(MultipartFile file, String path) {
-
-        File uploadDir = new File(uploadPath + "/customImage_" + path);
-
-        if (!uploadDir.exists()) {
-            uploadDir.mkdirs();
-        }
-
         try {
-            // 이미지 파일 저장
+            // 임시 파일 이름 생성
             String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-            Path filePath = Paths.get(uploadPath + "/customImage_" + path + "/" + fileName);
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            // 저장할 디렉터리 경로 설정
+            Path directoryPath = Paths.get(uploadPath + "/customImage_" + path);
+            if (!Files.exists(directoryPath)) {
+                // 디렉터리가 없으면 생성합니다.
+                Files.createDirectories(directoryPath);
+            }
+            // 파일 경로 설정
+            Path filePath = directoryPath.resolve(fileName);
+            // 파일 저장
+            FileCopyUtils.copy(file.getBytes(), Files.newOutputStream(filePath));
             return "/images/customImage_" + path + "/" + fileName;
         } catch (IOException e) {
             throw new RuntimeException("Failed to store file", e);
         }
     }
-
 }
