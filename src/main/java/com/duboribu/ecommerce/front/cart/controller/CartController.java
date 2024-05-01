@@ -1,6 +1,5 @@
 package com.duboribu.ecommerce.front.cart.controller;
 
-import com.duboribu.ecommerce.Utils.Validator;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
 import com.duboribu.ecommerce.front.cart.FoCartService;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -29,14 +27,14 @@ public class CartController {
 
     @GetMapping("")
     private String cartPage(HttpServletRequest request, Model model) {
-        String userId = getUserId(request);
+        String userId = jwtTokenProvider.getUserId(request);
         FoOrderResponse cartList = foCartService.getCartList(userId);
         model.addAttribute("foOrderResponse", cartList);
         return "front/shoping-cart";
     }
     @PostMapping("/add")
     public ResponseEntity add(@RequestBody CartsRequest cartRequest, HttpServletRequest request) {
-        String userId = getUserId(request);
+        String userId = jwtTokenProvider.getUserId(request);
         if (StringUtils.hasText(userId)) {
             foCartService.addCategory(userId, cartRequest);
         }
@@ -58,7 +56,7 @@ public class CartController {
     public ResponseEntity<DefaultResponse> updateQuantity(@PathVariable Long cartItem, HttpServletRequest request) {
         String userId = "";
         try {
-            userId = getUserId(request);
+            userId = jwtTokenProvider.getUserId(request);
         } catch (Exception e) {
             return new ResponseEntity<>(new DefaultResponse("토큰 만료", DefaultResponse.EXPIRED_ACCESS_TOKEN), HttpStatus.OK);
         }
@@ -70,14 +68,4 @@ public class CartController {
         return new ResponseEntity<>(new DefaultResponse(DefaultResponse.SYSTEM_ERR_MSG, DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
     }
 
-
-
-    private String getUserId(HttpServletRequest request) {
-        String accessToken = Validator.getAccessToken(request);
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-        if (authentication == null) {
-            return null;
-        }
-        return authentication.getName();
-    }
 }

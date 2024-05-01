@@ -12,9 +12,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
-
-@SpringBootApplication
 @EnableJpaAuditing
+@SpringBootApplication
 public class EcommerceApplication {
 
 	public static void main(String[] args) {

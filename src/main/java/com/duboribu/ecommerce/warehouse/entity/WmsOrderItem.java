@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.warehouse.entity;
 
-import com.duboribu.ecommerce.warehouse.enums.OrderState;
+import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,15 +18,15 @@ public class WmsOrderItem {
     @JoinColumn(name = "wms_order_id")
     private WmsOrder wmsOrder;
     @Enumerated(EnumType.STRING)
-    private OrderState state;
+    private WmsOrderState state;
 
-    public WmsOrderItem(Long id, OrderState state) {
+    public WmsOrderItem(Long id, WmsOrderState state) {
         this.id = id;
         this.state = state;
     }
 
-    public void updateOrderState(OrderState newOrderState) {
-        state = newOrderState;
+    public void updateOrderState(WmsOrderState newWmsOrderState) {
+        state = newWmsOrderState;
     }
 
     public void matchOrder(WmsOrder wmsOrder) {

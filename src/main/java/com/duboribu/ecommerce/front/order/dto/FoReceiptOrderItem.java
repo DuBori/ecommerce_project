@@ -6,13 +6,13 @@ import lombok.ToString;
 
 @Getter
 @ToString
-public class FoOrderItemResponse {
+public class FoReceiptOrderItem {
     private Long itemId;
     private String itemName;
     private int itemNetPrice;
     private int itemCount;
     @QueryProjection
-    public FoOrderItemResponse(Long itemId, String itemName, int itemNetPrice, int itemCount) {
+    public FoReceiptOrderItem(Long itemId, String itemName, int itemNetPrice, int itemCount) {
         this.itemId = itemId;
         this.itemName = itemName;
         this.itemNetPrice = itemNetPrice;

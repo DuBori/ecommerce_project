@@ -14,7 +14,6 @@ import com.duboribu.ecommerce.front.order.service.PaymentService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -40,7 +39,7 @@ public class OrderController {
             log.debug("{}", e.getMessage());
         }
 
-        FoOrderResponse foOrderResponse = getFoOrderResponse(cart, createOrderRequest, getUserId(request));
+        FoOrderResponse foOrderResponse = getFoOrderResponse(cart, createOrderRequest, jwtTokenProvider.getUserId(request));
         if (StringUtils.hasText(cart)) {
             model.addAttribute("cart", "cart");
         }
@@ -67,14 +66,6 @@ public class OrderController {
         log.info("byId : {}", byId);
         model.addAttribute("foOrderReceipt", foOrderService.findById(id));
         return "front/recipt";
-    }
-    private String getUserId(HttpServletRequest request) {
-        String accessToken = Validator.getAccessToken(request);
-        Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
-        if (authentication == null) {
-            return null;
-        }
-        return authentication.getName();
     }
 }
 

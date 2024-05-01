@@ -1,6 +1,7 @@
 package com.duboribu.ecommerce.entity;
 
 import com.duboribu.ecommerce.order.dto.OrderRequestDTO;
+import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,12 +16,15 @@ public class Delivery extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
+    private WmsOrderState wmsOrderState;
     private String zip; // 지번
     private String address; // 주소
     private String sender; // 보내는 사람
     private String senderPhoneNum;
     private String receiver; // 수령인
     private String receiverPhoneNum; // 수령인 번호
+
+
 
     @ManyToOne
     @JoinColumn(name = "order_id")

@@ -5,8 +5,8 @@ import com.duboribu.ecommerce.Utils.eamil.dto.EmailMessage;
 import com.duboribu.ecommerce.warehouse.WmsException;
 import com.duboribu.ecommerce.warehouse.entity.WmsOrder;
 import com.duboribu.ecommerce.warehouse.entity.WmsOrderItem;
-import com.duboribu.ecommerce.warehouse.enums.OrderState;
 import com.duboribu.ecommerce.warehouse.enums.WmsExceptionType;
+import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import com.duboribu.ecommerce.warehouse.order.dto.request.CreateDeliveryRequest;
 import com.duboribu.ecommerce.warehouse.order.dto.request.ProcessDeliveryRequest;
 import com.duboribu.ecommerce.warehouse.order.dto.request.SelectDeliveryRequest;
@@ -46,7 +46,7 @@ public class WmsOrderService {
             Optional<WmsOrder> findWmsOrder = wmsOrderJpaRepository.findById(orderInfo.getOrderId());
             if (findWmsOrder.isPresent()) {
                 WmsOrder wmsOrder = findWmsOrder.get();
-                wmsOrder.getWmsOrderItem().add(new WmsOrderItem(orderInfo.getOrderItemId(), OrderState.DELIVERY_SET));
+                wmsOrder.getWmsOrderItem().add(new WmsOrderItem(orderInfo.getOrderItemId(), WmsOrderState.DELIVERY_SET));
             } else {
                 WmsOrder wmsOrder = orderInfo.toEntity();
                 wmsOrderJpaRepository.save(wmsOrder);
@@ -77,7 +77,7 @@ public class WmsOrderService {
             throw new WmsException(WmsExceptionType.WMS_LIST_EMPTY);
         }
         String newOrderStateRequest = request.getNewOrderState();
-        OrderState matchState = OrderState.getMatchState(newOrderStateRequest);
+        WmsOrderState matchState = WmsOrderState.getMatchState(newOrderStateRequest);
         List<ProcessDeliveryRequest.CoDeliveryInfo> orderItemId = request.getOrderItemId();
         if (!orderItemId.isEmpty()) {
             return updateOrderItemState(matchState, orderItemId);
@@ -85,7 +85,7 @@ public class WmsOrderService {
         return Collections.emptyList();
     }
 
-    private List<UpdateWmsOrderResponse> updateOrderItemState(OrderState matchState, List<ProcessDeliveryRequest.CoDeliveryInfo> orderItemId) {
+    private List<UpdateWmsOrderResponse> updateOrderItemState(WmsOrderState matchState, List<ProcessDeliveryRequest.CoDeliveryInfo> orderItemId) {
         List<UpdateWmsOrderResponse> list = new ArrayList<>();
         for (ProcessDeliveryRequest.CoDeliveryInfo info  : orderItemId) {
             UpdateWmsOrderResponse updateWmsOrderResponse = updateWmsOrder(info.getCompanyOrderId(), info.getCoCode(), matchState);
@@ -107,16 +107,16 @@ public class WmsOrderService {
         }
     }
 
-    private UpdateWmsOrderResponse updateWmsOrder(Long companyOrderId, String companyCode, OrderState newOrderState) {
+    private UpdateWmsOrderResponse updateWmsOrder(Long companyOrderId, String companyCode, WmsOrderState newWmsOrderState) {
         // 실패한다면 wmsOrderLog에 실패한것들 로그로 쌓고 메일로 알려준다. // 이건 생각좀해보자
         Optional<WmsOrderItem> findWmsOrderItem = wmsOrderItemJpaRepository.findByIdAndWmsOrder_CoCode(companyOrderId, companyCode);
         if (findWmsOrderItem.isPresent()) {
             WmsOrderItem wmsOrderItem = findWmsOrderItem.get();
-            wmsOrderItem.updateOrderState(newOrderState);
-            return new UpdateWmsOrderResponse("success", companyCode, companyOrderId, newOrderState);
+            wmsOrderItem.updateOrderState(newWmsOrderState);
+            return new UpdateWmsOrderResponse("success", companyCode, companyOrderId, newWmsOrderState);
         }
         log.error("fails {}-order : {}", companyCode, companyOrderId);
-        return new UpdateWmsOrderResponse("fail", companyCode, companyOrderId, newOrderState);
+        return new UpdateWmsOrderResponse("fail", companyCode, companyOrderId, newWmsOrderState);
     }
 
 }

@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.warehouse.order.dto.response;
 
-import com.duboribu.ecommerce.warehouse.enums.OrderState;
+import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.ToString;
@@ -11,12 +11,12 @@ public class UpdateWmsOrderResponse {
     private String result;
     private String coCode;
     private Long companyOrderId;
-    private OrderState orderState;
+    private WmsOrderState wmsOrderState;
     @QueryProjection
-    public UpdateWmsOrderResponse(String result, String coCode, Long companyOrderId, OrderState orderState) {
+    public UpdateWmsOrderResponse(String result, String coCode, Long companyOrderId, WmsOrderState wmsOrderState) {
         this.result = result;
         this.coCode = coCode;
         this.companyOrderId = companyOrderId;
-        this.orderState = orderState;
+        this.wmsOrderState = wmsOrderState;
     }
 }

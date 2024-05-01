@@ -10,9 +10,9 @@ import retrofit2.http.POST;
 public interface RestInterface {
 	
    // 반환 타입은 Call<타입>의 제네릭 형태
-   @POST("/join/sign-up")
+   @POST("/auth/sign-up")
    Call<DefaultResponse<UserResponse>> signUp(@Body UserDto userDto);
-   @POST("/join/sign-in")
+   @POST("/auth/sign-in")
    Call<DefaultResponse<UserResponse>> signIn(@Body UserDto userDto);
 	
 }

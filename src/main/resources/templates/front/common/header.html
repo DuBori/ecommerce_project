@@ -71,7 +71,12 @@
                 event.preventDefault(); // 링크의 기본 동작을 막음
                 logout(); // 로그아웃 함수 실행
             });
-
+            $("a.disabled").click(function (event) {
+                event.preventDefault(); // 링크의 기본 동작을 막음
+            });
+            if (userId) {
+                $('li.faUser').show()
+            }
         })
 
         function directPurchase(productId, count) {

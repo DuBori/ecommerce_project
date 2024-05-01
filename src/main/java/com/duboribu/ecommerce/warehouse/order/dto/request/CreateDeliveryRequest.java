@@ -2,7 +2,7 @@ package com.duboribu.ecommerce.warehouse.order.dto.request;
 
 import com.duboribu.ecommerce.warehouse.entity.WmsOrder;
 import com.duboribu.ecommerce.warehouse.entity.WmsOrderItem;
-import com.duboribu.ecommerce.warehouse.enums.OrderState;
+import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -47,7 +47,7 @@ public class CreateDeliveryRequest {
         }
 
         public WmsOrder toEntity() {
-            return new WmsOrder(orderId, date, code, Collections.singletonList(new WmsOrderItem(orderItemId, OrderState.DELIVERY_SET)));
+            return new WmsOrder(orderId, date, code, Collections.singletonList(new WmsOrderItem(orderItemId, WmsOrderState.DELIVERY_SET)));
         }
     }
 
