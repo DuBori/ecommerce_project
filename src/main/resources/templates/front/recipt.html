@@ -29,7 +29,7 @@
       <!-- Receipt content goes here -->
       <div class="order-details">
         <!-- Iterate over order items -->
-        <div th:each="orderItem : ${foOrderReceipt.foOrderItemResponseList}">
+        <div th:each="orderItem : ${foOrderReceipt.getFoReceiptOrderItemList}">
           <div class="item">
             <span class="item-itemId" th:text="${orderItem.itemId}"></span>
             <span class="item-itemName" th:text="${orderItem.itemName}"></span>

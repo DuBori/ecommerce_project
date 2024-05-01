@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.warehouse.order.dto;
 
-import com.duboribu.ecommerce.warehouse.enums.OrderState;
+import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -17,7 +17,7 @@ public class WmsOrderInfo {
         public  class WmsOrderResponse {
             private String orderId;
             private String orderItemId;
-            private OrderState orderState;
+            private WmsOrderState wmsOrderState;
 
         }
     }

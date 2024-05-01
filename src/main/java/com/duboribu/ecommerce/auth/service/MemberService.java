@@ -76,6 +76,7 @@ public class MemberService implements UserDetailsService {
 
     @Transactional
     public UserResponse join(UserDto userDto) {
+        log.info("JoinUsername : {}", userDto.getUsername());
         if (!memberJpaRepository.findById(userDto.getUsername()).isEmpty()) {
             return null;
         }

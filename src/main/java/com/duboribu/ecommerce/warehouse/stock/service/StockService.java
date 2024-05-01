@@ -2,6 +2,7 @@ package com.duboribu.ecommerce.warehouse.stock.service;
 
 import com.duboribu.ecommerce.Utils.RestUtil;
 import com.duboribu.ecommerce.admin.item.dto.CreateStockRequest;
+import com.duboribu.ecommerce.entity.Item;
 import com.duboribu.ecommerce.entity.Stock;
 import com.duboribu.ecommerce.repository.ItemJpaRepository;
 import com.duboribu.ecommerce.repository.StockJpaRepository;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +32,14 @@ public class StockService {
             Boolean exist = response.getBody();
             log.info("{} : ", exist.toString());
             if (exist.booleanValue()) {
-                Stock stock = new Stock(itemJpaRepository.findById(request.getId()).get(), request.getCount());
+                Item item = itemJpaRepository.findById(request.getId()).get();
+                Optional<Stock> findStock = stockJpaRepository.findByItem(item);
+                if (findStock.isPresent()) {
+                    Stock stock = findStock.get();
+                    stock.changeStock(request.getCount());
+                    return true;
+                }
+                Stock stock = new Stock(item, request.getCount());
                 stockJpaRepository.save(stock);
                 return true;
             }

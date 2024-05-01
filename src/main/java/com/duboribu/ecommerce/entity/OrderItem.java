@@ -22,13 +22,16 @@ public class OrderItem extends BaseEntity implements Serializable {
     private int netPrice;
     private int dcPrice;
     private int count;
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
     @ManyToOne
     @JoinColumn(name ="item_id")
     private Item item;
+
+    @ManyToOne
+    @JoinColumn(name = "delivery_id")
+    private Delivery delivery;
     public OrderItem(Item item, Stock stock, int count) {
         this.netPrice = item.getPrice();
         this.dcPrice = 0;

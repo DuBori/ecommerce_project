@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.auth.util;
 
+import com.duboribu.ecommerce.Utils.Validator;
 import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
@@ -9,6 +10,7 @@ import com.duboribu.ecommerce.enums.RoleType;
 import com.duboribu.ecommerce.repository.MemberJpaRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -45,8 +47,8 @@ public class JwtTokenProvider implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
-    @Transactional
     // 권한 가져오기
+    @Transactional
     public Authentication getAuthentication(final String accessToken) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
@@ -65,8 +67,8 @@ public class JwtTokenProvider implements InitializingBean {
         UserDetails user = new PrincipalDetails(findMember.get());
         return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
     }
-
     // 토큰 생성
+    @Transactional
     public String createAccessToken(final UserDto userDto) {
         if (!StringUtils.hasText(userDto.getLoginType())) {
             return null;
@@ -84,6 +86,7 @@ public class JwtTokenProvider implements InitializingBean {
 
     }
     // 리프레시 토큰 생성
+    @Transactional
     public String createRefreshToken(String userId) {
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
@@ -94,7 +97,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .setExpiration(Timestamp.valueOf(now.plusMinutes(refreshTokenValidityInMilliseconds / (60 * 1000))))
                 .compact();
     }
-    
+    @Transactional
     // 검증
     public boolean validateToken(final String token) {
         try {
@@ -113,7 +116,7 @@ public class JwtTokenProvider implements InitializingBean {
             throw new JwtException(JwtUserExceptionType.ILLEGAL_JWT_TOKEN);
         }
     }
-
+    @Transactional
     public String createAccessToken(String userId, String userName, RoleType role) {
         final LocalDateTime now = LocalDateTime.now();
         return Jwts.builder()
@@ -126,7 +129,7 @@ public class JwtTokenProvider implements InitializingBean {
                 .setExpiration(Timestamp.valueOf(now.plusMinutes(accessTokenValidityInMilliseconds / (60 * 1000))))
                 .compact();
     }
-
+    @Transactional
     //엑세스 토큰의 만료시간
     public Long getExpiration(String accessToken){
         Date expiration = Jwts.parserBuilder().setSigningKey(key)
@@ -137,6 +140,8 @@ public class JwtTokenProvider implements InitializingBean {
         long now = new Date().getTime();
         return expiration.getTime() - now;
     }
+
+    @Transactional
     public boolean isExpired(String accessToken) {
         Date expiration = Jwts.parserBuilder().setSigningKey(key)
                 .build()
@@ -145,6 +150,15 @@ public class JwtTokenProvider implements InitializingBean {
                 .getExpiration();
         Date now = new Date();
         return expiration.before(now);
+    }
+    @Transactional
+    public String getUserId(HttpServletRequest request) {
+        String accessToken = Validator.getAccessToken(request);
+        Authentication authentication = getAuthentication(accessToken);
+        if (authentication == null) {
+            return null;
+        }
+        return authentication.getName();
     }
 }
 

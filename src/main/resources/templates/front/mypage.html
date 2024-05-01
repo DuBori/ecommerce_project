@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th ="http://www.thymeleaf.org">
+<div th:replace="front/common/header :: header"></div>
+<style>
+  .container {
+    /*max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;*/
+  }
+  .container h1 {
+    text-align: center;
+  }
+  .container #user-info, .container #order-info {
+    margin-bottom: 20px;
+  }
+  .container table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .container th, .container td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  .container th {
+    background-color: #f2f2f2;
+  }
+</style>
+<body>
+  <div th:replace="front/common/top :: top"></div>
+  <div class="container">
+    <h1>마이페이지</h1>
+    <div id="user-info">
+      <h2>사용자 정보</h2>
+      <table>
+        <tr>
+          <th>이름</th>
+          <td id="user-name" th:text="${user.name}"></td>
+        </tr>
+        <tr>
+          <th>계정</th>
+          <td id="user-email" th:text="${user.id}"></td>
+        </tr>
+        <!-- 추가적인 사용자 정보 필요시 여기에 추가 -->
+      </table>
+    </div>
+    <h1>주문 정보</h1>
+    <div id="order-info">
+      <table>
+        <thead>
+        <tr>
+          <th>주문 번호</th>
+          <th>주문 상태</th>
+          <th>총 가격</th>
+          <th>총 할인 가격</th>
+          <th>상품명</th>
+          <th>가격</th>
+          <th>수량</th>
+          <th>할인 가격</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${not #lists.isEmpty(myPageOrderResponse)}" th:each="order : ${myPageOrderResponse}">
+          <td th:text="${order.orderId}"></td>
+          <td th:text="${order.orderState}"></td>
+          <td th:text="${order.totalPrice}"></td>
+          <td th:text="${order.totalDcPrice}"></td>
+          <td colspan="4" th:if="${not #lists.isEmpty(order.list)}">
+            <table class="order-items">
+              <tr>
+                <th>상품명</th>
+                <th>가격</th>
+                <th>수량</th>
+                <th>할인 가격</th>
+              </tr>
+              <tr th:each="orderItem : ${order.list}">
+                <td th:text="${orderItem.name}"></td>
+                <td th:text="${orderItem.price}"></td>
+                <td th:text="${orderItem.quantity}"></td>
+                <td th:text="${orderItem.dcPrice}"></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Footer Section Begin -->
+  <div th:replace="front/common/footer :: footer"></div>
+</body>
+</html>

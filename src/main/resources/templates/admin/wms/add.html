@@ -78,7 +78,9 @@
         dataType: 'json',
         success: function (data) {
           // 성공적인 응답을 받은 경우
-          $('#responseMessage').text('요청이 성공적으로 완료되었습니다.');
+          if (data) {
+            $('#responseMessage').text('요청이 성공적으로 완료되었습니다.');
+          }
         },
         error: function (xhr, status, error) {
           // 오류 응답을 받은 경우

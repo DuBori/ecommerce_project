@@ -11,14 +11,14 @@ import java.util.List;
 public class FoPaymentView {
     private Long orderId;
     private int totalNetPrice;
-    private List<FoOrderItemResponse> foOrderItemResponseList;
+    private List<FoReceiptOrderItem> foReceiptOrderItemList;
     @QueryProjection
     public FoPaymentView(Long orderId) {
         this.orderId = orderId;
     }
 
-    public void mactedOrderListAndTotalPrice(int totalNetPrice, List<FoOrderItemResponse> list) {
+    public void mactedOrderListAndTotalPrice(int totalNetPrice, List<FoReceiptOrderItem> list) {
         this.totalNetPrice = totalNetPrice;
-        foOrderItemResponseList = list;
+        foReceiptOrderItemList = list;
     }
 }
