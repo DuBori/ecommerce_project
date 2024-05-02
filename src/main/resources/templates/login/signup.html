@@ -25,12 +25,31 @@
 
         h2 {
             text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .input-group > * {
+            width: 80%; /* 80% 폭으로 아이디 입력 필드 */
+        }
+
+        .input-group > button {
+            width: 20%; /* 20% 폭으로 중복확인 버튼 */
+            align-self: stretch; /* 버튼 높이를 아이디 입력 필드와 맞춤 */
+            max-height: 38px; /* 버튼 최대 높이 설정 */
         }
 
         input[type="text"],
         input[type="email"],
         input[type="password"],
-        input[type="submit"] {
+        input[type="submit"],
+        button {
             width: 100%;
             padding: 10px;
             margin-bottom: 10px;
@@ -39,14 +58,30 @@
             box-sizing: border-box;
         }
 
-        input[type="button"] {
+        button {
             background-color: #007bff;
             color: #fff;
             cursor: pointer;
         }
 
-        input[type="button"]:hover {
+        button:hover {
             background-color: #0056b3;
+        }
+
+        #usernameError {
+            color: red;
+            display: block;
+            margin-top: -10px;
+            margin-bottom: 10px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button-group > * {
+            width: calc(33.33% - 5px);
         }
     </style>
 </head>
@@ -56,62 +91,28 @@
 <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
 <div class="container">
     <h2>회원가입</h2>
-    <input type="text" name="username" placeholder="아이디" required>
-    <input type="password" name="password" placeholder="비밀번호" required>
-    <input type="password" name="repassword" placeholder="비밀번호 재확인" required>
-    <input type="text" name="name" placeholder="사용자 이름" required>
-    <input type="button" class="btn btn-primary" value="가입하기" onclick="signUpValidate();">
-    <input type="button" class="btn btn-primary ml-3" value="로그인 페이지" onclick="location.href='/login'">
-    <input type="button" class="btn btn-primary ml-3" value="메인 페이지" onclick="location.href='/'">
+    <div class="form-group">
+        <input type="text" name="username" id="username" placeholder="아이디" required>
+    </div>
+    <div class="form-group">
+        <input type="password" name="password" placeholder="비밀번호" required>
+    </div>
+    <div class="form-group">
+        <input type="password" name="repassword" placeholder="비밀번호 재확인" required>
+    </div>
+    <div class="form-group">
+        <input type="text" name="name" placeholder="사용자 이름" required>
+    </div>
+    <button type="button" onclick="signUpValidate();">가입하기</button>
+    <div style="text-align: center; margin-top: 10px;">
+        <button type="button" onclick="location.href='/login';">로그인 페이지</button>
+        <button type="button" onclick="location.href='/';">메인 페이지</button>
+    </div>
 </div>
 </body>
 </html>
 <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
 <script>
-    function signUpValidate() {
-        let userName = $("input[name=username]").val();
-        let password = $("input[name=password]").val();
-        let passReword = $("input[name=repassword]").val();
-        let name = $("input[name=name]").val();
 
-        if (!userName || !passReword || !passReword) {
-            alert("필수 정보를 모두 입력해주세요.");
-            return false;
-        }
-        if (password != passReword) {
-            alert("비밀번호가 다릅니다\n 다시 입력해주세요");
-            $("input[name=password]").val('')
-            $("input[name=repassword]").val('')
-            return false;
-        }
 
-        $.ajax({
-            url: '/auth/sign-up',
-            type: 'POST',
-            data: JSON.stringify({
-                username: userName,
-                password: password,
-                name: name
-            }),
-            contentType: 'application/json',
-            success: function (data) {
-                if (data.resCode == 200) { // 회원가입 완료
-                    alert(data.resMsg);
-                    location.href = '/login';
-                } else if (data.resCode == 203) { // 이미 회원
-                    alert(data.resMsg);
-                    $("input[name=username]").val('');
-                    $("input[name=password]").val('');
-                    $("input[name=repassword]").val('');
-                } else {
-                    alert('시스템 오류');
-                }
-            },
-            error: function (xhr, status, error) {
-                console.error('Error:', error);
-                alert('시스템 오류');
-            }
-        });
-
-    }
 </script>
