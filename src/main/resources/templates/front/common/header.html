@@ -24,11 +24,16 @@
     <script>
         let userId, name, expiration;
         const storedExpiration = sessionStorage.getItem('expiration');
-        $(function () {
+
+        function updateCartCount() {
             let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
             let cartCount = Object.values(cart).reduce((a, b) => a + b, 0);
+            $("span.shoppingBagSpan").text("");
             $("span.shoppingBagSpan").text(cartCount);
+        }
 
+        $(function () {
+            updateCartCount();
             // 장바구니 페이지로 이동할 때 카트 정보를 서버에 전송
             $('li a[href="/cart"]').click(function(e) {
                 e.preventDefault(); // 기본 이벤트 동작 방지
@@ -99,7 +104,6 @@
                 cartRequest.list
                     .push({ productId: parseInt(productId), quantity: quantity });
             }
-            let cartCount = Number($("span.shoppingBagSpan").text() == undefined ? 0 : $("span.shoppingBagSpan").text());
 
             // 이미 담겨져 있는 상품인지 확인
             if (cart[productId]) {
@@ -130,12 +134,11 @@
                 } else {
                     cart[productId] = 1;
                     console.log("productId : " + productId + " , " + "quantity : " + cart[productId]);
-                    cartCount++;
                 }
             }
-            $("span.shoppingBagSpan").empty().text(cartCount);
             // 변경된 주문서를 SessionStorage에 저장
             sessionStorage.setItem('cart', JSON.stringify(cart));
+            updateCartCount()
         }
 
         // 주문서를 확인할 때 호출되는 함수

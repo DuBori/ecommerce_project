@@ -14,11 +14,13 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static com.duboribu.ecommerce.entity.QBook.book;
@@ -33,7 +35,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
 
     @Override
     public Page<FoItemResponse> normalList(String category, Pageable pageable) {
-        List<FoItemResponse> list = jpaQueryFactory.select(new QFoItemResponse(item.id, book.title, price.value, item.filePath))
+        List<FoItemResponse> list = jpaQueryFactory.select(new QFoItemResponse(item.id, book.title, price.dcrt, book.price, item.filePath))
                 .from(item)
                 .innerJoin(book)
                 .on(item.id.eq(book.id))
@@ -42,6 +44,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .where(isCategory(category))
+                .orderBy(item.createdAt.desc())
                 .fetch();
         JPAQuery<Long> totalCount = jpaQueryFactory.select(item.count())
                 .from(item);
@@ -90,6 +93,26 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
 
         return new FoOrderResponse(getProductName(list), totalPrice, list);
 
+    }
+
+    @Override
+    public Page<FoItemResponse> dcList(String category, PageRequest pageable) {
+        List<FoItemResponse> list = jpaQueryFactory.select(new QFoItemResponse(item.id, book.title, price.dcrt, book.price, item.filePath))
+                .from(item)
+                .innerJoin(book)
+                .on(item.id.eq(book.id))
+                .innerJoin(price)
+                .on(price.item.id.eq(item.id))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .where(isCategory(category), price.startDate.before(LocalDateTime.now()), price.endDate.before(LocalDateTime.now()))
+                .orderBy(item.createdAt.desc())
+                .fetch();
+
+        JPAQuery<Long> totalCount = jpaQueryFactory.select(item.count())
+                .from(item);
+
+        return PageableExecutionUtils.getPage(list, pageable, totalCount::fetchOne);
     }
 
     private String getProductName(List<FoOrderItemView> list) {

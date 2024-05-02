@@ -169,7 +169,8 @@
                                         <!-- 대댓글 폼 -->
                                         <div class="reply-form">
                                             <textarea class="reply-text" name="detail" placeholder="대댓글을 입력하세요..." required></textarea>
-                                            <button onclick="alert('미지원기능이에요')">대댓글 등록</button>
+                                            <button th:onclick="'addComment(this, ' + ${comment.commentId} + ')'" onclick="addComment(this, )">대댓글 등록</button>
+
                                         </div>
                                         <!-- 대댓글 목록 -->
                                         <div class="reply-list" th:each="reply : ${comment.NoticeCommentChildList}">
@@ -257,7 +258,7 @@
 <!-- JavaScript 코드 -->
 <script>
     // 새로운 댓글을 댓글 목록에 추가하는 함수
-    function addComment($button) {
+    function addComment($button, $comment) {
 
         if (!userId) {
             alert("로그인 후 이용해주세요");
@@ -269,43 +270,33 @@
             alert("내용을 입력해주세요");
             return false;
         }
+
         let noticeId = $("input[name=noticeId]").val(); // 게시글 아이디
-        console.log(noticeId)
+        let dataToSend = {
+            id : noticeId,
+            detail: detail
+        };
+
+        if ($comment) {
+            // $comment가 존재하면 해당 id도 데이터에 추가
+            dataToSend.parentId = $comment;
+        }
+
         // AJAX 요청 설정
         $.ajax({
             type: "POST",
             url: "/notice/commentAdd",
             contentType: "application/json",
-            data: JSON.stringify({
-                id : noticeId,
-                detail: detail
-                }),
+            data: JSON.stringify(dataToSend),
             success: function (data) {
                 location.reload();
                 button.querySelector("textarea").value = "";
-            /*
-                // 현재 날짜와 시간 가져오기
-                var date = new Date();
-                var dateString = date.toLocaleString();
-
-                    // 새로운 댓글 HTML 생성
-                var newComment = document.createElement("div");
-                newComment.classList.add("comment");
-                newComment.innerHTML = `
-                                        <p>${commentText}</p>
-                                        <span>${dateString}</span>
-                                        `;
-
-                commentList.appendChild(newComment);
-                */
             },
             error: function (xhr, textStatus, errorThrown) {
                 alert("시스템 오류")
-                // 서버로부터 오류 응답을 받은 경우에 대한 처리
             }
         });
-
-
     }
+
 </script>
 </html>

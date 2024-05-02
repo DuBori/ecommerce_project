@@ -19,27 +19,6 @@ public class LoginController {
     public String loginPage() {
         return "login/login";
     }
-    @PostMapping("/login")
-    public String signIn(UserDto userDto) {
-        log.info("login userDto : {}", userDto);
-        /*try {
-            Call<DefaultResponse<UserResponse>> defaultResponseCall = restInterface.signIn(userDto);
-            Response<DefaultResponse<UserResponse>> execute = defaultResponseCall.execute();
-            DefaultResponse<UserResponse> body = execute.body();
-            if (body.getResCode() == 200) {
-                log.info("로그인성공");
-                return "redirect:/main";
-            }
-        } catch (Exception e) {
-
-        }*/
-        return null;
-    }
-
-    @RequestMapping("/signup")
-    public String signUpPage() {
-        return "login/signup";
-    }
 
     @PostMapping("/signup")
     public ResponseEntity signUp(UserDto userDto) {

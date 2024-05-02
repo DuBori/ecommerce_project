@@ -32,4 +32,8 @@ public class FoItemService {
     public FoOrderResponse itemViewResponses(CreateOrderRequest request) {
         return foItemCustomRepository.itemViewResponses(request);
     }
+
+    public Page<FoItemResponse> dcList(SearchItemRequest request, String category) {
+        return foItemCustomRepository.dcList(null, PageRequest.of(0, 5));
+    }
 }

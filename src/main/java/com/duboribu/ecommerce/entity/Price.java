@@ -18,7 +18,7 @@ public class Price extends BaseEntity implements Serializable {
     private Long id;
 
     private BigDecimal value;
-    private int salePercent;
+    private int dcrt;
 
     private LocalDateTime startDate;
 

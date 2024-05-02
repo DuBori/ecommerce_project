@@ -47,7 +47,7 @@
                                             <img th:src="${list.filePath}" alt="" style="width: 200px; height: 200px">
                                             <h5 th:text="${list.title}"></h5>
                                         </td>
-                                        <td class="shoping__cart__price" th:text="${list.price}" th:attr="data-price=@{${list.price}}">
+                                        <td class="shoping__cart__price" th:text="${list.price + ' 원'}" th:attr="data-price=@{${list.price}}">
                                         </td>
                                         <td class="shoping__cart__quantity">
                                             <div class="quantity">
@@ -58,7 +58,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="shoping__cart__total" th:text="${list.unitPrice}" th:attr="data-unitprice=@{${list.unitPrice}}">
+                                        <td class="shoping__cart__total" th:text="${list.unitPrice + '원'}" th:attr="data-unitprice=@{${list.unitPrice}}">
                                         </td>
                                         <td class="shoping__cart__item__close deleteCartItem" th:attr="data-itemid=@{${list.id}}, data-cartitemid=@{${list.cartItemId}}">
                                             <span class="icon_close"></span>
@@ -81,10 +81,12 @@
                         <h5>총 결제금액</h5>
                         <ul>
                             <li>Total
-                                <div th:if="${foOrderResponse != null}"><span
+                                <div th:if="${foOrderResponse != null}">
+                                    <span
                                         th:if="${foOrderResponse.getTotalPrice() != null}"
-                                        th:text="${foOrderResponse.getTotalPrice()}" class="totalPrice"
-                                        ></span></div>
+                                        th:text="${foOrderResponse.getTotalPrice() + '원'}" class="totalPrice"
+                                        ></span>
+                                </div>
                             </li>
                         </ul>
                         <a href="#" class="primary-btn">결제하러 가기</a>
@@ -154,9 +156,6 @@
     $(function () {
         let proQty = $('.pro-cart-qty');
 
-        // 총 가격
-        let totalPrice = parseInt($(".totalPrice").data('totalPrice'));
-
         proQty.on('click', '.qtybtn', function () {
             let $button = $(this);
             let oldValue = $button.parent().find('input').val();
@@ -179,8 +178,8 @@
                             newVal = parseFloat(newVal) + 1;
                             $button.parent().find('input.quantity').val(newVal);
                             $button.closest('.shoping-tr').find('.shoping__cart__total').attr('data-unitprice', data.body.unitPrice);
-                            $button.closest('.shoping-tr').find('.shoping__cart__total').text(data.body.unitPrice);
-                            $(".totalPrice").empty().text(getTotalUnitPrice());
+                            $button.closest('.shoping-tr').find('.shoping__cart__total').text(formatCurrency(data.body.unitPrice));
+                            $(".totalPrice").text(formatCurrency(getTotalUnitPrice()));
                         } else {
                             alert("카트 업데이트 오류발생")
                         }
@@ -205,8 +204,8 @@
                                 newVal = parseFloat(newVal) - 1;
                                 $button.parent().find('input.quantity').val(newVal);
                                 $button.closest('.shoping-tr').find('.shoping__cart__total').attr('data-unitprice', data.body.unitPrice);
-                                $button.closest('.shoping-tr').find('.shoping__cart__total').text(data.body.unitPrice);
-                                $(".totalPrice").empty().text(getTotalUnitPrice());
+                                $button.closest('.shoping-tr').find('.shoping__cart__total').text(formatCurrency(data.body.unitPrice));
+                                $(".totalPrice").empty().text(formatCurrency(getTotalUnitPrice()));
                             } else {
                                 alert("카트 업데이트 오류발생")
                             }
@@ -223,6 +222,10 @@
 
 
         });
+        function formatCurrency(amount) {
+            // 숫자를 원화 단위로 표시하는 함수
+            return amount.toFixed(0).replace(/\d(?=(\d{3})+$)/g, '$&,') + ' 원';
+        }
     })
 
 

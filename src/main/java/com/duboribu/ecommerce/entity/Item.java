@@ -22,7 +22,7 @@ public abstract class Item extends BaseEntity implements Serializable {
     private String productCode;
     private int price;
     @OneToMany(mappedBy = "item", cascade = CascadeType.PERSIST)
-    private List<Price> prices = new ArrayList<>(); // 할인?
+    private List<Price> prices = new ArrayList<>(); // 할인
     @OneToOne(mappedBy = "item", fetch = FetchType.LAZY)
     private Stock stock;
     private String comment;
