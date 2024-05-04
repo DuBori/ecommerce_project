@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
+import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
 import com.duboribu.ecommerce.front.enums.State;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -27,7 +28,7 @@ public abstract class Item extends BaseEntity implements Serializable {
     private Stock stock;
     private String comment;
     private String information;
-    private String weight;
+    private int weight;
     private String filePath;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -42,12 +43,14 @@ public abstract class Item extends BaseEntity implements Serializable {
         stock.matchItem(this);
     }
 
-    public Item(String filePath, int price, Category category, String state)
-    {
-        this.price = price;
-        this.filePath = filePath;
+    public Item(CreateBookRequest request, Category category) {
         this.category = category;
-        this.state = State.getmatcheState(state);
+        this.price = request.getPrice();
+        this.comment = request.getComment();
+        this.information = request.getInformation();
+        this.weight = request.getWeight();
+        this.filePath = request.getFilePath();
+        this.state = State.getmatcheState(request.getState());
     }
 
     public void updatePrice(List<Price> prices) {
@@ -58,7 +61,11 @@ public abstract class Item extends BaseEntity implements Serializable {
         }
     }
 
-    protected void updateFilePath(String filePath) {
+    protected void updateItemInfo(String filePath, int price, String comment, String information, int weight) {
         this.filePath = filePath;
+        this.price = price;
+        this.comment = comment;
+        this.information = information;
+        this.weight = weight;
     }
 }

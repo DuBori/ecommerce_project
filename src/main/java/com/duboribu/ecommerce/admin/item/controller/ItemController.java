@@ -43,6 +43,7 @@ public class ItemController {
     @GetMapping("/view/{id}")
     public String detailPage(@PathVariable Long id, Model model) {
         ResponseBook byBookId = adminItemCustomRepository.findByBookId(id);
+        log.info("ResponseBook : {}", byBookId);
         model.addAttribute("item", byBookId);
         model.addAttribute("categoryList", foCategoryService.list("book"));
         return "admin/item/view";

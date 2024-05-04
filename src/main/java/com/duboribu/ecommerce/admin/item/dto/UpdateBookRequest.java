@@ -14,5 +14,8 @@ public class UpdateBookRequest {
     private String publisher;
     private String filePath;
     private int price;
+    private String comment;
+    private String information;
+    private int weight;
     private int count;
 }

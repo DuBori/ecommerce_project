@@ -19,11 +19,11 @@ public class FoOrderItemView {
     private String state;
     private String comment;
     private String information;
-    private String weight;
+    private int weight;
     private Long cartItemId;
     @QueryProjection
     public FoOrderItemView(Long id, String title, String author, String publisher, String filePath,
-                      int price, int stockCount, State state, String comment, String information, String weight) {
+                      int price, int stockCount, State state, String comment, String information, int weight) {
         this.id = id;
         this.title = title;
         this.author = author;
@@ -37,12 +37,12 @@ public class FoOrderItemView {
         this.weight = weight;
     }
 
-    public void mactchedUntiyPrice(int quantity) {
+    public void matchedUntiyPrice(int quantity) {
         this.quantity = quantity;
         unitPrice = price * quantity;
     }
 
-    public void mactchedCartItemId(Long cartItemId) {
+    public void matchedCartItemId(Long cartItemId) {
         this.cartItemId = cartItemId;
     }
 }
