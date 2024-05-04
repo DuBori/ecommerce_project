@@ -26,9 +26,9 @@ public class AdminItemCustomRepositoryImpl implements AdminItemCustomRepository 
 
     @Override
     public ResponseBook findByBookId(Long id) {
-        return jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.filePath, book.price, category.id))
+        return jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.price, book.comment, book.information, book.weight, category.id, book.filePath, book.state))
                 .from(book)
-                .innerJoin(price)
+                .leftJoin(price)
                 .on(book.id.eq(price.item.id))
                 .innerJoin(category)
                 .on(book.category.eq(category))
@@ -38,9 +38,9 @@ public class AdminItemCustomRepositoryImpl implements AdminItemCustomRepository 
 
     @Override
     public Page<ResponseBook> list(SearchItemRequest searchItemRequest, Pageable pageable) {
-        QueryResults<ResponseBook> results = jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.filePath, book.price, category.id))
+        QueryResults<ResponseBook> results = jpaQueryFactory.select(new QResponseBook(book.id, book.title, book.author, book.publisher, book.price, book.comment, book.information, book.weight, category.id, book.filePath, book.state))
                 .from(book)
-                .innerJoin(price)
+                .leftJoin(price)
                 .on(book.id.eq(price.item.id))
                 .where(search(searchItemRequest))
                 .offset(pageable.getOffset())

@@ -18,10 +18,10 @@ public class FoItemView {
     private String state;
     private String comment;
     private String information;
-    private String weight;
+    private int weight;
     @QueryProjection
     public FoItemView(Long id, String title, String author, String publisher, String filePath,
-                      int price, int stockCount, State state, String comment, String information, String weight) {
+                      int price, int stockCount, State state, String comment, String information, int weight) {
         this.id = id;
         this.title = title;
         this.author = author;

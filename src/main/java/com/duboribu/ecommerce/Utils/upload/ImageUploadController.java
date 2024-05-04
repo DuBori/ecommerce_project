@@ -21,7 +21,6 @@ public class ImageUploadController {
     @PostMapping("/upload")
     public ResponseEntity<DefaultResponse> uploadImage(@RequestParam("file") MultipartFile file, String path, Model model) {
         String filePath = storageService.store(file, path);
-
         return new ResponseEntity<>(new DefaultResponse(filePath), HttpStatus.OK);
     }
 }

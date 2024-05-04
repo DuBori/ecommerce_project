@@ -84,7 +84,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
         for (FoOrderItemView item : list) {
             for (CreateOrderRequest.OrderItemRequest orderItem : request.getOrderItemRequest()) {
                 if (item.getId().equals(orderItem.getProductId())) {
-                    item.mactchedUntiyPrice(orderItem.getQuantity());
+                    item.matchedUntiyPrice(orderItem.getQuantity());
                     break;
                 }
             }

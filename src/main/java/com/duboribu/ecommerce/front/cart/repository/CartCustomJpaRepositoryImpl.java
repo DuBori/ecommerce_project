@@ -60,8 +60,8 @@ public class CartCustomJpaRepositoryImpl implements CartCustomJpaRepository {
         for (FoOrderItemView itemview : list) {
             for (FoCartItemView cartItemView : foCartItemView) {
                 if (itemview.getId().equals(cartItemView.getItemId())){
-                    itemview.mactchedUntiyPrice(cartItemView.getQuantity());
-                    itemview.mactchedCartItemId(cartItemView.getCartItemId());
+                    itemview.matchedUntiyPrice(cartItemView.getQuantity());
+                    itemview.matchedCartItemId(cartItemView.getCartItemId());
                     break;
                 }
             }

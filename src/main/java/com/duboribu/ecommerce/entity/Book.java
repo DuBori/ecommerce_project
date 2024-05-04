@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 // Book 엔티티
 @Entity
@@ -35,7 +34,7 @@ public class Book extends Item  implements Serializable {
     }
 
     public Book(CreateBookRequest request, Category category) {
-        super(request.getFilePath(), request.getPrice(), category, request.getState());
+        super(request, category);
         this.title = request.getTitle();
         this.author = request.getAuthor();
         this.publisher = request.getPublisher();
@@ -46,8 +45,7 @@ public class Book extends Item  implements Serializable {
         if (request.getId() <= 0) {
             throw new IllegalArgumentException("상품 수정 에러");
         }
-        super.updateFilePath(request.getFilePath());
-        super.getPrices().get(0).updatePrice(new BigDecimal(request.getPrice()));
+        super.updateItemInfo(request.getFilePath(), request.getPrice(), request.getComment(), request.getInformation(), request.getWeight());
         this.title = request.getTitle();
         this.author = request.getAuthor();
         this.publisher = request.getPublisher();

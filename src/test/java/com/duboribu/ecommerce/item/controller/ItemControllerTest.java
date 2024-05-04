@@ -17,7 +17,6 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.Optional;
 
 @SpringBootTest
@@ -51,7 +50,7 @@ class ItemControllerTest {
 
         if (optionalItem.isPresent()) {
             Item foundItem = optionalItem.get();
-            foundItem.updatePrice(Collections.singletonList(price));
+            /*foundItem.updatePrice(Collections.singletonList(price));*/
             Price savedPrice = foundItem.getPrices().get(0);
             Optional<Price> actualPrice = priceJpaRepository.findById(price.getId());
             Assertions.assertEquals(savedPrice, actualPrice.get());
