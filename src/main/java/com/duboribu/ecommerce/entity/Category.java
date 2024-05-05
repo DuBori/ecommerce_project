@@ -19,7 +19,7 @@ public class Category extends BaseEntity implements Serializable {
     private String name;
     private String code;
     private String state;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_category_id")
     private Category parent;
 

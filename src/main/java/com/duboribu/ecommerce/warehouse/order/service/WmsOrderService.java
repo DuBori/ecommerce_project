@@ -57,7 +57,6 @@ public class WmsOrderService {
 
     @Transactional
     public List<UpdateWmsOrderResponse> list(SelectDeliveryRequest request) {
-
         if (!StringUtils.hasText(request.getDate())) {
             throw new WmsException(WmsExceptionType.DATE_REQUIRED_ERROR);
         }

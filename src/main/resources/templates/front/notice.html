@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zxx">
+<html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="front/common/header :: header"></div>
 
 <body>
@@ -107,14 +107,18 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12" th:if="${list != null}">
+                        <div class="col-lg-12" th:if="${list.hasContent()}">
                             <div class="product__pagination blog__pagination">
                                 <a href="#" th:each="pageNumber : ${#numbers.sequence(0, list.totalPages - 1)}" th:href="@{${'/notice?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
                                 <a th:class="${list.number >= list.totalPages - 1 ? 'disabled' : ''}" th:href="@{${'/notice?page=' + (list.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
                             </div>
                         </div>
                     </div>
+                    <div class="row" th:if="${!list.hasContent()}">
+                        <h5>현재 존재하는 공지사항이 없습니다.</h5>
+                    </div>
                 </div>
+
             </div>
         </div>
     </section>

@@ -22,14 +22,14 @@ public class OrderItem extends BaseEntity implements Serializable {
     private int netPrice;
     private int dcPrice;
     private int count;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="item_id")
     private Item item;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
     public OrderItem(Item item, Stock stock, int count) {

@@ -21,13 +21,9 @@ public class FoNoticeController {
     private final JwtTokenProvider jwtTokenProvider;
     private final FoNoticeService foNoticeService;
     @GetMapping("")
-    public String notice(Model model, HttpServletRequest request) {
-        String userId = jwtTokenProvider.getUserId(request);
-        if (StringUtils.hasText(userId)) {
-            model.addAttribute("list",foNoticeService.list(PageRequest.of(0, 20)));
-            return "front/notice";
-        }
-        return "login/login";
+    public String notice(Model model) {
+        model.addAttribute("list",foNoticeService.list(PageRequest.of(0, 20)));
+        return "front/notice";
     }
     @GetMapping("/view/{id}")
     public String noticeView(@PathVariable Long id, Model model) {

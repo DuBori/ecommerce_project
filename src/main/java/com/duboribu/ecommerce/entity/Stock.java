@@ -18,7 +18,7 @@ public class Stock extends BaseEntity implements Serializable {
     private Long id;
     private int count;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 

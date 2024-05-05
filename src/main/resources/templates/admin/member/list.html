@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<div th:replace="admin/common/header :: header"></div>
+<style>
+  .container {
+    max-width: 800px;
+    margin: 80px auto;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .container .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  .container .pagination li {
+    display: inline-block;
+  }
+
+  .container .pagination a {
+    display: inline-block;
+    padding: 8px 16px;
+    text-decoration: none;
+    border: 1px solid;
+    border-radius: 4px;
+  }
+
+  .container .pagination a.active {
+    background-color: #007bff;
+    color: #fff;
+  }
+
+  .container .pagination a:hover {
+    background-color: #f1f1f1;
+  }
+</style>
+<body>
+
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12">
+      <table summary="This table shows how to create responsive tables using Datatables' extended functionality" class="table table-bordered table-hover dt-responsive">
+        <caption class="text-center">An example of a responsive table based on <a href="https://datatables.net/extensions/responsive/" target="_blank">DataTables</a>:</caption>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>이름</th>
+          <th>역할</th>
+          <th>상태</th>
+          <th>활성화/비활성화</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="member: ${memberResponse}">
+          <td th:text="${member.userId}"></td>
+          <td th:text="${member.name}"></td>
+          <td th:text="${member.role}"></td>
+          <td th:text="${member.state}"></td>
+          <td>
+            <select class="selectState" th:attr="data-user-id=${member.userId}, data-state=${member.state}" onchange="updateMemberState(this)">
+              <option value="Y" th:selected="${member.state == '활성화'}">활성화</option>
+              <option value="N" th:selected="${member.state == '비활성화'}">비활성화</option>
+            </select>
+          </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+
+        </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+  <th:block th:if="${memberResponse != null}">
+    <!-- 페이징 코드 -->
+    <ul class="pagination">
+      <!-- 이전 페이지로 가는 링크 -->
+      <li class="page-item" th:class="${memberResponse.first ? 'disabled' : ''}">
+        <a class="page-link" th:href="@{${'/admin/member/list?page=' + (memberResponse.number - 1)}}" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+          <span class="sr-only">이전</span>
+        </a>
+      </li>
+      <!-- 페이지 번호를 나타내는 링크 -->
+      <li th:each="pageNumber : ${#numbers.sequence(0, memberResponse.totalPages - 1)}" th:class="${pageNumber == memberResponse.number ? 'page-item active' : 'page-item'}">
+        <a class="page-link" th:href="@{${'/admin/member/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+      </li>
+      <!-- 다음 페이지로 가는 링크 -->
+      <li class="page-item" th:class="${memberResponse.number >= memberResponse.totalPages - 1 ? 'disabled' : ''}">
+        <a class="page-link" th:href="@{${'/admin/member/list?page=' + (memberResponse.number + 1)}}" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+          <span class="sr-only">다음</span>
+        </a>
+      </li>
+    </ul>
+  </th:block>
+</div>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
+</body>
+<script>
+  function updateMemberState($select) {
+    let userId = $($select).data('user-id');
+    let state = $($select).val();
+    if (!userId) {
+      alert("회원 아이디가 존재하지 않습니다.")
+    }
+
+    $.ajax({
+      url: '/admin/member/update/state',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(
+              {
+                userId : userId,
+                state : state
+              }
+      ),
+      success: function(response) {
+        location.reload()
+      },
+      error: function(xhr, status, error) {
+        // 오류 처리
+        console.error("장바구니 페이지로 이동 실패:", error);
+      }
+    });
+  }
+</script>
+</html>

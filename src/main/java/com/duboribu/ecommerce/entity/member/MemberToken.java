@@ -21,7 +21,7 @@ public class MemberToken  extends BaseEntity  implements Serializable {
     @Column
     private String refreshToken;
 
-    @OneToOne(mappedBy = "memberToken")
+    @OneToOne(mappedBy = "memberToken", fetch = FetchType.LAZY)
     private Member member;
 
     public MemberToken(String refreshToken) {

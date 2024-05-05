@@ -41,7 +41,6 @@ public class MainController {
         }
         model.addAttribute("user", foMemberService.findMember(userId));
         List<FoMyPageOrderResponse> orderListByUser = foMemberService.findOrderListByUser(userId);
-        log.info("dddddddd :{}", orderListByUser);
         model.addAttribute("myPageOrderResponse", orderListByUser);
         return "front/mypage";
     }

@@ -24,7 +24,7 @@ public class Price extends BaseEntity implements Serializable {
 
     private LocalDateTime endDate;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
