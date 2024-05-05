@@ -39,7 +39,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
                 .from(item)
                 .innerJoin(book)
                 .on(item.id.eq(book.id))
-                .innerJoin(price)
+                .leftJoin(price)
                 .on(price.item.id.eq(item.id))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
@@ -64,7 +64,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
                 .from(book)
                 .innerJoin(stock)
                 .on(book.id.eq(stock.item.id))
-                .innerJoin(price)
+                .leftJoin(price)
                 .on(book.eq(price.item))
                 .where(book.id.eq(itemId))
                 .fetchOne();
@@ -74,7 +74,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
     public FoOrderResponse itemViewResponses(CreateOrderRequest request) {
         List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher, book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
                 .from(book)
-                .innerJoin(stock)
+                .leftJoin(stock)
                 .on(book.id.eq(stock.item.id))
                 .where(book.id.in(request.getProductIds()))
                 .fetch();
