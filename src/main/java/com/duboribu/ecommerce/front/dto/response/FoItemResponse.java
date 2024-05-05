@@ -16,7 +16,11 @@ public class FoItemResponse {
     public FoItemResponse(Long id, String name, Integer dcrt, Integer price, String filePath) {
         this.id = id;
         this.name = name;
-        this.dcrt = dcrt;
+        if (dcrt == null) {
+            this.dcrt = 0;
+        } else {
+            this.dcrt = dcrt;
+        }
         this.price = price;
         this.filePath = filePath;
     }
