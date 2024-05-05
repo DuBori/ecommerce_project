@@ -15,4 +15,14 @@ public class FoQnaController {
     public String list() {
         return "front/qna/list";
     }
+
+    @GetMapping("/write")
+    public String write() {
+        return "front/qna/write";
+    }
+
+    @GetMapping("/view")
+    public String view() {
+        return "front/qna/view";
+    }
 }

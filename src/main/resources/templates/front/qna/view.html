@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<div th:replace="front/common/header :: header"></div>
+<body>
+<div th:replace="front/common/top :: top"></div>
+<div class="contents w1100 view-form board-view">
+  <div class="row vf-body">
+    <div class="col-lg mb-4">
+      <div class="card border-0">
+        <div class="card-body p-0 pt-2">
+          <h2>게시글 제목</h2>
+
+          <div class="d-flex py-2 border-bottom vfb-info">
+            <div class="col text-left">
+              <p>데이터</p>
+              <p>조회수 : 0</p>
+            </div>
+
+            <div class="col text-right pt-2">
+              <p class="writer">
+                <img alt="" /><b>관리자</b>
+              </p>
+            </div>
+          </div>
+          <div class="d-flex pt-4 pb-5 border-bottom">
+            <div class="col">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 내용 //END -->
+
+
+
+  <!-- 버튼 //START -->
+  <div class="d-flex justify-content-center vf-btn mt-3 mb-5">
+    <a href="board_delete.do?bbs_id=${BoardConDto.getBoard_id()}&bdata_no=${BoardConDto.getBdata_no()}" class="btn btn-danger mx-1" onclick="return confirm('정말 삭제하시겠습니까?\n되돌릴 수 없습니다.');"><i class="icon-trash mr-1"></i> 삭제하기</a>
+    <a href="board_modify.do?bbs_id=${BoardConDto.getBoard_id()}&bdata_no=${BoardConDto.getBdata_no()}" class="btn btn-primary mx-1"><i class="icon-note mr-1"></i> 수정하기</a>
+    <a href="board_list.do?bbs_id=${BoardConDto.getBoard_id()}&field=${param.field}&keyword=${param.keyword}&category=${param.category}&page=${param.page}" class="btn btn-secondary mx-1"><i class="icon-list mr-1"></i> 목록보기</a>
+  </div>
+  <!-- 버튼 //END -->
+
+
+  <!-- 댓글 //START -->
+  <div class="row vf-comment">
+    <div class="col-lg">
+      <div class="card border input-form">
+        <div class="card-body pt-3 pb-4">
+          <ul class="vfc-list">
+                <li id="comment-${comment.getBcomm_no()}" class="d-flex border-bottom py-3">
+                  <div class="vfcl-writer">
+                    <img src="${path}/resources/site/images/admin_icon.png" alt=""/><b>관리자</b></c:when>
+                  </div>
+                  <div class="vfcl-body px-3">내용</div>
+                  <div class="vfcl-date text-center">
+                    <p>내용</p>
+                    <button type="button" class="btn btn-sm btn-outline-danger py-0 mt-2" onclick=""><i class="icon-close mr-1"></i> 삭제</button>
+                  </div>
+                </li>
+          </ul>
+            <form name="comment_form" method="post">
+              <input type="hidden" name="bbs_id" value="${BoardConDto.getBoard_id()}" />
+              <input type="hidden" name="bdata_no" value="${BoardConDto.getBdata_no()}" />
+              <div class="d-flex justify-content-center vfc-form">
+                <div class="vfcf-writer">
+                      <input type="hidden" name="bcomm_id" value="${sess_id}" />
+                      <input type="hidden" name="bcomm_pw" value="${sess_pw}" />
+                      <input type="hidden" name="bcomm_name" value="${sess_name}" />
+                      <input type="hidden" name="sess" value="${sess_type}" />
+                </div>
+                <div class="vfcf-input"><textarea name="bcomm_cont" class="form-control" rows="4"></textarea></div>
+                <div class="vfcf-btn">
+                  <button type="button" class="btn btn-info" onclick="addComment('comment_form')">
+                    <i class="icon-pencil mr-1"></i> 댓글 등록
+                  </button>
+                </div>
+              </div>
+            </form>
+          </c:if>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 댓글 //END -->
+</div>
+<!-- 삭제하기 Modal //START -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body text-center p-5">
+        <h4 class="mt-5">게시물 비밀번호를 입력하세요.</h4>
+        <p>&nbsp;</p>
+        <form name="delete_form" method="post" action="board_delete.do">
+          <input type="hidden" name="bbs_id" value="${BoardConDto.getBoard_id()}" />
+          <input type="hidden" name="bdata_no" value="${BoardConDto.getBdata_no()}" />
+          <input type="password" name="input_pw" class="form-control rounded mb-2 w-50 m-auto text-center" required />
+          <button type="submit" class="btn btn-outline-danger w-50 mb-5"><i class="fa fa-trash-o"></i> 삭제하기</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div th:replace="front/common/footer :: footer"></div>
+</body>
+</html>
