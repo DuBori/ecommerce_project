@@ -2,6 +2,7 @@ package com.duboribu.ecommerce.entity.member;
 
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.entity.BaseEntity;
+import com.duboribu.ecommerce.front.enums.State;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,8 @@ public class Member extends BaseEntity implements Serializable {
     private String pwd;
     @Column
     private String name;
+    @Enumerated(EnumType.STRING)
+    private State state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ROLE_ID")
@@ -34,6 +37,7 @@ public class Member extends BaseEntity implements Serializable {
         this.id = id;
         this.pwd = pwd;
         this.name = name;
+        this.state = State.Y;
     }
 
     public Member(String id, String pwd, String name, Role role, MemberToken memberToken) {
@@ -55,6 +59,7 @@ public class Member extends BaseEntity implements Serializable {
         this.pwd = pwd;
         this.name = name;
         this.role = role;
+        this.state = State.Y;
     }
 
     public void updateToken(MemberToken memberToken) {
@@ -63,5 +68,9 @@ public class Member extends BaseEntity implements Serializable {
 
     public UserDto getMemberDto() {
         return new UserDto(id, null, name, role.getRoleType(), null, null);
+    }
+
+    public void updateState(String state) {
+        this.state = State.getmatcheState(state);
     }
 }

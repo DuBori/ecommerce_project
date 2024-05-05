@@ -68,6 +68,7 @@ public class FoNoticeCustomJpaRepositoryImpl implements FoNoticeCustomJpaReposit
                 ))
                 .from(notice)
                 .where(notice.id.eq(id))
+                .orderBy(notice.createdAt.desc())
                 .fetchOne();
 
         // 부모 댓글
@@ -76,6 +77,7 @@ public class FoNoticeCustomJpaRepositoryImpl implements FoNoticeCustomJpaReposit
                 .innerJoin(member)
                 .on(comment.member.eq(member))
                 .where(comment.notice.id.eq(id), comment.parentComment.isNull())
+                .orderBy(comment.createdAt.desc())
                 .fetch();
 
         //자식댓글
@@ -84,6 +86,7 @@ public class FoNoticeCustomJpaRepositoryImpl implements FoNoticeCustomJpaReposit
                 .innerJoin(member)
                 .on(comment.member.eq(member))
                 .where(comment.notice.id.eq(id), comment.parentComment.isNotNull())
+                .orderBy(comment.createdAt.desc())
                 .fetch();
 
         for (FoNoticeComment parent : parentComments) {

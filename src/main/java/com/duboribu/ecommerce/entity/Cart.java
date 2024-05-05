@@ -19,7 +19,7 @@ public class Cart extends BaseEntity implements Serializable {
     private Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)

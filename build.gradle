@@ -51,6 +51,7 @@ dependencies {
 			}
 		}
 	}
+
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
 	implementation group: 'com.squareup.retrofit2', name: 'retrofit', version: '2.10.0'
@@ -73,6 +74,7 @@ def querydslSrcDir = 'src/main/generated'
 clean {
 	delete file(querydslSrcDir)
 }
+
 tasks.withType(JavaCompile) {
 	options.generatedSourceOutputDirectory = file(querydslSrcDir)
 }

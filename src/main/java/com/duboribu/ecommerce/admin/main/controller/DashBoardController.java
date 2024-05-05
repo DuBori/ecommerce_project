@@ -1,11 +1,14 @@
 package com.duboribu.ecommerce.admin.main.controller;
 
 import com.duboribu.ecommerce.Utils.RestUtil;
+import com.duboribu.ecommerce.admin.member.service.BoMemberService;
+import com.duboribu.ecommerce.admin.order.service.BoOrderService;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
@@ -13,8 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class DashBoardController {
+    private final BoMemberService boMemberService;
+    private final BoOrderService boOrderService;
     @GetMapping
-    public String main() {
+    public String main(Model model) {
+        model.addAttribute("memberCount", boMemberService.count());
+        model.addAttribute("orderCount", boOrderService.count());
+        model.addAttribute("revenueCount", boOrderService.revenueCount());
         return "admin/index";
     }
 

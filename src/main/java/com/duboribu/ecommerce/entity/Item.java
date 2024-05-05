@@ -33,7 +33,6 @@ public abstract class Item extends BaseEntity implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
-
     @Enumerated(EnumType.STRING)
     private State state;
 
