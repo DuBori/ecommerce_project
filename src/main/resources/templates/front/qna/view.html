@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th ="http://www.thymeleaf.org">
 <div th:replace="front/common/header :: header"></div>
 <body>
 <div th:replace="front/common/top :: top"></div>
@@ -8,24 +8,20 @@
     <div class="col-lg mb-4">
       <div class="card border-0">
         <div class="card-body p-0 pt-2">
-          <h2>게시글 제목</h2>
+          <h2 th:text="${notice.title}"></h2>
 
           <div class="d-flex py-2 border-bottom vfb-info">
             <div class="col text-left">
-              <p>데이터</p>
-              <p>조회수 : 0</p>
+              <p th:text="${notice.createBy}">데이터</p>
+              <p th:text="${'조회수 : ' + notice.getCommentCount()}"></p>
             </div>
 
-            <div class="col text-right pt-2">
-              <p class="writer">
-                <img alt="" /><b>관리자</b>
-              </p>
-            </div>
           </div>
           <div class="d-flex pt-4 pb-5 border-bottom">
-            <div class="col">
+            <div class="col" th:text="${notice.detail}">
             </div>
           </div>
+          <input type="hidden" name="noticeId" th:value="${notice.id}"/>
         </div>
       </div>
     </div>
@@ -42,44 +38,39 @@
   </div>
   <!-- 버튼 //END -->
 
-
-  <!-- 댓글 //START -->
-  <div class="row vf-comment">
+  <!-- 댓글 영역 -->
+  <div class="row vf-comment" id="comment-section" th:if="${notice.comments != null}">
     <div class="col-lg">
       <div class="card border input-form">
-        <div class="card-body pt-3 pb-4">
-          <ul class="vfc-list">
-                <li id="comment-${comment.getBcomm_no()}" class="d-flex border-bottom py-3">
-                  <div class="vfcl-writer">
-                    <img src="${path}/resources/site/images/admin_icon.png" alt=""/><b>관리자</b></c:when>
-                  </div>
-                  <div class="vfcl-body px-3">내용</div>
-                  <div class="vfcl-date text-center">
-                    <p>내용</p>
-                    <button type="button" class="btn btn-sm btn-outline-danger py-0 mt-2" onclick=""><i class="icon-close mr-1"></i> 삭제</button>
-                  </div>
-                </li>
-          </ul>
-            <form name="comment_form" method="post">
-              <input type="hidden" name="bbs_id" value="${BoardConDto.getBoard_id()}" />
-              <input type="hidden" name="bdata_no" value="${BoardConDto.getBdata_no()}" />
-              <div class="d-flex justify-content-center vfc-form">
-                <div class="vfcf-writer">
-                      <input type="hidden" name="bcomm_id" value="${sess_id}" />
-                      <input type="hidden" name="bcomm_pw" value="${sess_pw}" />
-                      <input type="hidden" name="bcomm_name" value="${sess_name}" />
-                      <input type="hidden" name="sess" value="${sess_type}" />
-                </div>
-                <div class="vfcf-input"><textarea name="bcomm_cont" class="form-control" rows="4"></textarea></div>
-                <div class="vfcf-btn">
-                  <button type="button" class="btn btn-info" onclick="addComment('comment_form')">
-                    <i class="icon-pencil mr-1"></i> 댓글 등록
-                  </button>
+        <!-- 댓글 폼 -->
+        <div id="comment-form">
+          <textarea id="comment-text" name="detail" placeholder="댓글을 입력하세요." class="form-control" rows="4" required></textarea>
+          <button type="button" class="btn btn-info" onclick="addComment(this)"> <i class="icon-pencil mr-1"></i>댓글 등록</button>
+        </div>
+        <!-- 댓글 목록 -->
+        <div id="comment-list">
+        <div class="comment" th:each="comment : ${notice.comments}">
+          <div class="comment-wrapper">
+            <p class="comment-user" th:text="${comment.userName}"></p>
+            <p class="comment-detail" th:text="${comment.detail}"></p>
+            <!-- 대댓글 영역 -->
+            <div class="reply-section" th:if="${comment.NoticeCommentChildList != null}">
+              <!-- 대댓글 폼 -->
+              <div class="reply-form">
+                <textarea class="form-control" name="detail" placeholder="대댓글을 입력하세요." required></textarea>
+                <button class="btn btn-info" th:onclick="'addComment(this, ' + ${comment.commentId} + ')'" onclick="addComment(this, )">대댓글 등록</button>
+              </div>
+              <!-- 대댓글 목록 -->
+              <div class="reply-list" th:each="reply : ${comment.NoticeCommentChildList}">
+                <div class="reply">
+                  <p class="reply-user" th:text="${reply.userName}"></p>
+                  <p class="reply-detail" th:text="${reply.detail}"></p>
                 </div>
               </div>
-            </form>
-          </c:if>
+            </div>
+          </div>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -104,4 +95,47 @@
 </div>
 <div th:replace="front/common/footer :: footer"></div>
 </body>
+<script>
+  // 새로운 댓글을 댓글 목록에 추가하는 함수
+  function addComment($button, $comment) {
+
+    if (!userId) {
+      alert("로그인 후 이용해주세요");
+      return false;
+    }
+
+    let detail = $($button).parent().find('textarea[name=detail]').val(); // textarea 요소를 찾음
+    if (!detail) {
+      alert("내용을 입력해주세요");
+      return false;
+    }
+
+    let noticeId = $("input[name=noticeId]").val(); // 게시글 아이디
+    let dataToSend = {
+      id : noticeId,
+      detail: detail
+    };
+
+    if ($comment) {
+      // $comment가 존재하면 해당 id도 데이터에 추가
+      dataToSend.parentId = $comment;
+    }
+
+    // AJAX 요청 설정
+    $.ajax({
+      type: "POST",
+      url: "/notice/commentAdd",
+      contentType: "application/json",
+      data: JSON.stringify(dataToSend),
+      success: function (data) {
+        location.reload();
+        button.querySelector("textarea").value = "";
+      },
+      error: function (xhr, textStatus, errorThrown) {
+        alert("시스템 오류")
+      }
+    });
+  }
+
+</script>
 </html>

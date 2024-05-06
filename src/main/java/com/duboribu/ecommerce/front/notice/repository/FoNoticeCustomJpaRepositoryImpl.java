@@ -5,6 +5,8 @@ import com.duboribu.ecommerce.front.notice.dto.reponse.FoNoticeComment;
 import com.duboribu.ecommerce.front.notice.dto.reponse.FoNoticeResponse;
 import com.duboribu.ecommerce.front.notice.dto.reponse.QFoNoticeComment;
 import com.duboribu.ecommerce.front.notice.dto.reponse.QFoNoticeResponse;
+import com.duboribu.ecommerce.front.qna.dto.request.NoticeRequest;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -29,11 +32,13 @@ public class FoNoticeCustomJpaRepositoryImpl implements FoNoticeCustomJpaReposit
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public Page<FoNoticeResponse> getFoNoticeList(Pageable pageable) {
+    public Page<FoNoticeResponse> getFoNoticeList(Pageable pageable, NoticeRequest noticeRequest) {
         List<Notice> noticeList = jpaQueryFactory.select(notice)
                 .from(notice)
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
+                .where(notice.noticeType.eq(noticeRequest.getNoticeType()),
+                        isNotNullUserId(noticeRequest.getUserId()))
                 .fetch();
         List<FoNoticeResponse> list = new ArrayList<>();
         noticeList.forEach(
@@ -53,6 +58,13 @@ public class FoNoticeCustomJpaRepositoryImpl implements FoNoticeCustomJpaReposit
                 .from(notice);
 
         return PageableExecutionUtils.getPage(list, pageable, countQuery::fetchCount);
+    }
+
+    private BooleanExpression isNotNullUserId(String userId) {
+        if (StringUtils.hasText(userId)) {
+            return notice.member.id.eq(userId);
+        }
+        return null;
     }
 
     @Override

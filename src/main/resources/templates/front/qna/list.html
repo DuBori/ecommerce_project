@@ -22,17 +22,16 @@
                 </div>
 
                 <div class="card-body p-0">
-                    <ul class="bf-list">
-                        <li>
-                            <div class="bfl-tit">타이틀</div>
+                    <ul class="bf-list" th:if="${not #lists.isEmpty(list)}">
+                        <li th:each="notice : ${list}">
+                            <div class="bfl-tit" th:text="${notice.title}"></div>
                             <div class="bfl-cont">
-                                <div class="pb-3 text-center bflc-photo"><img src="${path}${dto.getBdata_file1()}" alt="" /></div>
-                                <div class="bflc-body">
-                                   내용
+                                <div class="pb-3 text-center bflc-photo"><img src="" alt="" /></div>
+                                <div class="bflc-body" th:text="${notice.detail}">
+
                                 </div>
                                 <div class="bflc-btn">
-                                    <a href="board_modify.do?bbs_id=${dto.getBoard_id()}&bdata_no=${dto.getBdata_no()}" class="btn btn-outline-success btn-sm m-1">수정</a>
-                                    <a href="board_delete.do?bbs_id=${dto.getBoard_id()}&bdata_no=${dto.getBdata_no()}" class="btn btn-outline-danger btn-sm my-1" onclick="return confirm('정말 삭제하시겠습니까?\n되돌릴 수 없습니다.');">삭제</a>
+                                    <a th:href="@{/qna/view/{id}(id=${notice.id})}" class="btn btn-outline-success btn-sm m-1">자세히 보기</a>
                                 </div>
                             </div>
                         </li>
@@ -49,75 +48,22 @@
         <div class="col-sm-8 mb-3 text-center">
         </div>
         <div class="col-sm-2 mb-3 text-right">
-            <a href="${path}/board/board_write.do?bbs_id=${conf.getBoard_id()}" class="btn btn-primary"><i class="fa fa-pencil mr-1"></i> 글쓰기</a>
+            <a href="/qna/write" class="btn btn-primary"><i class="fa fa-pencil mr-1"></i> 글쓰기</a>
         </div>
     </div>
 
 </div>
-<!--<div class="contents w1100 board-list">
-  <div class="row">
-    <div class="col-lg">
-      <div class="card border-0">
-        <div class="card-header bg-white border-0 pt-0 px-0 d-flex justify-content-between">
-          <div class="pt-3">총 <b class="text-primary">0</b> 개의 게시물</div>
-          &lt;!&ndash;<c:if test="${conf.getBoard_use_category() eq 'Y' and !empty BoardCate}">
-            <div>
-              <select name="category" class="custom-select" onchange="location.href='${path}/board/board_list.do?bbs_id=${param.bbs_id}&field=${field}&keyword=${keyword}&category='+this.value;">
-                <option value="">- 전체보기 -</option>
-                <c:forEach var="cateList" items="${BoardCate}">
-                  <option value="${cateList.getBcate_no()}"<c:if test="${category eq cateList.getBcate_no()}"> selected=\"selected\"</c:if>>${cateList.getBcate_name()}</option>
-                </c:forEach>
-              </select>
-            </div>
-          </c:if>&ndash;&gt;
-        </div>
-
-        <div class="card-body p-0">
-          <table class="table-list mb-2 board-list">
-            <thead>
-            <tr>
-              <th style="width: 7.25%; min-width: 80px;" class="table-list-hide">No.</th>
-              <th>제목</th>
-              <th style="width: 11%; min-width: 120px;" class="table-list-hide-mob">글쓴이</th>
-              <th style="width: 11%; min-width: 120px;">작성일</th>
-              <th style="width: 7.25%; min-width: 80px;" class="table-list-hide-mob">조회수</th>
-            </tr>
-            </thead>
-
-            <tbody>
-                  <tr>
-                    <td class="text-center eng table-list-hide">1</td>
-                    <td class="text-left pl-3 subject">ㅋㅋ</td>
-                    <td class="text-center table-list-hide-mob">관리자</td>
-                    <td class="text-center eng">어제</td>
-                    <td class="text-center eng table-list-hide-mob">2</td>
-                  </tr>
-                  <tr>
-                      <td class="text-center eng table-list-hide">1</td>
-                      <td class="text-left pl-3 subject">ㅋㅋ</td>
-                      <td class="text-center table-list-hide-mob">관리자</td>
-                      <td class="text-center eng">어제</td>
-                      <td class="text-center eng table-list-hide-mob">2</td>
-                  </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-
-  <div class="row mt-4 list-bottom-util">
-    <div class="col-sm-4 mb-3 text-left">
-    </div>
-    <div class="col-sm-4 mb-3 text-center">
-    </div>
-    <div class="col-sm-4 mb-3 text-right">
-     <a href="${path}/board/board_write.do?bbs_id=${conf.getBoard_id()}" class="btn btn-primary"><i class="fa fa-pencil mr-1"></i> 글쓰기</a>
-    </div>
-  </div>
-</div>-->
 <div th:replace="front/common/footer :: footer"></div>
+<script>
+    $("li").on("click", function () {
+        var isOpen = $(this).hasClass("open");
+
+        if (isOpen) {
+            $(this).removeClass("open");
+        } else {
+            $(this).addClass("open");
+        }
+    });
+</script>
 </body>
 </html>

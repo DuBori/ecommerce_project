@@ -66,8 +66,41 @@
                 });
             });
 
-            // 찜하기 기능  // 검색기능
-            $('li a[href="/like"], .heart-icon, .site-btn, .footer__widget__social').click(function(e) {
+            $('li a[href="/member/like"]').click(function(e) {
+                e.preventDefault(); // 기본 이벤트 동작 방지
+                if (!userId) {
+                    alert('로그인 후 이용해주세요.');
+                    return;
+                }
+                location.href = '/member/like';
+            });
+
+            $('button.heart-icon').click(function (){
+
+                if (!userId) {
+                    alert('로그인 후 이용해주세요.');
+                    return;
+                }
+
+                let itemId = $("input[name=itemId]").val();
+                $.ajax({
+                    url: '/member/like/click',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        itemId : itemId
+                    }),
+                    success: function(data) {
+                        alert(data.resMsg);
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("시스템 오류");
+                    }
+                });
+            });
+
+            // 검색기능
+            $('.site-btn, .footer__widget__social').click(function(e) {
                 e.preventDefault(); // 기본 이벤트 동작 방지
                 alert('아직 지원하지 않아요');
                 return;

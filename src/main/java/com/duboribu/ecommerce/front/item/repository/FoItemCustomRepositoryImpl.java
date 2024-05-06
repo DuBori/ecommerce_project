@@ -25,6 +25,7 @@ import java.util.List;
 
 import static com.duboribu.ecommerce.entity.QBook.book;
 import static com.duboribu.ecommerce.entity.QItem.item;
+import static com.duboribu.ecommerce.entity.QMemberLike.memberLike;
 import static com.duboribu.ecommerce.entity.QPrice.price;
 import static com.duboribu.ecommerce.entity.QStock.stock;
 
@@ -93,6 +94,19 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
 
         return new FoOrderResponse(getProductName(list), totalPrice, list);
 
+    }
+
+    @Override
+    public FoOrderResponse itemLikeViewResponses(String userId) {
+        List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher, book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
+                .from(book)
+                .leftJoin(stock)
+                .on(book.id.eq(stock.item.id))
+                .innerJoin(memberLike)
+                .on(memberLike.item.id.eq(book.id))
+                .fetch();
+        int totalPrice = 0;
+        return new FoOrderResponse("", totalPrice, list);
     }
 
     @Override

@@ -3,9 +3,13 @@ package com.duboribu.ecommerce.front.notice.service;
 import com.duboribu.ecommerce.entity.Comment;
 import com.duboribu.ecommerce.entity.Notice;
 import com.duboribu.ecommerce.entity.member.Member;
+import com.duboribu.ecommerce.enums.NoticeType;
+import com.duboribu.ecommerce.front.enums.State;
 import com.duboribu.ecommerce.front.notice.dto.reponse.FoNoticeResponse;
 import com.duboribu.ecommerce.front.notice.dto.request.CreateCommentReq;
 import com.duboribu.ecommerce.front.notice.repository.FoNoticeCustomJpaRepository;
+import com.duboribu.ecommerce.front.qna.dto.request.NoticeRequest;
+import com.duboribu.ecommerce.front.qna.dto.request.QnaWriteReq;
 import com.duboribu.ecommerce.repository.CommentJpaRepository;
 import com.duboribu.ecommerce.repository.MemberJpaRepository;
 import com.duboribu.ecommerce.repository.NoticeJpaRepository;
@@ -29,8 +33,8 @@ public class FoNoticeService {
     private final FoNoticeCustomJpaRepository foNoticeCustomJpaRepository;
 
     @Transactional
-    public Page<FoNoticeResponse> list(PageRequest request) {
-        return foNoticeCustomJpaRepository.getFoNoticeList(request);
+    public Page<FoNoticeResponse> list(PageRequest request, NoticeRequest noticeRequest) {
+        return foNoticeCustomJpaRepository.getFoNoticeList(request, noticeRequest);
     }
     @Transactional
     public FoNoticeResponse noticeView(Long id) {
@@ -55,5 +59,16 @@ public class FoNoticeService {
         }
         notice.getCommentList().add( new Comment(notice, findMember.get(), createCommentReq));
         return true;
+    }
+    @Transactional
+    public Long writeQna(QnaWriteReq qnaWriteReq, String userId) {
+        Optional<Member> findMember = memberJpaRepository.findById(userId);
+        if (findMember.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 회원이 없습니다.");
+        }
+        Member member = findMember.get();
+        Notice save = noticeJpaRepository.save(new Notice(qnaWriteReq.getTitle(), qnaWriteReq.getCont(), State.Y,
+                member, NoticeType.QNA));
+        return save.getId();
     }
 }

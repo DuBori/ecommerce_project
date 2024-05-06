@@ -1,8 +1,10 @@
 package com.duboribu.ecommerce.front.notice.controller;
 
 import com.duboribu.ecommerce.auth.util.JwtTokenProvider;
+import com.duboribu.ecommerce.enums.NoticeType;
 import com.duboribu.ecommerce.front.notice.dto.request.CreateCommentReq;
 import com.duboribu.ecommerce.front.notice.service.FoNoticeService;
+import com.duboribu.ecommerce.front.qna.dto.request.NoticeRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +24,7 @@ public class FoNoticeController {
     private final FoNoticeService foNoticeService;
     @GetMapping("")
     public String notice(Model model) {
-        model.addAttribute("list",foNoticeService.list(PageRequest.of(0, 20)));
+        model.addAttribute("list", foNoticeService.list(PageRequest.of(0, 20), new NoticeRequest(NoticeType.NOTICE)));
         return "front/notice";
     }
     @GetMapping("/view/{id}")

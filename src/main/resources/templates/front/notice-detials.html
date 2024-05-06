@@ -1,61 +1,7 @@
 <!DOCTYPE html>
 <html lang="zxx" xmlns:th ="http://www.thymeleaf.org">
 <div th:replace="front/common/header :: header"></div>
-<style>
-    #comment-section {
-        margin-top: 50px;
-    }
 
-    #comment-form textarea {
-        width: 100%;
-        height: 100px;
-        margin-bottom: 10px;
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-    }
-
-    #comment-form button, .reply-form button {
-        padding: 5px 10px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-    }
-
-    #comment-list {
-        margin-top: 20px;
-    }
-
-    .comment {
-        margin-bottom: 10px;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-    }
-    .comment-wrapper {
-        margin-left: 20px; /* 들여쓰기 정도 조절 */
-    }
-
-    .comment-user {
-        font-weight: bold;
-    }
-
-    .reply-section {
-        margin-left: 20px; /* 대댓글도 같은 정도로 들여쓰기 */
-    }
-
-    .reply-form textarea {
-        width: calc(100% - 40px); /* 폼의 너비를 적절히 조절 */
-        margin-bottom: 10px;
-    }
-
-    .reply-form button {
-        margin-left: 10px;
-    }
-</style>
 
 <body>
     <div th:replace="front/common/top :: top"></div>
@@ -65,67 +11,6 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 col-md-5 order-md-1 order-2">
-                    <!--<div class="blog__sidebar">
-                        <div class="blog__sidebar__search">
-                            <form action="#">
-                                <input type="text" placeholder="Search...">
-                                <button type="submit"><span class="icon_search"></span></button>
-                            </form>
-                        </div>
-                        <div class="blog__sidebar__item">
-                            <h4>Categories</h4>
-                            <ul>
-                                <li><a href="#">All</a></li>
-                                <li><a href="#">Beauty (20)</a></li>
-                                <li><a href="#">Food (5)</a></li>
-                                <li><a href="#">Life Style (9)</a></li>
-                                <li><a href="#">Travel (10)</a></li>
-                            </ul>
-                        </div>
-                        <div class="blog__sidebar__item">
-                            <h4>Recent News</h4>
-                            <div class="blog__sidebar__recent">
-                                <a href="#" class="blog__sidebar__recent__item">
-                                    <div class="blog__sidebar__recent__item__pic">
-                                        <img src="/images/blog/sidebar/sr-1.jpg" alt="">
-                                    </div>
-                                    <div class="blog__sidebar__recent__item__text">
-                                        <h6>09 Kinds Of Vegetables<br /> Protect The Liver</h6>
-                                        <span>MAR 05, 2019</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="blog__sidebar__recent__item">
-                                    <div class="blog__sidebar__recent__item__pic">
-                                        <img src="/images/blog/sidebar/sr-2.jpg" alt="">
-                                    </div>
-                                    <div class="blog__sidebar__recent__item__text">
-                                        <h6>Tips You To Balance<br /> Nutrition Meal Day</h6>
-                                        <span>MAR 05, 2019</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="blog__sidebar__recent__item">
-                                    <div class="blog__sidebar__recent__item__pic">
-                                        <img src="/images/blog/sidebar/sr-3.jpg" alt="">
-                                    </div>
-                                    <div class="blog__sidebar__recent__item__text">
-                                        <h6>4 Principles Help You Lose <br />Weight With Vegetables</h6>
-                                        <span>MAR 05, 2019</span>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                        <div class="blog__sidebar__item">
-                            <h4>Search By</h4>
-                            <div class="blog__sidebar__item__tags">
-                                <a href="#">Apple</a>
-                                <a href="#">Beauty</a>
-                                <a href="#">Vegetables</a>
-                                <a href="#">Fruit</a>
-                                <a href="#">Healthy Food</a>
-                                <a href="#">Lifestyle</a>
-                            </div>
-                        </div>
-                    </div>-->
                 </div>
                 <div class="col-lg-8 col-md-7 order-md-1 order-1">
                     <div class="blog__details__text">
@@ -152,31 +37,36 @@
                         </div>
                     </div>
                     <!-- 댓글 영역 -->
-                    <div id="comment-section" th:if="${notice.comments != null}">
-                        <!-- 댓글 폼 -->
-                        <div id="comment-form">
-                            <textarea id="comment-text" name="detail" placeholder="댓글을 입력하세요..." required></textarea>
-                            <button type="button" onclick="addComment(this)">댓글 등록</button>
-                        </div>
-                        <!-- 댓글 목록 -->
-                        <div id="comment-list">
-                            <div class="comment" th:each="comment : ${notice.comments}">
-                                <div class="comment-wrapper">
-                                    <p class="comment-user" th:text="${comment.userName}"></p>
-                                    <p class="comment-detail" th:text="${comment.detail}"></p>
-                                    <!-- 대댓글 영역 -->
-                                    <div class="reply-section" th:if="${comment.NoticeCommentChildList != null}">
-                                        <!-- 대댓글 폼 -->
-                                        <div class="reply-form">
-                                            <textarea class="reply-text" name="detail" placeholder="대댓글을 입력하세요..." required></textarea>
-                                            <button th:onclick="'addComment(this, ' + ${comment.commentId} + ')'" onclick="addComment(this, )">대댓글 등록</button>
-
-                                        </div>
-                                        <!-- 대댓글 목록 -->
-                                        <div class="reply-list" th:each="reply : ${comment.NoticeCommentChildList}">
-                                            <div class="reply">
-                                                <p class="reply-user" th:text="${reply.userName}"></p>
-                                                <p class="reply-detail" th:text="${reply.detail}"></p>
+                    <div class="row vf-comment" id="comment-section" th:if="${notice.comments != null}">
+                        <div class="col-lg">
+                            <div class="card border input-form">
+                                <!-- 댓글 폼 -->
+                                <div id="comment-form">
+                                    <textarea id="comment-text" name="detail" class="form-control" placeholder="댓글을 입력하세요..." required></textarea>
+                                    <div class="vfcf-btn">
+                                        <button type="button" class="btn btn-info" onclick="addComment(this)">댓글 등록</button>
+                                    </div>
+                                </div>
+                                <!-- 댓글 목록 -->
+                                <div id="comment-list">
+                                    <div class="comment" th:each="comment : ${notice.comments}">
+                                        <div class="comment-wrapper">
+                                            <p class="comment-user" th:text="${comment.userName}"></p>
+                                            <p class="comment-detail" th:text="${comment.detail}"></p>
+                                            <!-- 대댓글 영역 -->
+                                            <div class="reply-section" th:if="${comment.NoticeCommentChildList != null}">
+                                                <!-- 대댓글 폼 -->
+                                                <div class="reply-form">
+                                                    <textarea  class="form-control reply-text" name="detail" placeholder="대댓글을 입력하세요..." required></textarea>
+                                                    <button th:onclick="'addComment(this, ' + ${comment.commentId} + ')'" onclick="addComment(this, )">대댓글 등록</button>
+                                                </div>
+                                                <!-- 대댓글 목록 -->
+                                                <div class="reply-list" th:each="reply : ${comment.NoticeCommentChildList}">
+                                                    <div class="reply">
+                                                        <p class="reply-user" th:text="${reply.userName}"></p>
+                                                        <p class="reply-detail" th:text="${reply.detail}"></p>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

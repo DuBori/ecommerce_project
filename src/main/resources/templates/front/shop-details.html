@@ -71,7 +71,7 @@
                         </div>
                         <button th:onclick="'addToCart(\'' + ${item.id} + '\')'" class="primary-btn">카트 담기</button>
                         <button  class="primary-btn directPurchase">바로 구매</button>
-                        <button href="#" class="heart-icon"><span class="icon_heart_alt"></span></button>
+                        <button href="/member/like" class="heart-icon"><span class="icon_heart_alt"></span></button>
                         <ul>
                             <li><b>판매여부 : </b> <span th:text="${item.state == 'Y' ? '판매중' : '일시품절'}"></span></li>
                             <!--<li><b>배달 : </b> <span> <samp>&lt;!&ndash;Free pickup today&ndash;&gt;</samp></span></li>-->
