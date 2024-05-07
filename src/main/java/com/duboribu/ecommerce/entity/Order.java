@@ -1,5 +1,6 @@
 package com.duboribu.ecommerce.entity;
 
+import com.duboribu.ecommerce.admin.order.dto.request.UpdateOrderReq;
 import com.duboribu.ecommerce.entity.member.Member;
 import com.duboribu.ecommerce.enums.OrderState;
 import jakarta.persistence.*;
@@ -51,5 +52,10 @@ public class Order extends BaseEntity implements Serializable {
                     .sum();
         }
         return 0; // 주문 상품이 없을 경우 0을 반환
+    }
+
+    public void updateOrder(UpdateOrderReq updateOrderReq) {
+        state = updateOrderReq.getOrderState();
+        orderItemList.forEach(it -> it.updateState(updateOrderReq.getOrderState()));
     }
 }

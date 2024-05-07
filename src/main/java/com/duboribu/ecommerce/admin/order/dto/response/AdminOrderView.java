@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.order.dto;
+package com.duboribu.ecommerce.admin.order.dto.response;
 
 import com.duboribu.ecommerce.enums.OrderState;
 import com.querydsl.core.annotations.QueryProjection;

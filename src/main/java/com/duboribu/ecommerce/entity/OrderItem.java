@@ -46,4 +46,10 @@ public class OrderItem extends BaseEntity implements Serializable {
     public void matchedOrderId(Order order) {
         this.order = order;
     }
+
+    public void updateState(OrderState orderState) {
+        if (OrderState.OSI02.equals(state) && OrderState.OSI03.equals(orderState)) {
+            this.state = orderState;
+        }
+    }
 }

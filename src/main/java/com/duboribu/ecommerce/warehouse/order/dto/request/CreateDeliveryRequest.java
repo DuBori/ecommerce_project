@@ -15,7 +15,7 @@ import java.util.List;
 @ToString
 public class CreateDeliveryRequest {
     private static String date; // YYYYMMDD 필수값아님 예외가 필요한 경우
-    private static String code;
+    private static String code; // 회사코드
     private List<OrderInfo> orderList;
 
     @Getter

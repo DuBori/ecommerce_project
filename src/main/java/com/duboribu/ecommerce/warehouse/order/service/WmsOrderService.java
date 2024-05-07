@@ -108,7 +108,7 @@ public class WmsOrderService {
 
     private UpdateWmsOrderResponse updateWmsOrder(Long companyOrderId, String companyCode, WmsOrderState newWmsOrderState) {
         // 실패한다면 wmsOrderLog에 실패한것들 로그로 쌓고 메일로 알려준다. // 이건 생각좀해보자
-        Optional<WmsOrderItem> findWmsOrderItem = wmsOrderItemJpaRepository.findByIdAndWmsOrder_CoCode(companyOrderId, companyCode);
+        Optional<WmsOrderItem> findWmsOrderItem = wmsOrderItemJpaRepository.findByWmsIdAndWmsOrder_CoCode(companyOrderId, companyCode);
         if (findWmsOrderItem.isPresent()) {
             WmsOrderItem wmsOrderItem = findWmsOrderItem.get();
             wmsOrderItem.updateOrderState(newWmsOrderState);

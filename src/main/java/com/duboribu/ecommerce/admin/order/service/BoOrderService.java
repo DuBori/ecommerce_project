@@ -27,7 +27,7 @@ public class BoOrderService {
         int lastYearCount = orderJpaRepository.countAllByCreatedAtBetween(startOfLastYear, endOfLastYear);
         return new BoDashRes(totalCount, currentCount, lastYearCount);
     }
-
+    @Transactional
     public BoDashRes revenueCount() {
         Long totalCount = orderItemJpaRepository.totalPrice();
         LocalDateTime startOfYear = LocalDateTime.now().withDayOfYear(1);
@@ -38,4 +38,5 @@ public class BoOrderService {
         int lastYearCount = orderItemJpaRepository.totalPrice(startOfLastYear, endOfLastYear);
         return new BoDashRes(totalCount, currentCount, lastYearCount);
     }
+
 }

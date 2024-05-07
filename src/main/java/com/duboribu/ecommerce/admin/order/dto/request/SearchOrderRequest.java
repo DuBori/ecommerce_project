@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.order.dto;
+package com.duboribu.ecommerce.admin.order.dto.request;
 
 import lombok.Getter;
 import lombok.Setter;

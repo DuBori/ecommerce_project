@@ -1,6 +1,6 @@
 package com.duboribu.ecommerce.admin.order.controller;
 
-import com.duboribu.ecommerce.admin.order.dto.SearchOrderRequest;
+import com.duboribu.ecommerce.admin.order.dto.request.SearchOrderRequest;
 import com.duboribu.ecommerce.admin.order.repository.AdminOrderCustomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

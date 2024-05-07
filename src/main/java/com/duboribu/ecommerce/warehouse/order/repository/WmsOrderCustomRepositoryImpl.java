@@ -24,7 +24,7 @@ public class WmsOrderCustomRepositoryImpl implements WmsOrderCustomRepository {
         if (!StringUtils.hasText(request.getDate())) {
             return Collections.emptyList();
         }
-        return jpaQueryFactory.select(new QUpdateWmsOrderResponse(wmsOrder.wmsDate, wmsOrder.coCode, wmsOrderItem.id, wmsOrderItem.state))
+        return jpaQueryFactory.select(new QUpdateWmsOrderResponse(wmsOrder.wmsDate, wmsOrder.coCode, wmsOrderItem.wmsId, wmsOrderItem.state))
                 .from(wmsOrder)
                 .innerJoin(wmsOrderItem)
                 .on(wmsOrder.orderId.eq(wmsOrderItem.wmsOrder.id))

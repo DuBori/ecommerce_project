@@ -17,10 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -39,14 +36,15 @@ public class WmsOrderController {
      * 발주조회
      */
     @GetMapping("/list")
-    public ResponseEntity<DefaultResponse> list(SelectDeliveryRequest request) {
+    public ResponseEntity<DefaultResponse> list(@RequestBody SelectDeliveryRequest request) {
         return new ResponseEntity<>(new DefaultResponse<>(wmsOrderService.list(request)), HttpStatus.OK);
     }
     /**
      * 발주등록
      * */
     @PostMapping("/register")
-    public ResponseEntity registerOrder(CreateDeliveryRequest request) {
+    public ResponseEntity registerOrder(@RequestBody CreateDeliveryRequest request) {
+        log.info("CreateDeliveryRequest : {}", request);
         if (!wmsOrderService.register(request)) {
             return ResponseEntity.internalServerError().build();
         }
@@ -56,7 +54,7 @@ public class WmsOrderController {
      * 프로세스 진행
      * */
     @PostMapping("/process")
-    public List<UpdateWmsOrderResponse> updateOrderStates(ProcessDeliveryRequest request) {
+    public List<UpdateWmsOrderResponse> updateOrderStates(@RequestBody ProcessDeliveryRequest request) {
         return wmsOrderService.updateOrderStates(request);
     }
     /*
