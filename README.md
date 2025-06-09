@@ -41,3 +41,16 @@ src/
 ├── service/        # 비즈니스 로직 처리
 ├── dto/            # 요청/응답 DTO
 └── util/           # 유틸성 클래스 (토큰, 로깅 등)
+
+🧠 기술적 포인트
+QueryDSL
+복합 검색 기능 (상품명 + 카테고리 + 가격 범위)을 BooleanBuilder와 where절 null 무시 방식으로 구현하여 가독성과 재사용성 향상.
+
+N+1 문제 해결
+JPA에서 fetch join과 @BatchSize를 통해 쿼리 수 감소 및 성능 최적화.
+
+Spring Security + JWT
+커스텀 JwtAuthenticationFilter를 통해 로그인 후 JWT 토큰을 발급하고, 요청마다 인증 처리 수행.
+
+AOP + Global Exception
+AOP를 통해 공통 로깅 처리, @ControllerAdvice로 일관된 예외 응답 처리.
