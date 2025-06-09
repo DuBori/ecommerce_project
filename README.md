@@ -8,7 +8,7 @@
 ## 🛠️ 사용 기술 스택
 
 - **Backend**: Java 17, Spring Boot 3.x, Spring Security, JPA (Hibernate), QueryDSL
-- **Database**: MySQL, Redis (세션/캐싱)
+- **Database**: MySQL
 - **Infra**: Docker, Nginx, GitHub Actions, Ubuntu On-Premise Server
 - **ETC**: JWT, RESTful API, Lombok, Validation
 
