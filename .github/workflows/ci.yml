@@ -33,6 +33,11 @@ jobs:
       - name: Build with Gradle (skip tests)
         run: ./gradlew clean build -x test
 
+      - name: Create SSH key file
+        run: |
+          echo "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
       # 5. 빌드 결과물(JAR) EC2로 복사
       - name: Copy JAR to EC2
         run: |
