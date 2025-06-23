@@ -42,13 +42,8 @@ jobs:
       - name: Deploy on EC2 via SSM
         run: |
           aws ssm send-command \
-            --instance-ids ${{ secrets.EC2_INSTANCE_ID }} \
+            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
             --comment "GitHub Actions deploy" \
-            --parameters commands=[
-              "cd /home/ec2-user/project",
-              "git pull origin master",
-              "docker-compose down -v",
-              "docker-compose up -d --build"
-            ] \
+            --parameters '{"commands":["cd /home/ec2-user/project","git pull origin master","docker-compose down -v","docker-compose up -d --build"]}' \
             --timeout-seconds 600
