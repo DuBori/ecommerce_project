@@ -9,27 +9,43 @@ on:
       - master
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
+      # 1. 코드 체크아웃
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17 (with Gradle cache)
+      # 2. JDK 설치 + Gradle 캐시
+      - name: Set up JDK 17 with Gradle cache
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
           cache: 'gradle'
 
+      # 3. Gradle wrapper 권한 부여
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
+      # 4. 빌드 (테스트 생략)
       - name: Build with Gradle (skip tests)
         run: ./gradlew clean build -x test
 
-      - name: Deploy to EC2 (optional)
-        if: github.ref == 'refs/heads/master'
+      # 5. 빌드 결과물(JAR) EC2로 복사
+      - name: Copy JAR to EC2
         run: |
-          ssh -i ${{ secrets.EC2_PRIVATE_KEY }} ec2-user@${{ secrets.EC2_IP }} 'bash -s' < deploy.sh
+          scp -o StrictHostKeyChecking=no -i ${{ secrets.EC2_PRIVATE_KEY }} \
+            build/libs/*.jar \
+            ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user/project/build/libs/
+
+      # 6. EC2에서 Docker Compose 재시작
+      - name: Restart Docker Compose on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ${{ secrets.EC2_PRIVATE_KEY }} \
+            ec2-user@${{ secrets.EC2_IP }} << 'EOF'
+            cd /home/ec2-user/project
+            docker-compose down -v
+            docker-compose up -d --build
+          EOF
