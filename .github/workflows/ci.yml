@@ -31,12 +31,9 @@ jobs:
           printf "%s\n" "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
 
-      - name: Copy JAR to EC2
-        run: |
-          scp -o StrictHostKeyChecking=no \
-          -i ec2_key.pem \
-          build/libs/*.jar \
-          ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user/project/build/libs/
+      - name: Restart Docker Compose (no-build) on EC2
+        run: ssh -o StrictHostKeyChecking=no -i ec2_key.pem ec2-user@${{ secrets.EC2_IP }} "cd /home/ec2-user/project && docker-compose down && docker-compose up -d --no-build"
+
 
       - name: Restart Docker Compose (no-build) on EC2
         run: ssh -o StrictHostKeyChecking=no \
