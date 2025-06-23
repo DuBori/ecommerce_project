@@ -13,6 +13,6 @@ import java.io.IOException;
 public class AuthenticationFailureHandler implements org.springframework.security.web.authentication.AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.AuthenticationException exception) throws IOException, ServletException {
-        response.sendRedirect("http://localhost:8080/");
+        response.sendRedirect("http://3.36.228.68/");
     }
 }

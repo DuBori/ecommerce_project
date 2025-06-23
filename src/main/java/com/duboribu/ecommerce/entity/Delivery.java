@@ -3,7 +3,6 @@ package com.duboribu.ecommerce.entity;
 import com.duboribu.ecommerce.order.dto.OrderRequestDTO;
 import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 public class Delivery extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue
@@ -24,8 +23,6 @@ public class Delivery extends BaseEntity implements Serializable {
     private String receiver; // 수령인
     private String receiverPhoneNum; // 수령인 번호
 
-
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
@@ -34,7 +31,8 @@ public class Delivery extends BaseEntity implements Serializable {
     @JoinColumn(name = "order_item_id")
     private OrderItem orderItem;
 
-    public Delivery(String address, String sender, String senderPhoneNum, String receiver, String receiverPhoneNum) {
+    public Delivery(WmsOrderState wmsOrderState, String address, String sender, String senderPhoneNum, String receiver, String receiverPhoneNum) {
+        this.wmsOrderState = wmsOrderState;
         this.address = address;
         this.sender = sender;
         this.senderPhoneNum = senderPhoneNum;

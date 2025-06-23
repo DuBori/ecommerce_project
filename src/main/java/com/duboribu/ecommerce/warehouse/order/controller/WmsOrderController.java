@@ -4,6 +4,7 @@ import com.duboribu.ecommerce.auth.domain.DefaultResponse;
 import com.duboribu.ecommerce.warehouse.order.dto.request.CreateDeliveryRequest;
 import com.duboribu.ecommerce.warehouse.order.dto.request.ProcessDeliveryRequest;
 import com.duboribu.ecommerce.warehouse.order.dto.request.SelectDeliveryRequest;
+import com.duboribu.ecommerce.warehouse.order.dto.response.RegisterResponse;
 import com.duboribu.ecommerce.warehouse.order.dto.response.UpdateWmsOrderResponse;
 import com.duboribu.ecommerce.warehouse.order.service.WmsOrderService;
 import com.google.zxing.BarcodeFormat;
@@ -43,12 +44,8 @@ public class WmsOrderController {
      * 발주등록
      * */
     @PostMapping("/register")
-    public ResponseEntity registerOrder(@RequestBody CreateDeliveryRequest request) {
-        log.info("CreateDeliveryRequest : {}", request);
-        if (!wmsOrderService.register(request)) {
-            return ResponseEntity.internalServerError().build();
-        }
-        return ResponseEntity.ok().build();
+    public ResponseEntity<RegisterResponse> registerOrder(@RequestBody CreateDeliveryRequest request) {
+        return new ResponseEntity<>(wmsOrderService.register(request), HttpStatus.OK);
     }
     /**
      * 프로세스 진행

@@ -1,7 +1,7 @@
 package com.duboribu.ecommerce.admin.order.repository;
 
-import com.duboribu.ecommerce.admin.order.dto.QAdminOrderView;
 import com.duboribu.ecommerce.admin.order.dto.response.AdminOrderView;
+import com.duboribu.ecommerce.admin.order.dto.response.QAdminOrderView;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;

@@ -28,7 +28,7 @@ public class AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccess
     @Transactional
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         Map<String, Object> attributes = ((OAuth2User) authentication.getPrincipal()).getAttributes();
-        String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:8080/auth/oauth2/code/google")
+        String targetUrl = UriComponentsBuilder.fromUriString("http://3.36.228.68/auth/oauth2/code/google")
                 .queryParam("code", attributes.get("email"))
                 .build()
                 .encode(StandardCharsets.UTF_8)

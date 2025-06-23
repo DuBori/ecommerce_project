@@ -24,6 +24,8 @@ public class JwtCustomFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+        String path = request.getRequestURI();
+        log.info("path : {}", path);
         log.info("Token 검증 필터 진입");
         // 추후에 수정 필요부분 모두 검증로직타버림
         /*String headerToken = request.getHeader(AUTHORIZATION_HEADER);
@@ -32,6 +34,12 @@ public class JwtCustomFilter extends OncePerRequestFilter {
             doFilter(request, response, filterChain);
             return;
         }*/
+        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/swagger-resources")) {
+            log.info("swagger 진입");
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         String accessToken = "";
         Cookie[] cookies = request.getCookies();
         if (request.getCookies() != null) {

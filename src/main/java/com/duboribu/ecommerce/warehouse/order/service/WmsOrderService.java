@@ -10,6 +10,7 @@ import com.duboribu.ecommerce.warehouse.enums.WmsOrderState;
 import com.duboribu.ecommerce.warehouse.order.dto.request.CreateDeliveryRequest;
 import com.duboribu.ecommerce.warehouse.order.dto.request.ProcessDeliveryRequest;
 import com.duboribu.ecommerce.warehouse.order.dto.request.SelectDeliveryRequest;
+import com.duboribu.ecommerce.warehouse.order.dto.response.RegisterResponse;
 import com.duboribu.ecommerce.warehouse.order.dto.response.UpdateWmsOrderResponse;
 import com.duboribu.ecommerce.warehouse.order.repository.WmsOrderCustomRepository;
 import com.duboribu.ecommerce.warehouse.order.repository.WmsOrderItemJpaRepository;
@@ -38,21 +39,27 @@ public class WmsOrderService {
     @Value("${protect.email}")
     private String adminEmail;
     @Transactional
-    public boolean register(CreateDeliveryRequest request) {
+    public RegisterResponse register(CreateDeliveryRequest request) {
         if (request.getOrderList().isEmpty()) {
             throw new WmsException(WmsExceptionType.WMS_LIST_EMPTY);
         }
+        List<RegisterResponse.WmsOrderResponse> list = new ArrayList<>();
         for (CreateDeliveryRequest.OrderInfo orderInfo : request.getOrderList()) {
-            Optional<WmsOrder> findWmsOrder = wmsOrderJpaRepository.findById(orderInfo.getOrderId());
-            if (findWmsOrder.isPresent()) {
-                WmsOrder wmsOrder = findWmsOrder.get();
-                wmsOrder.getWmsOrderItem().add(new WmsOrderItem(orderInfo.getOrderItemId(), WmsOrderState.DELIVERY_SET));
-            } else {
-                WmsOrder wmsOrder = orderInfo.toEntity();
-                wmsOrderJpaRepository.save(wmsOrder);
+            try {
+                Optional<WmsOrder> findWmsOrder = wmsOrderJpaRepository.findById(orderInfo.getOrderId());
+                if (findWmsOrder.isPresent()) {
+                    WmsOrder wmsOrder = findWmsOrder.get();
+                    wmsOrder.getWmsOrderItem().add(new WmsOrderItem(orderInfo.getOrderItemId(), WmsOrderState.DELIVERY_SET));
+                } else {
+                    WmsOrder wmsOrder = orderInfo.toEntity();
+                    wmsOrderJpaRepository.save(wmsOrder);
+                }
+                list.add(new RegisterResponse.WmsOrderResponse(orderInfo.getOrderId(), orderInfo.getOrderItemId(), WmsOrderState.DELIVERY_SET));
+            } catch (Exception e) {
+                log.error("error register info id : {}, orderId : {}, reason : {}", orderInfo.getOrderItemId(), orderInfo.getOrderId(), e.getMessage());
             }
         }
-        return false;
+        return new RegisterResponse(list.size(), list);
     }
 
     @Transactional
