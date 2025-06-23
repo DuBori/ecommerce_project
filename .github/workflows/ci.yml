@@ -1,4 +1,4 @@
-name: CI/CD via SSM
+name: CI → Copy JAR → Deploy (no-build)
 
 on:
   push:
@@ -6,44 +6,50 @@ on:
       - master
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. 코드 체크아웃
+      # 1) 코드 체크아웃
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. JDK 설치 + Gradle 캐시
+      # 2) JDK 설치 & Gradle 캐시
       - name: Set up JDK 17 with Gradle cache
         uses: actions/setup-java@v3
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
           cache: 'gradle'
 
-      # 3. Gradle wrapper 실행 권한 부여
+      # 3) Gradle wrapper 실행 권한
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
-      # 4. 빌드 (테스트 생략)
-      - name: Build with Gradle (skip tests)
+      # 4) JAR 빌드 (테스트 생략)
+      - name: Build JAR (skip tests)
         run: ./gradlew clean build -x test
 
-      # 5. AWS 자격증명 설정
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id:     ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region:            ${{ secrets.AWS_REGION }}
-
-      # 6. EC2에 SSM 커맨드로 배포 실행
-      - name: Deploy on EC2 via SSM
+      # 5) SSH 키 파일 생성
+      - name: Create SSH key file
         run: |
-          aws ssm send-command \
-            --instance-ids "${{ secrets.EC2_INSTANCE_ID }}" \
-            --document-name "AWS-RunShellScript" \
-            --comment "GitHub Actions deploy" \
-            --parameters '{"commands":["cd /home/ec2-user/project","git pull origin master","docker-compose down -v","docker-compose up -d --build"]}' \
-            --timeout-seconds 600
+          printf "%s\n" "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
+          chmod 600 ec2_key.pem
+
+      # 6) JAR 파일만 EC2로 복사
+      - name: Copy JAR to EC2
+        run: |
+          scp -o StrictHostKeyChecking=no \
+            -i ec2_key.pem \
+            build/libs/*.jar \
+            ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user/project/build/libs/
+
+      # 7) EC2에서 컨테이너 재시작 (no build)
+      - name: Restart Docker Compose (no-build) on EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no \
+            -i ec2_key.pem \
+            ec2-user@${{ secrets.EC2_IP }} \
+            "cd /home/ec2-user/project && \
+             docker-compose down && \
+             docker-compose up -d --no-build"
