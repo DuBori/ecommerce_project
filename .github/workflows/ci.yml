@@ -1,9 +1,10 @@
-name: CI → Copy JAR → Deploy (no-build)
+name: CI → Copy JAR → Deploy (no-build + auto-reboot)
 
 on:
   push:
     branches:
       - master
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -30,23 +31,44 @@ jobs:
           printf "%s\n" "${{ secrets.EC2_PRIVATE_KEY }}" > ec2_key.pem
           chmod 600 ec2_key.pem
 
-      # ——————————————————————————————
-      # 1) 컨테이너 중지
-      - name: Stop Docker Compose on EC2
+      #  AWS CLI 준비
+      - name: Configure AWS CLI
+        uses: aws-actions/aws-cli-action@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
+      # 컨테이너 종료 (SSH timeout 감지 → 자동 재부팅)
+      - name: Stop Docker Compose with timeout and auto-reboot
         run: |
-          ssh -o StrictHostKeyChecking=no \
-              -i ec2_key.pem \
+          INSTANCE_ID="i-xxxxxxxxxxxxxxxxx"  # ← EC2 인스턴스 ID 입력
+
+          for i in {1..3}; do
+            echo "Attempt $i: sudo docker-compose down with 20s timeout"
+          
+            timeout 20s ssh -o StrictHostKeyChecking=no -i ec2_key.pem \
               ec2-user@${{ secrets.EC2_IP }} \
-              "cd /home/ec2-user/project && sudo docker-compose down"
+              "cd /home/ec2-user/project && sudo docker-compose down" && break
 
-      # 2) JAR 복사 (생략된 경우 여기에 삽입)
+            echo "Timeout or SSH failure. Rebooting EC2..."
+            aws ec2 reboot-instances --instance-ids $INSTANCE_ID
+
+            echo "Waiting for EC2 to be ready..."
+            aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
+            sleep 20
+          done
+
+      #  JAR 복사
       - name: Copy JAR to EC2
-        run: scp -o StrictHostKeyChecking=no -i ec2_key.pem build/libs/*.jar ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user/project/build/libs/
+        run: |
+          scp -o StrictHostKeyChecking=no -i ec2_key.pem \
+            build/libs/*.jar \
+            ec2-user@${{ secrets.EC2_IP }}:/home/ec2-user/project/build/libs/
 
-      # 3) 컨테이너 재시작 (no-build)
+      # 컨테이너 재시작
       - name: Start Docker Compose (no-build) on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no \
-              -i ec2_key.pem \
-              ec2-user@${{ secrets.EC2_IP }} \
-              "cd /home/ec2-user/project && sudo docker-compose up -d --no-build"
+          ssh -o StrictHostKeyChecking=no -i ec2_key.pem \
+            ec2-user@${{ secrets.EC2_IP }} \
+            "cd /home/ec2-user/project && sudo docker-compose up -d --no-build"

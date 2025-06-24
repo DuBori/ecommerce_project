@@ -1,55 +1,32 @@
-<footer class="footer spad" th:fragment="footer">
+<footer class="footer bg-light pt-5" th:fragment="footer">
     <div class="container">
         <div class="row">
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="footer__about">
-                    <div class="footer__about__logo">
-                        <a href="./index.html"><img th:src="@{/images/logo.png}" alt=""></a>
-                    </div>
-                    <ul>
-                        <li>Address: 금천구 독산동</li>
-                        <li>Phone: 010-4080-7843</li>
-                        <li>Email: wjdgus8576@naver.com</li>
-                    </ul>
-                </div>
+            <!-- About -->
+            <div class="col-md-4 mb-4">
+                <h5 class="mb-3">ReadHub</h5>
+                <ul class="list-unstyled">
+                    <li>Address: 금천구 독산동</li>
+                    <li>Phone: 010-4080-7843</li>
+                    <li>Email: wjdgus8576@naver.com</li>
+                </ul>
             </div>
-            <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
-                <div class="footer__widget">
-                    <h6>Useful Links</h6>
-                    <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">About Our Shop</a></li>
-                        <li><a href="#">Secure Shopping</a></li>
-                        <li><a href="#">Delivery infomation</a></li>
-                        <li><a href="#">Privacy Policy</a></li>
-                        <li><a href="#">Our Sitemap</a></li>
-                    </ul>
-                    <ul>
-                        <li><a href="#">Who We Are</a></li>
-                        <li><a href="#">Our Services</a></li>
-                        <li><a href="#">Projects</a></li>
-                        <li><a href="#">Contact</a></li>
-                        <li><a href="#">Innovation</a></li>
-                        <li><a href="#">Testimonials</a></li>
-                    </ul>
-                </div>
+            <!-- Blog Link -->
+            <div class="col-md-4 mb-4">
+                <h5 class="mb-3">Develops Blog</h5>
+                <a href="https://www.notion.so/Park-Jeong-Hyeon-0772b4124b154714b40d51e40d163c22" class="d-flex align-items-center">
+                    <img src="/images/blog/notion.png" alt="" style="width:24px; height:24px; object-fit:cover; margin-right:12px;">
+                    <span>개발자 노션</span>
+                </a>
             </div>
-            <div class="col-lg-4 col-md-12">
-                <div class="footer__widget">
-                    <h6>Join Our Newsletter Now</h6>
-                    <p>Get E-mail updates about our latest shop and special offers.</p>
-                    <form action="#">
-                        <input type="text" placeholder="Enter your mail">
-                        <button type="submit" class="site-btn">Subscribe</button>
-                    </form>
-                    <div class="footer__widget__social">
-                        <a href="#"><i class="fa fa-facebook"></i></a>
-                        <a href="#"><i class="fa fa-instagram"></i></a>
-                        <a href="#"><i class="fa fa-twitter"></i></a>
-                        <a href="#"><i class="fa fa-pinterest"></i></a>
-                    </div>
-                </div>
+            <!-- 소셜 또는 추가 정보 -->
+            <div class="col-md-4 mb-4">
+                <h5 class="mb-3">Follow Us</h5>
+                <!-- 아이콘 리스트 등 -->
             </div>
+        </div>
+
+        <div class="text-center py-3 border-top">
+            <small>&copy; <script>document.write(new Date().getFullYear());</script> All rights reserved. Template by Colorlib</small>
         </div>
         <div class="row">
             <div class="col-lg-12">
@@ -62,12 +39,10 @@
                                     href="https://colorlib.com" target="_blank">Colorlib</a>
                             <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
                     </div>
-                    <div class="footer__copyright__payment"><img th:src="@{/images/payment-item.png}" alt=""></div>
                 </div>
             </div>
         </div>
     </div>
-    <!-- Footer Section End -->
 
     <!-- Js Plugins -->
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
@@ -78,7 +53,6 @@
     <script th:src="@{/js/mixitup.min.js}"></script>
     <script th:src="@{/js/owl.carousel.min.js}"></script>
     <script th:src="@{/js/main.js}"></script>
-
 
     <script th:src="@{/js/commonUpload.js}"></script>
 </footer>

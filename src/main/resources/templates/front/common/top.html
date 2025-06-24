@@ -137,7 +137,7 @@
     </header>
     <!-- Header Section End -->
     <!-- Hero Section Begin -->
-    <div th:if="${mainCategoryList != null}">
+
         <section class="hero">
             <div class="container">
                 <div class="row">
@@ -147,7 +147,7 @@
                                 <i class="fa fa-bars"></i>
                                 <span>카테고리</span>
                             </div>
-                            <ul>
+                            <ul th:if="${mainCategoryList != null}">
                                 <li th:each="category: ${mainCategoryList}">
                                     <a th:href="@{/item/{category}/list(category=${category.code})}" th:text="${category.name}"></a>
                                 </li>
@@ -158,7 +158,7 @@
                         <div class="hero__search">
                             <div class="hero__search__form">
                                 <form action="#">
-                                    <input type="text" placeholder="찾는 도서를 알려주세요">
+                                    <input type="text" placeholder="검색어를 입력 해주세요.">
                                     <button type="submit" class="site-btn">검색</button>
                                 </form>
                             </div>
@@ -184,19 +184,23 @@
         </section>
         <!-- Hero Section End -->
 
-        <!-- Categories Section Begin -->
-        <section class="categories">
-            <div class="container">
-                <div class="row">
-                    <div class="categories__slider owl-carousel">
-                        <div class="col-lg-3" th:each="normal : ${normalList}">
-                            <div class="categories__item set-bg" th:attr="data-setbg=@{${normal.filePath}}">
-                                <h5><a th:href="@{/item/view/{id}(id=${normal.id})}"  th:text="${normal.name}"></a></h5>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Categories Section Begin -->
+    <section class="categories py-5">
+        <div class="container">
+            <!-- Owl Carousel 초기화용 클래스만 감싸기 -->
+            <div class="categories__slider owl-carousel">
+                <!-- 각 아이템은 col이 아니라 순수 콘텐츠로만 -->
+                <div class="categories__item set-bg"
+                     th:attr="data-setbg=@{${normal.filePath}}"
+                     th:each="normal : ${normalList}">
+                    <h5>
+                        <a th:href="@{/item/view/{id}(id=${normal.id})}"
+                           th:text="${normal.name}"></a>
+                    </h5>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+    <!-- Categories Section End -->
+
 </div>

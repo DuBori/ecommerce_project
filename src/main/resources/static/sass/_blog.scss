@@ -12,6 +12,13 @@
     }
 }
 
+.blog__item__pic_footer img{
+    width: 25%;
+    max-width: 50px;
+    height: auto;
+    object-fit: cover;
+}
+
 .blog__item__text {
     padding-top: 25px;
 

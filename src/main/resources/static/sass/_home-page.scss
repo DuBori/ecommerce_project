@@ -1,61 +1,78 @@
 /*---------------------
   Categories
 -----------------------*/
-.categories__item {
-    height: 270px;
+.categories {
+    background-color: #f8f9fa;
+}
+.categories__slider .categories__item {
     position: relative;
-
-    h5 {
-        position: absolute;
-        left: 0;
-        width: 100%;
-        padding: 0 20px;
-        bottom: 20px;
-        text-align: center;
-
-        a {
-            font-size: 18px;
-            color: $normal-color;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 12px 0 10px;
-            background: $white-color;
-            display: block;
-        }
-    }
+    height: 200px;               /* 원하는 고정 높이 */
+    background-size: cover;
+    background-position: center;
+    border-radius: .5rem;
+    overflow: hidden;
+    margin: 0 .5rem;             /* 슬라이드 사이 여백 */
 }
 
-.categories__slider {
+/* 배경 이미지 세팅 스크립트(set-bg)가 완료된 후 .set-bg 에 적용됩니다. */
+.set-bg {
+    transition: transform .3s ease;
+}
+.set-bg:hover {
+    transform: scale(1.05);
+}
 
-    .col-lg-3 {
-        max-width: 100%;
-    }
+.categories__item h5 {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    margin: 0;
+}
+.categories__item h5 a {
+    color: #fff;
+    background: rgba(0, 0, 0, .4);
+    padding: .25rem .75rem;
+    border-radius: .25rem;
+    text-decoration: none;
+    font-weight: 600;
+}
 
-    &.owl-carousel {
+/*---------------------
+  Banner
+-----------------------*/
+/* 배너 섹션 전체 padding */
+.banner {
+    padding: 4rem 0;               /* 위아래 충분한 여백 */
+    background-color: #fff;        /* 섹션 배경 통일 */
+}
 
-        .owl-nav {
+/* 각 배너 이미지 래핑 */
+.banner__pic {
+    overflow: hidden;
+    border-radius: .5rem;          /* 모서리 라운드 */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: transform .3s ease;
+}
 
-            button {
-                font-size: 18px;
-                color: $normal-color;
-                height: 70px;
-                width: 30px;
-                line-height: 70px;
-                text-align: center;
-                border: 1px solid $border;
-                position: absolute;
-                left: -35px;
-                top: 50%;
-                -webkit-transform: translateY(-35px);
-                background: $white-color;
+/* 이미지 크기 통일 & 반응형 */
+.banner__pic img {
+    width: 100%;
+    height: 100%;
+    max-height: 300px;             /* 원하는 최대 높이 */
+    object-fit: cover;             /* 이미지를 잘라서 꽉 채움 */
+    display: block;
+}
 
-                &.owl-next {
-                    left: auto;
-                    right: -35px;
-                }
-            }
-        }
+/* 호버 시 살짝 확대 효과 */
+.banner__pic:hover {
+    transform: scale(1.03);
+}
+
+/* 모바일에서 세로 스택(열) */
+@media (max-width: 767px) {
+    .banner__pic {
+        margin-bottom: 1rem;
+        max-height: 200px;
     }
 }
 
