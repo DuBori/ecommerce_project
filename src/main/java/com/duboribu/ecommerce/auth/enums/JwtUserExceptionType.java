@@ -14,7 +14,8 @@ public enum JwtUserExceptionType {
     EXPIRED_JWT_TOKEN("만료된 JWT 토큰입니다.", 106),
     UN_SUPPORTED_JWT_TOKEN("지원되지 않는 JWT 토큰입니다.", 107),
     ILLEGAL_JWT_TOKEN("JWT 토큰이 잘못되었습니다.", 108),
-    NON_TOKEN("토큰이 존재하지 않습니다.", 109);
+    NON_TOKEN("토큰이 존재하지 않습니다.", 109),
+    INVALID_CLASS("토큰의 정보가 존재하지 않습니다.", 110);
 
     private final String desc;
     private final int code;

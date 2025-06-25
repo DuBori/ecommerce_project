@@ -4,10 +4,7 @@ import com.duboribu.ecommerce.Utils.Validator;
 import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
-import com.duboribu.ecommerce.entity.member.Member;
-import com.duboribu.ecommerce.entity.member.PrincipalDetails;
 import com.duboribu.ecommerce.enums.RoleType;
-import com.duboribu.ecommerce.repository.MemberJpaRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,6 +14,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,14 +26,12 @@ import java.security.Key;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
-import java.util.Optional;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenProvider implements InitializingBean {
-    private final MemberJpaRepository memberJpaRepository;
-    private final String AUTHORITY_DELIMITER =",";
     private Key key;
     @Value("${custom.jwt.token.key}")
     private String secret;
@@ -44,7 +41,7 @@ public class JwtTokenProvider implements InitializingBean {
     private long refreshTokenValidityInMilliseconds;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
     // 권한 가져오기
@@ -57,15 +54,13 @@ public class JwtTokenProvider implements InitializingBean {
                 .getBody();
 
         if (claims.get("id") == null && claims.get("name") == null && claims.get("role") == null) {
-            return null;
+            throw new JwtException(JwtUserExceptionType.INVALID_CLASS);
         }
-        String userId = claims.get("id").toString();
-        Optional<Member> findMember = memberJpaRepository.findById(userId);
-        if (findMember.isEmpty()) {
-            return null;
-        }
-        UserDetails user = new PrincipalDetails(findMember.get());
-        return new UsernamePasswordAuthenticationToken(user, "", user.getAuthorities());
+        String userId = claims.get("id", String.class);
+        String role = claims.get("role", String.class);
+        List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+        UserDetails user = new User(userId, "", authorities);
+        return new UsernamePasswordAuthenticationToken(user, accessToken, authorities);
     }
     // 토큰 생성
     @Transactional
@@ -154,10 +149,10 @@ public class JwtTokenProvider implements InitializingBean {
     @Transactional
     public String getUserId(HttpServletRequest request) {
         String accessToken = Validator.getAccessToken(request);
-        Authentication authentication = getAuthentication(accessToken);
-        if (authentication == null) {
-            return null;
+        if (isExpired(accessToken)) {
+            throw new JwtException(JwtUserExceptionType.EXPIRED_JWT_TOKEN);
         }
+        Authentication authentication = getAuthentication(accessToken);
         return authentication.getName();
     }
 }
