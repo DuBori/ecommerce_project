@@ -76,3 +76,9 @@ Spring Security + JWT
 
 AOP + Global Exception
 AOP를 통해 공통 로깅 처리, @ControllerAdvice로 일관된 예외 응답 처리.
+
+---
+## 📊 ERD (Entity Relationship Diagram)
+<img width="1095" height="989" alt="image" src="https://github.com/user-attachments/assets/f7270c51-dad2-4823-81b5-14397905b10d" />
+
+
