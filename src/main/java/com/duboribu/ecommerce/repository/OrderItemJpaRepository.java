@@ -1,5 +1,6 @@
-package com.duboribu.ecommerce.entity;
+package com.duboribu.ecommerce.repository;
 
+import com.duboribu.ecommerce.entity.OrderItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
