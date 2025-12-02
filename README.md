@@ -79,6 +79,19 @@ AOP를 통해 공통 로깅 처리, @ControllerAdvice로 일관된 예외 응답
 
 ---
 ## 📊 ERD (Entity Relationship Diagram)
+아래 ERD는 주요 도메인 중심(Entity) 구조를 시각화한 것입니다.  
+회원 가입 → 장바구니 → 주문 → 결제/배송 흐름을 따라 핵심 관계를 표현하였습니다.  
+권한(Role), 인증 토큰 등 보조 도메인은 생략되어 있습니다.
+
 <img width="1095" height="989" alt="image" src="https://github.com/user-attachments/assets/f7270c51-dad2-4823-81b5-14397905b10d" />
+
+- `member` → 사용자 계정
+- `item`, `category` → 상품 + 카테고리 분류
+- `cart`, `cart_item` → 장바구니 구조
+- `shop_order`, `order_item` → 주문 + 주문 상세
+- `payment`, `delivery` → 결제 및 배송 처리
+
+상품은 카테고리에 소속되며, 주문은 여러 상품을 포함할 수 있습니다.  
+결제는 주문 1건당 1회, 배송은 주문 또는 상품 단위로 분리 가능합니다.
 
 
