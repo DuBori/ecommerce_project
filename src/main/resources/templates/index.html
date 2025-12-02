@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DuBoriBu Portfolio</title>
+    <link rel="stylesheet" th:href="@{/css/index_profile.css}" type="text/css">
+</head>
+<body>
+
+<header class="header">
+    <div class="logo">DUBORIBU</div>
+    <nav class="nav">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#Notion">Notion</a>
+        <a href="#contact" class="btn-primary">Contact</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <div class="hero-text">
+        <h1>안녕하세요.<br><span>박정현</span>입니다.</h1>
+        <!--<p class="sub">저는 백엔드 개발을 하고 있어요.</p>-->
+    </div>
+
+    <div class="hero-img">
+        <img src="./assets/profile.png" alt="profile" />
+    </div>
+</section>
+
+<section id="about" class="about">
+    <h2>저는 이런 사람입니다.</h2>
+    <ul>
+        <li>문제 해결 중심으로 작업합니다.</li>
+        <li>백엔드 구조와 아키텍처를 중요하게 생각합니다.</li>
+        <li>협업하면서 서로 배우는 환경을 선호합니다.</li>
+        <li>신속한 개발보다 견고한 설계를 우선합니다.</li>
+    </ul>
+</section>
+
+<section id="projects" class="projects">
+    <h2>Projects</h2>
+    <div class="project-grid">
+        <div class="project-card" data-link="/ecommerce">
+            <img src="./assets/ecommerce.png" />
+            <h3>쇼핑몰 개인 프로젝트(JPA/QueryDSL)</h3>
+            <p>2024.03.11 ~ 2024.05.11</p>
+        </div>
+
+        <div class="project-card" data-link="./project-detail/fionic.html">
+            <img src="./assets/fionic.png" />
+            <h3>Fionic Java Final Project</h3>
+            <p>2022.11.25 ~ 2022.12.29</p>
+        </div>
+
+        <div class="project-card" data-link="./project-detail/watchpedia.html">
+            <img src="./assets/watch.png" />
+            <h3>와차피디아</h3>
+            <p>2022.10.18 ~ 2022.11.14</p>
+        </div>
+    </div>
+</section>
+
+<section id="Notion" class="projects">
+    <h2>Notion</h2>
+    <div class="project-grid">
+        <div class="project-card" data-link="https://balsam-tumbleweed-3cd.notion.site/Park-Jeong-Hyeon-0772b4124b154714b40d51e40d163c22?pvs=74">
+            <img src="./assets/ecommerce.png" />
+            <h3>notion 주소</h3>
+            <p>개인 notion 주소입니다.</p>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.querySelectorAll('.project-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const link = card.getAttribute('data-link');
+            if (link) location.href = link;
+        });
+    });
+
+</script>
+</body>
+</html>

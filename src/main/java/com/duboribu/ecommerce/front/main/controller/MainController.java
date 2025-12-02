@@ -26,14 +26,23 @@ public class MainController {
     private final FoCategoryService foCategoryService;
     private final FoMemberService foMemberService;
     private final JwtTokenProvider jwtTokenProvider;
-    @GetMapping
+
+    @GetMapping()
+    public String profile(SearchItemRequest request, Model model) {
+        model.addAttribute("normalList", foItemService.normalList(request, null));
+        model.addAttribute("mainCategoryList", foCategoryService.list("book"));
+        return "index";
+    }
+
+
+    @GetMapping("/ecommerce")
     public String main(SearchItemRequest request, Model model) {
         model.addAttribute("normalList", foItemService.normalList(request, null));
         model.addAttribute("mainCategoryList", foCategoryService.list("book"));
         return "front/index";
     }
 
-    @GetMapping("/mypage")
+    @GetMapping("/ecommerce/mypage")
     public String myPage(HttpServletRequest request, Model model) {
         String userId = jwtTokenProvider.getUserId(request);
         if (!StringUtils.hasText(userId)) {
