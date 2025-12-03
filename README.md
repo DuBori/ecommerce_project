@@ -7,6 +7,11 @@ https://duboribu.com/
 CI/CD는 GitHub Actions 기반 자동화 배포를 구성했고, 구조적 리팩토링 및 문서화를 진행 중입니다.
 
 ---
+# 아키텍처 다이어그램
+<img width="691" height="616" alt="commerce_architecture_1203 drawio" src="https://github.com/user-attachments/assets/aca1d90b-4b33-4a2f-83e3-f6089a95a02f" />
+
+
+---
 
 ## 🛠 사용 기술 스택
 
@@ -93,5 +98,7 @@ AOP를 통해 공통 로깅 처리, @ControllerAdvice로 일관된 예외 응답
 
 상품은 카테고리에 소속되며, 주문은 여러 상품을 포함할 수 있습니다.  
 결제는 주문 1건당 1회, 배송은 주문 또는 상품 단위로 분리 가능합니다.
+
+
 
 
