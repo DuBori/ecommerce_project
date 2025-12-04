@@ -1,59 +1,35 @@
-<footer class="footer bg-light pt-5" th:fragment="footer">
+<footer class="footer" th:fragment="footer">
     <div class="container">
-        <div class="row">
+        <div class="footer__content">
             <!-- About -->
-            <div class="col-md-4 mb-4">
-                <h5 class="mb-3">ReadHub</h5>
-                <ul class="list-unstyled">
+            <div class="footer__section">
+                <h5>DUBORIBU</h5>
+                <ul>
                     <li>Address: 금천구 독산동</li>
                     <li>Phone: 010-4080-7843</li>
                     <li>Email: wjdgus8576@naver.com</li>
                 </ul>
             </div>
+
             <!-- Blog Link -->
-            <div class="col-md-4 mb-4">
-                <h5 class="mb-3">Develops Blog</h5>
-                <a href="https://www.notion.so/Park-Jeong-Hyeon-0772b4124b154714b40d51e40d163c22" class="d-flex align-items-center">
-                    <img src="/images/blog/notion.png" alt="" style="width:24px; height:24px; object-fit:cover; margin-right:12px;">
+            <div class="footer__section">
+                <h5>Develops Blog</h5>
+                <a href="https://www.notion.so/Park-Jeong-Hyeon-0772b4124b154714b40d51e40d163c22" target="_blank">
+                    <img src="https://via.placeholder.com/28" alt="Notion">
                     <span>개발자 노션</span>
                 </a>
             </div>
-            <!-- 소셜 또는 추가 정보 -->
-            <div class="col-md-4 mb-4">
-                <h5 class="mb-3">Follow Us</h5>
-                <!-- 아이콘 리스트 등 -->
-            </div>
-        </div>
 
-        <div class="text-center py-3 border-top">
-            <small>&copy; <script>document.write(new Date().getFullYear());</script> All rights reserved. Template by Colorlib</small>
-        </div>
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="footer__copyright">
-                    <div class="footer__copyright__text">
-                        <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-                            All rights reserved | This template is made with <i class="fa fa-heart"
-                                                                                aria-hidden="true"></i> by <a
-                                    href="https://colorlib.com" target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-                    </div>
-                </div>
+            <!-- Follow Us -->
+            <div class="footer__section">
+                <h5>Follow Us</h5>
+                <p>소셜 미디어에서 ReadHub를 만나보세요</p>
             </div>
         </div>
     </div>
 
     <!-- Js Plugins -->
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-    <script th:src="@{/js/bootstrap.min.js}"></script>
-    <script th:src="@{/js/jquery.nice-select.min.js}"></script>
-    <script th:src="@{/js/jquery-ui.min.js}"></script>
-    <script th:src="@{/js/jquery.slicknav.js}"></script>
-    <script th:src="@{/js/mixitup.min.js}"></script>
-    <script th:src="@{/js/owl.carousel.min.js}"></script>
-    <script th:src="@{/js/main.js}"></script>
-
     <script th:src="@{/js/commonUpload.js}"></script>
 </footer>
 

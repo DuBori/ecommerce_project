@@ -6,22 +6,58 @@
 <body>
 <div th:replace="front/common/top :: top"></div>
 
-<!--<div class="banner">
+<!-- Hero Section (카테고리 + 검색 + 배너) -->
+<section class="hero">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="banner__pic">
-                    <img th:src="@{/images/banner/banner-1.jpg}" alt="">
-                </div>
+        <!-- 왼쪽: 카테고리 -->
+        <div class="hero__categories">
+            <div class="hero__categories__all">
+                <i class="fa fa-bars"></i>
+                <span>카테고리</span>
             </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="banner__pic">
-                    <img th:src="@{/images/banner/banner-2.jpg}" alt="">
+            <ul th:if="${mainCategoryList != null}">
+                <li th:each="category: ${mainCategoryList}">
+                    <a th:href="@{/item/{category}/list(category=${category.code})}"
+                       th:text="${category.name}"></a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 오른쪽: 검색 + 배너 -->
+        <div class="hero__right">
+            <div class="hero__item">
+                <div class="hero__text">
+                    <h2>DUBORIBU</h2>
+                    <p>DUBORIBU DUBORIBU</p>
                 </div>
             </div>
         </div>
     </div>
-</div>-->
+</section>
+
+<!-- Categories Slider (제일 크기 카드들) -->
+<section class="categories">
+    <div class="container">
+        <div class="categories__slider owl-carousel">
+            <div class="categories__item set-bg"
+                 th:each="normal : ${normalList}"
+                 th:attr="data-setbg=@{${normal.filePath}}">
+                <h5>
+                    <a th:href="@{/item/view/{id}(id=${normal.id})}"
+                       th:text="${normal.name}"></a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Welcome Section -->
+<section class="welcome-section">
+    <div class="container">
+        <h2>Welcome to ReadHub</h2>
+        <p>여기에 맞춤 콘텐츠가 들어갑니다</p>
+    </div>
+</section>
 
 <!-- Footer Section Begin -->
 <div th:replace="front/common/footer :: footer"></div>
