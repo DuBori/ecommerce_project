@@ -1,0 +1,608 @@
+/* ============ Notice Detail Page - Force Override All Styles ============ */
+
+/* Reset and Override Container */
+section.blog-details.spad {
+    padding: 60px 0 !important;
+    background: #fff !important;
+    min-height: 100vh !important;
+}
+
+section.blog-details.spad .container {
+    max-width: 1100px !important;
+    margin: 0 auto !important;
+    padding: 0 40px !important;
+}
+
+section.blog-details.spad .container .row {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+/* Hide Sidebar Completely */
+section.blog-details .col-lg-4,
+section.blog-details .col-md-5,
+section.blog-details [class*="col-lg-4"],
+section.blog-details [class*="col-md-5"] {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    visibility: hidden !important;
+}
+
+/* Main Content Full Width */
+section.blog-details .col-lg-8,
+section.blog-details .col-md-7 {
+    flex: none !important;
+    max-width: 900px !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    display: block !important;
+}
+
+/* ============ Blog Details Text ============ */
+section.blog-details .blog__details__text {
+    background: #fff !important;
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 8px !important;
+    padding: 50px !important;
+    margin: 0 0 30px 0 !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+section.blog-details .blog__details__text h4 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #999 !important;
+    margin: 0 0 10px 0 !important;
+    padding: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    display: block !important;
+}
+
+section.blog-details .blog__details__text > p:nth-of-type(1) {
+    font-size: 32px !important;
+    font-weight: 700 !important;
+    color: #333 !important;
+    margin: 0 0 40px 0 !important;
+    line-height: 1.4 !important;
+    padding: 0 0 25px 0 !important;
+    border-bottom: 3px solid #333 !important;
+    display: block !important;
+}
+
+section.blog-details .blog__details__text h5 {
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    color: #999 !important;
+    margin: 40px 0 25px 0 !important;
+    padding: 0 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 1px !important;
+    display: block !important;
+}
+
+section.blog-details .blog__details__text img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: 8px !important;
+    margin: 30px 0 !important;
+    padding: 0 !important;
+    object-fit: cover !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    display: block !important;
+}
+
+section.blog-details .blog__details__text > p:last-of-type {
+    color: #555 !important;
+    font-size: 16px !important;
+    line-height: 2 !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    margin: 20px 0 0 0 !important;
+    padding: 0 !important;
+    display: block !important;
+}
+
+/* ============ Author Section ============ */
+section.blog-details .blog__details__content {
+    background: #f8f9fa !important;
+    border-radius: 8px !important;
+    padding: 35px !important;
+    margin: 0 0 50px 0 !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+section.blog-details .blog__details__content .row {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+section.blog-details .blog__details__content .col-lg-6 {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+section.blog-details .blog__details__author {
+    display: flex !important;
+    align-items: center !important;
+    gap: 25px !important;
+}
+
+section.blog-details .blog__details__author__pic {
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+    overflow: hidden !important;
+    flex-shrink: 0 !important;
+    background: #e0e0e0 !important;
+    border: 3px solid #fff !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+}
+
+section.blog-details .blog__details__author__pic img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+}
+
+section.blog-details .blog__details__author__text {
+    flex: 1 !important;
+}
+
+section.blog-details .blog__details__author__text h6 {
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    color: #333 !important;
+    margin: 0 0 8px 0 !important;
+}
+
+section.blog-details .blog__details__author__text span {
+    font-size: 14px !important;
+    color: #666 !important;
+}
+
+/* ============ Comment Section ============ */
+section.blog-details .vf-comment {
+    margin: 60px 0 0 0 !important;
+    padding: 50px 0 0 0 !important;
+    border-top: 3px solid #333 !important;
+    width: 100% !important;
+    display: block !important;
+}
+
+section.blog-details .vf-comment.row {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+}
+
+section.blog-details .vf-comment .col-lg {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+}
+
+section.blog-details .vf-comment .card {
+    background: #fff !important;
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+    padding: 40px !important;
+    margin: 0 !important;
+}
+
+section.blog-details .vf-comment .card.border {
+    border: 1px solid #f0f0f0 !important;
+}
+
+section.blog-details .vf-comment .input-form {
+    padding: 0 !important;
+}
+
+/* Comment Form */
+section.blog-details #comment-form {
+    margin: 0 0 50px 0 !important;
+    background: #f8f9fa !important;
+    padding: 30px !important;
+    border-radius: 8px !important;
+    display: block !important;
+}
+
+section.blog-details #comment-form textarea,
+section.blog-details #comment-text {
+    width: 100% !important;
+    padding: 18px 22px !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    resize: vertical !important;
+    min-height: 140px !important;
+    margin: 0 0 20px 0 !important;
+    font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    line-height: 1.6 !important;
+    background: #fff !important;
+    transition: all 0.3s !important;
+    display: block !important;
+}
+
+section.blog-details #comment-form textarea:focus,
+section.blog-details #comment-text:focus {
+    outline: none !important;
+    border-color: #3498db !important;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1) !important;
+}
+
+section.blog-details #comment-form textarea::placeholder,
+section.blog-details #comment-text::placeholder {
+    color: #aaa !important;
+}
+
+section.blog-details .vfcf-btn {
+    text-align: right !important;
+    display: block !important;
+}
+
+section.blog-details #comment-form .btn,
+section.blog-details .btn-info {
+    padding: 14px 40px !important;
+    border-radius: 8px !important;
+    font-size: 15px !important;
+    font-weight: 600 !important;
+    border: none !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+    background: #3498db !important;
+    color: #fff !important;
+    display: inline-block !important;
+}
+
+section.blog-details #comment-form .btn:hover,
+section.blog-details .btn-info:hover {
+    background: #2980b9 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(52, 152, 219, 0.3) !important;
+}
+
+/* Comment List */
+section.blog-details #comment-list {
+    clear: both !important;
+    display: block !important;
+    width: 100% !important;
+}
+
+section.blog-details .comment {
+    padding: 30px !important;
+    border: 1px solid #f0f0f0 !important;
+    background: #fafafa !important;
+    border-radius: 8px !important;
+    margin: 0 0 20px 0 !important;
+    display: block !important;
+}
+
+section.blog-details .comment:last-child {
+    margin-bottom: 0 !important;
+}
+
+section.blog-details .comment-wrapper {
+    position: relative !important;
+}
+
+section.blog-details .comment-user {
+    font-weight: 700 !important;
+    color: #333 !important;
+    font-size: 15px !important;
+    margin: 0 0 15px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+section.blog-details .comment-user::before {
+    content: "👤" !important;
+    font-size: 18px !important;
+}
+
+section.blog-details .comment-detail {
+    color: #555 !important;
+    font-size: 15px !important;
+    line-height: 1.8 !important;
+    margin: 0 0 20px 0 !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    padding-left: 28px !important;
+    display: block !important;
+}
+
+/* Reply Section */
+section.blog-details .reply-section {
+    margin: 30px 0 0 40px !important;
+    padding-left: 25px !important;
+    border-left: 4px solid #e0e0e0 !important;
+    display: block !important;
+}
+
+section.blog-details .reply-form {
+    margin: 0 0 25px 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+    background: #fff !important;
+    padding: 20px !important;
+    border-radius: 8px !important;
+}
+
+section.blog-details .reply-form textarea,
+section.blog-details .reply-text,
+section.blog-details .reply-form .form-control {
+    width: 100% !important;
+    padding: 14px 18px !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    resize: vertical !important;
+    min-height: 100px !important;
+    font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    line-height: 1.6 !important;
+    transition: all 0.3s !important;
+    background: #fff !important;
+    display: block !important;
+}
+
+section.blog-details .reply-form textarea:focus,
+section.blog-details .reply-text:focus,
+section.blog-details .reply-form .form-control:focus {
+    outline: none !important;
+    border-color: #3498db !important;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1) !important;
+}
+
+section.blog-details .reply-form button {
+    align-self: flex-end !important;
+    padding: 12px 30px !important;
+    background: #3498db !important;
+    color: #fff !important;
+    border: none !important;
+    border-radius: 6px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s !important;
+}
+
+section.blog-details .reply-form button:hover {
+    background: #2980b9 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3) !important;
+}
+
+section.blog-details .reply-list {
+    margin: 0 0 20px 0 !important;
+    display: block !important;
+}
+
+section.blog-details .reply {
+    padding: 20px !important;
+    background: #fff !important;
+    border: 1px solid #f0f0f0 !important;
+    border-radius: 6px !important;
+    margin: 0 0 15px 0 !important;
+    display: block !important;
+}
+
+section.blog-details .reply:last-child {
+    margin-bottom: 0 !important;
+}
+
+section.blog-details .reply-user {
+    font-weight: 700 !important;
+    color: #333 !important;
+    font-size: 14px !important;
+    margin: 0 0 12px 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+section.blog-details .reply-user::before {
+    content: "↪" !important;
+    color: #3498db !important;
+    font-size: 16px !important;
+    font-weight: 700 !important;
+}
+
+section.blog-details .reply-detail {
+    color: #555 !important;
+    font-size: 14px !important;
+    line-height: 1.7 !important;
+    margin: 0 !important;
+    white-space: pre-wrap !important;
+    word-break: break-word !important;
+    padding-left: 24px !important;
+    display: block !important;
+}
+
+/* Hide hidden input */
+section.blog-details input[type="hidden"] {
+    display: none !important;
+    visibility: hidden !important;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 1200px) {
+    section.blog-details.spad .container {
+        padding: 0 30px !important;
+    }
+}
+
+@media (max-width: 991px) {
+    section.blog-details .blog__details__text {
+        padding: 40px !important;
+    }
+
+    section.blog-details .blog__details__content {
+        padding: 30px !important;
+    }
+
+    section.blog-details .reply-section {
+        margin-left: 25px !important;
+        padding-left: 20px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    section.blog-details.spad .container {
+        padding: 0 20px !important;
+    }
+
+    section.blog-details.spad {
+        padding: 40px 0 !important;
+    }
+
+    section.blog-details .blog__details__text {
+        padding: 30px !important;
+    }
+
+    section.blog-details .blog__details__text > p:nth-of-type(1) {
+        font-size: 26px !important;
+        padding-bottom: 20px !important;
+    }
+
+    section.blog-details .blog__details__text > p:last-of-type {
+        font-size: 15px !important;
+    }
+
+    section.blog-details .blog__details__content {
+        padding: 25px !important;
+    }
+
+    section.blog-details .blog__details__author {
+        gap: 20px !important;
+    }
+
+    section.blog-details .blog__details__author__pic {
+        width: 70px !important;
+        height: 70px !important;
+    }
+
+    section.blog-details .vf-comment {
+        margin-top: 50px !important;
+        padding-top: 40px !important;
+    }
+
+    section.blog-details .vf-comment .card {
+        padding: 30px !important;
+    }
+
+    section.blog-details #comment-form {
+        padding: 25px !important;
+    }
+
+    section.blog-details #comment-form textarea,
+    section.blog-details #comment-text {
+        min-height: 120px !important;
+        padding: 15px 18px !important;
+    }
+
+    section.blog-details .comment {
+        padding: 25px !important;
+    }
+
+    section.blog-details .reply-section {
+        margin-left: 20px !important;
+        padding-left: 15px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    section.blog-details .blog__details__text {
+        padding: 25px !important;
+    }
+
+    section.blog-details .blog__details__text > p:nth-of-type(1) {
+        font-size: 22px !important;
+        padding-bottom: 18px !important;
+    }
+
+    section.blog-details .blog__details__text > p:last-of-type {
+        font-size: 14px !important;
+        line-height: 1.8 !important;
+    }
+
+    section.blog-details .blog__details__content {
+        padding: 20px !important;
+    }
+
+    section.blog-details .blog__details__author {
+        flex-direction: column !important;
+        text-align: center !important;
+        align-items: center !important;
+        gap: 15px !important;
+    }
+
+    section.blog-details .blog__details__author__pic {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    section.blog-details .vf-comment .card {
+        padding: 20px !important;
+    }
+
+    section.blog-details #comment-form {
+        padding: 20px !important;
+    }
+
+    section.blog-details #comment-form textarea,
+    section.blog-details #comment-text {
+        min-height: 100px !important;
+        padding: 14px 16px !important;
+        font-size: 14px !important;
+    }
+
+    section.blog-details #comment-form .btn,
+    section.blog-details .btn-info {
+        width: 100% !important;
+        padding: 14px 20px !important;
+    }
+
+    section.blog-details .comment {
+        padding: 20px !important;
+    }
+
+    section.blog-details .reply-section {
+        margin-left: 15px !important;
+        padding-left: 12px !important;
+        border-left-width: 3px !important;
+    }
+
+    section.blog-details .reply-form {
+        padding: 15px !important;
+    }
+
+    section.blog-details .reply-form button {
+        width: 100% !important;
+    }
+
+    section.blog-details .vfcf-btn {
+        text-align: center !important;
+    }
+
+    section.blog-details .vfcf-btn .btn {
+        width: 100% !important;
+    }
+}

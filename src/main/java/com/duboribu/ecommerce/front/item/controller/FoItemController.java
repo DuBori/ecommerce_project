@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/item")
+@RequestMapping("/ecommerce/item")
 public class FoItemController {
     private final FoItemService foItemService;
     private final FoCategoryService foCategoryService;

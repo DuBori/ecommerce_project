@@ -11,14 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
 @Controller
-@RequestMapping("")
+@RequestMapping("/ecommerce")
 @RequiredArgsConstructor
 @Slf4j
 public class MainController {
@@ -27,26 +26,21 @@ public class MainController {
     private final FoMemberService foMemberService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @GetMapping()
-    public String profile(SearchItemRequest request, Model model) {
-        model.addAttribute("normalList", foItemService.normalList(request, null));
-        model.addAttribute("mainCategoryList", foCategoryService.list("book"));
-        return "index";
-    }
 
-
-    @GetMapping("/ecommerce")
+    @GetMapping("")
     public String main(SearchItemRequest request, Model model) {
         model.addAttribute("normalList", foItemService.normalList(request, null));
         model.addAttribute("mainCategoryList", foCategoryService.list("book"));
         return "front/index";
     }
 
-    @GetMapping("/ecommerce/mypage")
+    @GetMapping("/mypage")
     public String myPage(HttpServletRequest request, Model model) {
-        String userId = jwtTokenProvider.getUserId(request);
-        if (!StringUtils.hasText(userId)) {
-            throw new IllegalArgumentException("회원이 아닙니다");
+        String userId = "";
+        try {
+            userId = jwtTokenProvider.getUserId(request);
+        } catch (Exception e) {
+            log.error("e : {}", e.getMessage());
         }
         model.addAttribute("user", foMemberService.findMember(userId));
         List<FoMyPageOrderResponse> orderListByUser = foMemberService.findOrderListByUser(userId);

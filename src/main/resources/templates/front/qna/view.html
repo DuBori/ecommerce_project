@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th ="http://www.thymeleaf.org">
 <div th:replace="front/common/header :: header"></div>
+<link rel="stylesheet" th:href="@{/css/qna.css}" type="text/css">
 <body>
 <div th:replace="front/common/top :: top"></div>
 <div class="contents w1100 view-form board-view">
@@ -124,7 +125,7 @@
     // AJAX 요청 설정
     $.ajax({
       type: "POST",
-      url: "/notice/commentAdd",
+      url: "/ecommerce/notice/commentAdd",
       contentType: "application/json",
       data: JSON.stringify(dataToSend),
       success: function (data) {

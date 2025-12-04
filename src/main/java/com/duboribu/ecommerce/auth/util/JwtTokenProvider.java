@@ -149,6 +149,9 @@ public class JwtTokenProvider implements InitializingBean {
     @Transactional
     public String getUserId(HttpServletRequest request) {
         String accessToken = Validator.getAccessToken(request);
+        if (!StringUtils.hasText(accessToken)) {
+            throw new JwtException(JwtUserExceptionType.NON_TOKEN);
+        }
         if (isExpired(accessToken)) {
             throw new JwtException(JwtUserExceptionType.EXPIRED_JWT_TOKEN);
         }

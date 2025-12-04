@@ -15,10 +15,10 @@
                     <div class="breadcrumb__text">
                         <h2>상품 리스트</h2>
                         <div class="breadcrumb__option">
-                            <a href="/">Home</a>
+                            <a href="/ecommerce">Home</a>
                         </div>
                     </div>
-                </div>
+                </div>/
             </div>
         </div>
     </section>
@@ -33,7 +33,7 @@
                         <div class="sidebar__item">
                             <h4>카테고리</h4>
                             <ul>
-                                <li th:each="category : ${categoryList}"><a th:href="@{/item/{category}/list(category=${category.code})}" th:text="${category.name}"></a></li>
+                                <li th:each="category : ${categoryList}"><a th:href="@{/ecommerce/item/{category}/list(category=${category.code})}" th:text="${category.name}"></a></li>
                             </ul>
                         </div>
                         <div class="sidebar__item">
@@ -41,7 +41,7 @@
                                 <h4>신규 제품</h4>
                                 <div class="latest-product__slider owl-carousel">
                                     <div class="latest-prdouct__slider__item" >
-                                        <a th:href="@{/item/view/{id}(id=${newItem.id})}" class="latest-product__item" th:each="newItem : ${newItems}">
+                                        <a th:href="@{/ecommerce/item/view/{id}(id=${newItem.id})}" class="latest-product__item" th:each="newItem : ${newItems}">
                                             <div class="latest-product__item__pic">
                                                 <img th:src="${newItem.filePath}" alt="">
                                             </div>
@@ -77,7 +77,7 @@
                                         </div>
                                         <div class="product__discount__item__text">
                                             <span th:text="${all.name}"></span>
-                                            <h5><a th:href="@{/item/view/{id}(id=${all.id})}" th:text="${all.name}"></a></h5>
+                                            <h5><a th:href="@{/ecommerce/item/view/{id}(id=${all.id})}" th:text="${all.name}"></a></h5>
                                             <div class="product__item__price" th:text="${all.price}"><span th:text="${all.price} +'원'"></span></div>
                                         </div>
                                     </div>
@@ -123,7 +123,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6><a th:href="@{/item/view/{id}(id=${categoryItem.id})}" th:text="${categoryItem.name}"></a></h6>
+                                    <h6><a th:href="@{/ecommerce/item/view/{id}(id=${categoryItem.id})}" th:text="${categoryItem.name}"></a></h6>
                                     <h5 th:text="${categoryItem.price}"></h5>
                                 </div>
                             </div>
@@ -131,8 +131,8 @@
                     </div>
                     <th:block th:if="${categoryItems != null}">
                         <div class="product__pagination">
-                            <a href="#" th:each="pageNumber : ${#numbers.sequence(0, categoryItems.totalPages - 1)}" th:href="@{${'/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
-                            <a th:href="@{${'/item/list?page=' + (categoryItems.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
+                            <a href="#" th:each="pageNumber : ${#numbers.sequence(0, categoryItems.totalPages - 1)}" th:href="@{${'/ecommerce/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
+                            <a th:href="@{${'/ecommerce/item/list?page=' + (categoryItems.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
                         </div>
                     </th:block>
                 </div>

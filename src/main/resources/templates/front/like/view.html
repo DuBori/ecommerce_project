@@ -27,7 +27,7 @@
                                 </div>
                                 <div class="product__discount__item__text">
                                     <span th:text="${all.title}"></span>
-                                    <h5><a th:href="@{/item/view/{id}(id=${all.id})}" th:text="${all.title}"></a></h5>
+                                    <h5><a th:href="@{/ecommerce/item/view/{id}(id=${all.id})}" th:text="${all.title}"></a></h5>
                                     <div class="product__item__price" th:text="${all.price}"><span th:text="${all.price} +'원'"></span></div>
                                 </div>
                             </div>

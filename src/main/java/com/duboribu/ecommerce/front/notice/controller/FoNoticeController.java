@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-@RequestMapping("/notice")
+@RequestMapping("/ecommerce/notice")
 @RequiredArgsConstructor
 public class FoNoticeController {
     private final JwtTokenProvider jwtTokenProvider;

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Slf4j
 @Controller(value = "LoginController")
-@RequestMapping("/login")
+@RequestMapping("/ecommerce/login")
 @RequiredArgsConstructor
 public class LoginController {
     @RequestMapping()

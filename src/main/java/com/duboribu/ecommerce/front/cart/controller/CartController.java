@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/cart")
+@RequestMapping("/ecommerce/cart")
 public class CartController {
     private final FoCartService foCartService;
     private final JwtTokenProvider jwtTokenProvider;

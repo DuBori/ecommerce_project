@@ -54,7 +54,7 @@
                 </div>
                 <div class="header__top__right__auth">
                     <a class="logoutLink" style="display: none;"><i class="fa"></i> 로그아웃</a>
-                    <a class="loginLink" th:href="@{/login}" style="display: none;"><i class="fa fa-user"></i>로그인</a>
+                    <a class="loginLink" th:href="@{/ecommerce/login}" style="display: none;"><i class="fa fa-user"></i>로그인</a>
                 </div>
             </div>
         </div>
@@ -68,18 +68,19 @@
             </div>
             <nav class="header__menu">
                 <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/item/list">상품</a></li>
-                    <li><a href="/notice">공지사항</a></li>
-                    <li><a href="/qna">1:1 문의</a></li>
+                    <li><a href="/">ProFile</a></li>
+                    <li><a href="/ecommerce">Home</a></li>
+                    <li><a href="/ecommerce/item/list">상품</a></li>
+                    <li><a href="/ecommerce/notice">공지사항</a></li>
+                    <li><a href="/ecommerce/qna">1:1 문의</a></li>
                     <li><a href="https://balsam-tumbleweed-3cd.notion.site/Park-Jeong-Hyeon-0772b4124b154714b40d51e40d163c22">개발자 정보</a></li>
                 </ul>
             </nav>
             <div class="header__cart">
                 <ul>
                     <li class="faUser" style="display: none"><a href="/mypage"><i class="fa fa-user"></i></a></li>
-                    <li><a href="/member/like"><i class="fa fa-heart"></i> <span class="heartSpan">0</span></a></li>
-                    <li><a href="/cart"><i class="fa fa-shopping-bag"></i> <span class="shoppingBagSpan">0</span></a></li>
+                    <li><a href="/ecommerce/member/like"><i class="fa fa-heart"></i> <span class="heartSpan">0</span></a></li>
+                    <li><a href="/ecommerce/cart"><i class="fa fa-shopping-bag"></i> <span class="shoppingBagSpan">0</span></a></li>
                 </ul>
             </div>
             <div class="humberger__open">

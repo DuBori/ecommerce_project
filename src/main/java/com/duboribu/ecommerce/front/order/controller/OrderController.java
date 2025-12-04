@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/order")
+@RequestMapping("/ecommerce/order")
 public class OrderController {
     private final FoItemService foItemService;
     private final PaymentService paymentService;

@@ -37,7 +37,7 @@
                 }
                 // AJAX 요청으로 장바구니 페이지로 이동하면서 카트 정보를 전송
                 $.ajax({
-                    url: '/cart/add',
+                    url: '/ecommerce/cart/add',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify(cartRequest),
@@ -51,7 +51,7 @@
                 });
             });
 
-            $('li a[href="/member/like"]').click(function(e) {
+            $('li a[href="/ecommerce/member/like"]').click(function(e) {
                 e.preventDefault(); // 기본 이벤트 동작 방지
                 if (!userId) {
                     alert('로그인 후 이용해주세요.');
@@ -69,7 +69,7 @@
 
                 let itemId = $("input[name=itemId]").val();
                 $.ajax({
-                    url: '/member/like/click',
+                    url: '/ecommerce/member/like/click',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -132,7 +132,7 @@
                 if (confirm("이미 담겨져 있는 상품입니다. 카트로 이동하시겠습니까?")) {
                     // AJAX 요청으로 장바구니 페이지로 이동하면서 카트 정보를 전송
                     $.ajax({
-                        url: '/cart/add',
+                        url: '/ecommerce/cart/add',
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify(cartRequest),
@@ -220,7 +220,7 @@
                             sessionStorage.setItem('name', data.body.name);
                         } else if (data.resCode == 204) {
                         } else if (data.resCode == 202 || data.resCode == 205) {
-                            location.href = "/login";
+                            location.href = "/ecommerce/login";
                         }
                         toggleLoginLogout(userId)
                     },
@@ -256,7 +256,7 @@
                     if (data.resCode == 200) {
                         alert('로그아웃 완료');
                         sessionStorage.clear();
-                        location.href='/';
+                        location.href='/ecommerce';
                     } else {
                         alert('시스템 오류');
                     }

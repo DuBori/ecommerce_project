@@ -63,13 +63,14 @@ public class SecurityConfig {
                         })
 
                         // 기존 공개 허용 경로에서 Swagger 제거했으니 주의
-                        .requestMatchers("/auth/**","/", "/ecommerce/**","/login/**","/cart/**","/notice/**", "/error/**","/wms/order/**",
-                                "/item/**", "/order/**", "/orderApi/**",
-                                "/fonts/**","/wms/**", "/image/**", "/admin/item/exist/**",
-                                "/images/**", "/admin/login")
+                        .requestMatchers("/auth/**","/", "/ecommerce/**", "/error/**","/wms/order/**",
+                                "/fonts/**","/wms/**", "/image/**",
+                                "/admin/item/exist/**",
+                                "/images/**",
+                                "/admin/login")
                         .permitAll()
 
-                        .requestMatchers("/admin/**", "/qna/**")
+                        .requestMatchers("/admin/**")
                         .hasAnyAuthority(RoleType.ROLE_ADMIN.name())
 
                         .anyRequest()

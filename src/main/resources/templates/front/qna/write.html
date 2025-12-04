@@ -3,8 +3,9 @@
 <div th:replace="front/common/header :: header"></div>
 <body>
 <div th:replace="front/common/top :: top"></div>
+<link rel="stylesheet" th:href="@{/css/qna.css}" type="text/css">
 <div class="contents w1100 board-write board-faq">
-  <form name="form_input" method="post" action="/qna/write" >
+  <form name="form_input" method="post" action="/ecommerce/qna/write" >
     <div class="row">
       <div class="col-lg mb-4">
         <div class="card input-form">

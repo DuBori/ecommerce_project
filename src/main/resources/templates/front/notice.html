@@ -12,7 +12,6 @@
                     <div class="breadcrumb__text">
                         <h2>공지사항</h2>
                         <div class="breadcrumb__option">
-                            <a href="index.html">Home</a>
                             <span>공지사항</span>
                         </div>
                     </div>
@@ -44,7 +43,7 @@
                                     </ul>
                                     <h5 th:text="${notice.title}"><a href="#"></a></h5>
                                     <p th:text="${notice.detail}"></p>
-                                    <a th:href="@{/notice/view/{id}(id=${notice.id})}" class="blog__btn">자세히 보러가기<span class="arrow_right"></span></a>
+                                    <a th:href="@{/ecommerce/notice/view/{id}(id=${notice.id})}" class="blog__btn">자세히 보러가기<span class="arrow_right"></span></a>
                                 </div>
                             </div>
                         </div>

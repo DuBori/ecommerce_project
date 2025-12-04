@@ -14,7 +14,7 @@
                     <div class="breadcrumb__text">
                         <h2>장바구니</h2>
                         <div class="breadcrumb__option">
-                            <a href="/">Home</a>
+                            <a href="/ecommerce">Home</a>
                             <span>장바구니</span>
                         </div>
                     </div>
@@ -113,7 +113,7 @@
         }
 
         // form 생성
-        let form = $('<form action="/order/checkout" method="POST">' +
+        let form = $('<form action="/ecommerce/order/checkout" method="POST">' +
             '<input type="hidden" name="cart" value="cart">' +
             '</form>');
 
@@ -127,7 +127,7 @@
         let itemId = $(this).data('itemid');
         let cartItemId = $(this).data('cartitemid');
         $.ajax({
-            url: '/cart/delete/' + cartItemId,
+            url: '/ecommerce/cart/delete/' + cartItemId,
             type: 'POST',
             success: function(data) {
                 let code = data.resCode;
@@ -165,7 +165,7 @@
             let newVal = parseFloat(oldValue);
             if ($button.hasClass('inc')) {
                 $.ajax({
-                    url: '/cart/quantity/inc',
+                    url: '/ecommerce/cart/quantity/inc',
                     type: 'POST',
                     data: JSON.stringify({
                         itemId : itemId,
@@ -191,7 +191,7 @@
             } else {
                 if (oldValue > 1) {
                     $.ajax({
-                        url: '/cart/quantity/desc',
+                        url: '/ecommerce/cart/quantity/desc',
                         type: 'POST',
                         data: JSON.stringify({
                             itemId : itemId,
