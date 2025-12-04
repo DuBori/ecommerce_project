@@ -1,7 +1,7 @@
 package com.duboribu.ecommerce.admin.order.service;
 
 import com.duboribu.ecommerce.admin.main.dto.response.BoDashRes;
-import com.duboribu.ecommerce.entity.OrderItemJpaRepository;
+import com.duboribu.ecommerce.repository.OrderItemJpaRepository;
 import com.duboribu.ecommerce.repository.OrderJpaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
