@@ -4,10 +4,15 @@ import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.enums.UserType;
 import com.duboribu.ecommerce.enums.RoleType;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.test.util.ReflectionTestUtils;
 
@@ -15,27 +20,44 @@ import java.util.stream.Collectors;
 
 @ExtendWith(MockitoExtension.class)
 class JwtTokenProviderTest {
+    private static final Logger log = LoggerFactory.getLogger(JwtTokenProviderTest.class);
     @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
     public static final UserDto USER_DTO = new UserDto("test", "1", "정현", RoleType.ROLE_ADMIN, UserType.LOGIN_MEMBER, "login");
 
+    @DisplayName("정상케이스를 위한 초기화 작업")
     @BeforeEach
     void init() {
+        JwtTokenProviderTest.log.info(">>> BeforeEach called");
         ReflectionTestUtils.setField(jwtTokenProvider, "secret", "test-secret-key-test-secret-key-test-secret");
         ReflectionTestUtils.setField(jwtTokenProvider, "accessTokenValidityInMilliseconds", 1000L); // 1초
         ReflectionTestUtils.setField(jwtTokenProvider, "refreshTokenValidityInMilliseconds", 1000L * 60 * 60 * 24 * 14L); // 14일
 
         jwtTokenProvider.afterPropertiesSet();
     }
-    @DisplayName("정상케이스를 위한 초기화 작업")
-    void afterinit() {
-        ReflectionTestUtils.setField(jwtTokenProvider, "accessTokenValidityInMilliseconds", 1000L * 60 * 60); // 1시간
-        ReflectionTestUtils.setField(jwtTokenProvider, "refreshTokenValidityInMilliseconds", 1000L * 60 * 60 * 24 * 14L); // 14일
+
+    // 기본 설정 (30분 유효)
+    private void initWithDefaultConfig() {
+        JwtTokenProviderTest.log.info("30분 유효 토큰 세팅");
+        initProvider(1000L * 60 * 30, 1000L * 60 * 60 * 24 * 14);
+    }
+    
+    // 만료 테스트용 설정 (0.1초 유효)
+    private void initWithShortExpiry() {
+        JwtTokenProviderTest.log.info("0.1초 유효 토큰 세팅");
+        initProvider(100L, 1000L * 60 * 60 * 24 * 14);
+    }
+    
+    // 공통 초기화 로직
+    private void initProvider(long accessTokenValidity, long refreshTokenValidity) {
+        ReflectionTestUtils.setField(jwtTokenProvider, "secret", "test-secret-key-test-secret-key-test-secret");
+        ReflectionTestUtils.setField(jwtTokenProvider, "accessTokenValidityInMilliseconds", accessTokenValidity);
+        ReflectionTestUtils.setField(jwtTokenProvider, "refreshTokenValidityInMilliseconds", refreshTokenValidity);
         jwtTokenProvider.afterPropertiesSet();
     }
+
     @Test
-    @DisplayName("토큰이 만료되었을때 JwtException이 발생해야 한다.")
-    @Disabled
+    @DisplayName("토큰이 만료 점검 -> JwtException이 발생해야 한다.")
     void tokenExpiredThrowChk() {
         String oneSecondToken = jwtTokenProvider.createAccessToken(USER_DTO);
         try {
@@ -54,9 +76,9 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("토큰에 대한 어드민 권한을 잘 가져오는지 확인해 본다.")
     void tokenAuthResChk() {
-        afterinit();
-
+        initWithDefaultConfig();
         String accessToken = jwtTokenProvider.createAccessToken(USER_DTO);
+
         Authentication authentication = jwtTokenProvider.getAuthentication(accessToken);
 
         Assertions.assertEquals(authentication.getCredentials().toString(), accessToken);
@@ -68,9 +90,8 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("토큰 생성 점검이 정상임을 확인한다.")
     void tokenResChk() {
-        afterinit();
+        initWithDefaultConfig();
         String accessToken = jwtTokenProvider.createAccessToken(USER_DTO);
-
         Assertions.assertTrue(!jwtTokenProvider.isExpired(accessToken));
     }
 

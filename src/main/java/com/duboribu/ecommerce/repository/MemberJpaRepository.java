@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface MemberJpaRepository extends JpaRepository<Member, String> {
+
     Optional<Member> findByName(String username);
+
     long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
 }

@@ -71,7 +71,7 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-    testImplementation 'ch.qos.logback:logback-classic:1.5.13'
+    testImplementation 'ch.qos.logback:logback-classic:1.4.14'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	implementation 'org.modelmapper:modelmapper:2.3.1'
 
