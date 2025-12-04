@@ -44,6 +44,7 @@ public class JwtTokenProvider implements InitializingBean {
     public void afterPropertiesSet() {
         this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
+
     // 권한 가져오기
     @Transactional
     public Authentication getAuthentication(final String accessToken) {

@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -46,22 +45,6 @@ public class SecurityConfig {
                         exception.authenticationEntryPoint(jwtAuthenticationEntryPoint)
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request// Swagger UI 경로는 본인 IP만 허용
-                        .requestMatchers("/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
-                        .access((authentication, context) -> {
-                            HttpServletRequest req = context.getRequest();
-
-                            String ip = req.getHeader("X-Forwarded-For");
-                            if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
-                                ip = req.getRemoteAddr();
-                            }
-                            if (ip != null && ip.contains(",")) {
-                                ip = ip.split(",")[0].trim();
-                            }
-                            log.info("Client IP: {}", ip);
-
-                            return new AuthorizationDecision("175.113.128.171".equals(ip));
-                        })
-
                         // 기존 공개 허용 경로에서 Swagger 제거했으니 주의
                         .requestMatchers("/auth/**","/", "/ecommerce/**", "/error/**","/wms/order/**",
                                 "/fonts/**","/wms/**", "/image/**",
@@ -70,7 +53,7 @@ public class SecurityConfig {
                                 "/admin/login")
                         .permitAll()
 
-                        .requestMatchers("/admin/**")
+                        .requestMatchers("/admin/**", "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
                         .hasAnyAuthority(RoleType.ROLE_ADMIN.name())
 
                         .anyRequest()

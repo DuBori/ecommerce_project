@@ -169,14 +169,16 @@ public class AuthController {
             Cookie cookie = new Cookie("refreshToken", tokenResponse.getRefreshToken());
             cookie.setHttpOnly(true);
             cookie.setMaxAge(30 * 24 * 60 * 60); // 30일
-            cookie.setPath("/");
+            cookie.setPath("/ecommerce");
+            cookie.setSecure(true);
             response.addCookie(cookie);
         }
         if (StringUtils.hasText(tokenResponse.getAccessToken())) {
             Cookie cookie = new Cookie("Authorization", tokenResponse.getAccessToken());
             cookie.setHttpOnly(true);
             cookie.setMaxAge(30 * 60); // 30분
-            cookie.setPath("/");
+            cookie.setPath("/ecommerce");
+            cookie.setSecure(true);
             response.addCookie(cookie);
         }
     }

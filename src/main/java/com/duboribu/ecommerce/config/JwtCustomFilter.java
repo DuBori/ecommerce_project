@@ -59,12 +59,20 @@ public class JwtCustomFilter extends OncePerRequestFilter {
             throw new JwtException("Access Token 만료");
         }
 
-        if (tokenProvider.validateToken(accessToken)) {
+        try {
             Authentication authentication = tokenProvider.getAuthentication(accessToken);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
+            filterChain.doFilter(request, response);
+        } catch (JwtException e) {
+            log.error("JwtException : {}", e.getMessage());
+            throw new JwtException(e.getMessage());
+        } catch (Exception e) {
+            log.error("JwtCustomFilter : {}", e.getMessage());
         }
 
-        filterChain.doFilter(request, response);
+
+
+
     }
 }
