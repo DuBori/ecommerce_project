@@ -169,7 +169,7 @@ public class AuthController {
             Cookie cookie = new Cookie("refreshToken", tokenResponse.getRefreshToken());
             cookie.setHttpOnly(true);
             cookie.setMaxAge(30 * 24 * 60 * 60); // 30일
-            cookie.setPath("/ecommerce");
+            cookie.setPath("/");
             cookie.setSecure(true);
             response.addCookie(cookie);
         }
@@ -177,7 +177,7 @@ public class AuthController {
             Cookie cookie = new Cookie("Authorization", tokenResponse.getAccessToken());
             cookie.setHttpOnly(true);
             cookie.setMaxAge(30 * 60); // 30분
-            cookie.setPath("/ecommerce");
+            cookie.setPath("/");
             cookie.setSecure(true);
             response.addCookie(cookie);
         }
