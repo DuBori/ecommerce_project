@@ -32,4 +32,8 @@ public class UserDto {
         userType = UserType.JOIN_MEMBER;
         return new Member(username, password, name, role);
     }
+
+    public void encodePassword(String encode) {
+        this.password = encode;
+    }
 }

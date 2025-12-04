@@ -6,6 +6,7 @@ import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.domain.response.JwtTokenResponse;
 import com.duboribu.ecommerce.auth.domain.response.PublicUserResponse;
 import com.duboribu.ecommerce.auth.domain.response.UserResponse;
+import com.duboribu.ecommerce.auth.service.AuthService;
 import com.duboribu.ecommerce.auth.service.MemberService;
 import com.duboribu.ecommerce.auth.service.MemberTokenService;
 import com.duboribu.ecommerce.entity.member.Member;
@@ -31,6 +32,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AuthController {
     private final MemberService memberService;
+    private final AuthService authService;
     private final MemberTokenService memberTokenService;
 
     /**
@@ -40,7 +42,7 @@ public class AuthController {
     @PostMapping("/sign-up")
     @Operation(summary = "회원가입", description = "회원가입 및 리프레시 토큰 발급을 진행합니다.")
     public ResponseEntity<DefaultResponse> signUp(@RequestBody UserDto userDto) {
-        UserResponse userResponse = memberService.join(userDto);
+        UserResponse userResponse = authService.join(userDto);
         if (userResponse == null) {
             log.error("회원가입실패");
             return new ResponseEntity<>(new DefaultResponse("이미 회원입니다.", DefaultResponse.DUP_MEMBER_ERR), settingHeader(null) , HttpStatus.OK);
@@ -55,7 +57,7 @@ public class AuthController {
     @PostMapping("/admin/sign-up")
     @Operation(summary = "관리자 강제가입", description = "회원가입 및 리프레시 토큰 발급을 진행합니다.")
     public ResponseEntity<DefaultResponse> adminSignUp(@RequestBody UserDto userDto) {
-        UserResponse userResponse = memberService.joinAdmin(userDto);
+        UserResponse userResponse = authService.joinAdmin(userDto);
         if (userResponse == null) {
             log.error("회원가입실패");
             return new ResponseEntity<>(new DefaultResponse("이미 회원입니다.", DefaultResponse.DUP_MEMBER_ERR), settingHeader(null) , HttpStatus.OK);
@@ -63,6 +65,7 @@ public class AuthController {
         log.info("회원가입성공");
         return new ResponseEntity<>(new DefaultResponse("회원가입 완료", DefaultResponse.SUCCESS), settingHeader(null) , HttpStatus.OK);
     }
+
     /**
      * 통합 로그인이 아닌, 일반 회원인 경우 진입
      * 너 회원인거 확인했어 -> 토큰 바로 발급하고 셋팅해줄게 -> 메인페이지
@@ -75,7 +78,7 @@ public class AuthController {
         if (findMember.isEmpty()) {
             return new ResponseEntity<>(new DefaultResponse<>("회원의 정보가 존재하지않습니다.",DefaultResponse.NON_MEMBER_ERR), null , HttpStatus.OK);
         }
-        UserResponse userResponse = memberService.login(userDto);
+        UserResponse userResponse = authService.login(userDto);
         if (userResponse == null) {
             return new ResponseEntity<>(new DefaultResponse<>("아이디 또는 비밀번호가 잘못되었습니다", DefaultResponse.SYSTEM_ERR), null , HttpStatus.OK);
         }
@@ -83,6 +86,7 @@ public class AuthController {
         createCookie(response, new JwtTokenResponse(tokenResponse.getAccessToken(), userResponse.getTokenResponse().getRefreshToken()));
         return new ResponseEntity<>(new DefaultResponse<>(new PublicUserResponse(userResponse)), null , HttpStatus.OK);
     }
+
     /**
      * 로그아웃
      */
@@ -112,7 +116,7 @@ public class AuthController {
     @Operation(summary = "통합 소셜 로그인", description = "소셜 로그인 [리다이렉트를 받아 신규  회원 강제가입 및 로그인]")
     public ResponseEntity<DefaultResponse<PublicUserResponse>> SocialSignIn(@PathVariable(name = "site") String site, String code, HttpServletResponse response) {
         log.info("소셜 로그인 접속시도");
-        UserResponse userResponse = memberService.saveSocialUser(code, SocialType.getSite(site));
+        UserResponse userResponse = authService.saveSocialUser(code, SocialType.getSite(site));
         if (userResponse == null) {
             return new ResponseEntity<>(new DefaultResponse<>("해당 사이트는 제공하지않습니다.", DefaultResponse.SYSTEM_ERR), settingHeader(null), HttpStatus.FOUND);
         }

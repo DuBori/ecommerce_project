@@ -24,7 +24,7 @@ public class LoginController {
     public ResponseEntity signUp(UserDto userDto) {
         log.info("회원가입 유저 : {} ", userDto.getUsername());
         try {
-            ResponseEntity<DefaultResponse> response = RestUtil.post("http://localhost:8080/auth/sign-up", userDto, null, DefaultResponse.class);
+            ResponseEntity<DefaultResponse> response = RestUtil.post("/auth/sign-up", userDto, null, DefaultResponse.class);
             return response;
         } catch (Exception e) {
             log.error(e.getMessage());
