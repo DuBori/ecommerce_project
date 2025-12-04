@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.main.controller;
+package com.duboribu.ecommerce.admin.controller;
 
 import com.duboribu.ecommerce.Utils.RestUtil;
 import com.duboribu.ecommerce.admin.member.service.BoMemberService;

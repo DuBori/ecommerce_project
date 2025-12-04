@@ -367,7 +367,7 @@
       contentType: 'application/json',
       success: function (data) {
         if (data.resCode == 200) { // 회원가입 완료
-          location.href = '/';
+          location.href = '/ecommerce';
         } else {
           alert(data.resMsg);
           location.reload();

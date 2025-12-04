@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.category.controller;
+package com.duboribu.ecommerce.admin.controller;
 
 import com.duboribu.ecommerce.admin.category.dto.CategoryResponse;
 import com.duboribu.ecommerce.admin.category.dto.CreateCategoryRequest;

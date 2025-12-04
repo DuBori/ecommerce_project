@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.order.controller;
+package com.duboribu.ecommerce.admin.controller;
 
 import com.duboribu.ecommerce.admin.order.dto.request.SearchOrderRequest;
 import com.duboribu.ecommerce.admin.order.repository.AdminOrderCustomRepository;

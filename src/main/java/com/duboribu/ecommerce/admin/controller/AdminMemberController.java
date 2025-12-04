@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.member.controller;
+package com.duboribu.ecommerce.admin.controller;
 
 import com.duboribu.ecommerce.admin.common.BoSearchCommand;
 import com.duboribu.ecommerce.admin.member.dto.request.UpdateMemberState;

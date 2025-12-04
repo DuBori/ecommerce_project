@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.item.controller;
+package com.duboribu.ecommerce.admin.controller;
 
 import com.duboribu.ecommerce.admin.item.dto.CreateBookRequest;
 import com.duboribu.ecommerce.admin.item.dto.ResponseBook;

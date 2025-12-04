@@ -140,10 +140,10 @@ public class AuthController {
     private HttpHeaders settingHeader(String token) {
         final HttpHeaders headers = new HttpHeaders();
         if (StringUtils.hasText(token)) {
-            headers.setLocation(URI.create("/"));
+            headers.setLocation(URI.create("/ecommerce"));
             return headers;
         }
-        headers.setLocation(URI.create("/login"));
+        headers.setLocation(URI.create("/ecommerce/login"));
         return headers;
     }
    /*

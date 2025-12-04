@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.admin.notice.controller;
+package com.duboribu.ecommerce.admin.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
