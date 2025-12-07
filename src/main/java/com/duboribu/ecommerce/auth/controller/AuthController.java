@@ -57,7 +57,7 @@ public class AuthController {
      * */
     @PostMapping(value = "/auth/admin/sign-up",
             consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = "application/json;charset=UTF-8")
     @Operation(summary = "관리자 강제가입", description = "회원가입 및 리프레시 토큰 발급을 진행합니다.")
     public ResponseEntity<DefaultResponse> adminSignUp(@RequestBody UserDto userDto) {
         UserResponse userResponse = authService.joinAdmin(userDto);
