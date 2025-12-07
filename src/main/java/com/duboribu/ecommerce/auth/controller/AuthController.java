@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -54,7 +55,9 @@ public class AuthController {
      * 일반 유저 회원가입 및 리프레시 토큰 저장
      * 그 후 일반 회원은 다시 로그인을 해야한다.
      * */
-    @PostMapping("/admin/sign-up")
+    @PostMapping(value = "/auth/admin/sign-up",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "관리자 강제가입", description = "회원가입 및 리프레시 토큰 발급을 진행합니다.")
     public ResponseEntity<DefaultResponse> adminSignUp(@RequestBody UserDto userDto) {
         UserResponse userResponse = authService.joinAdmin(userDto);
