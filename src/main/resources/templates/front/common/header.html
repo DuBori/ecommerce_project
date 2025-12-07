@@ -22,7 +22,7 @@
         $(function () {
             updateCartCount();
             // 장바구니 페이지로 이동할 때 카트 정보를 서버에 전송
-            $('li a[href="/cart"]').click(function(e) {
+            $('li a[href="/ecommerce/cart"]').click(function(e) {
                 e.preventDefault(); // 기본 이벤트 동작 방지
 
                 let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
@@ -42,7 +42,7 @@
                     contentType: 'application/json',
                     data: JSON.stringify(cartRequest),
                     success: function(response) {
-                        location.href = '/cart';
+                        location.href = '/ecommerce/cart';
                     },
                     error: function(xhr, status, error) {
                         // 오류 처리
@@ -57,7 +57,7 @@
                     alert('로그인 후 이용해주세요.');
                     return;
                 }
-                location.href = '/member/like';
+                location.href = '/ecommerce/member/like';
             });
 
             $('button.heart-icon').click(function (){
@@ -121,10 +121,15 @@
             }
 
             let cart = JSON.parse(sessionStorage.getItem('cart')) || {};
-            let cartRequest = { list: [] };
+            let cartRequest = {
+                list : []
+            };
             for (const [productId, quantity] of Object.entries(cart)) {
                 cartRequest.list
-                    .push({ productId: parseInt(productId), quantity: quantity });
+                    .push({
+                        productId: parseInt(productId),
+                        quantity: quantity
+                    });
             }
 
             // 이미 담겨져 있는 상품인지 확인
@@ -138,7 +143,7 @@
                         data: JSON.stringify(cartRequest),
                         success: function(response) {
                             // 성공적으로 처리된 경우에 대한 처리
-                           location.href = '/cart';
+                           location.href = '/ecommerce/cart';
                         },
                         error: function(xhr, status, error) {
                             // 오류 처리

@@ -9,7 +9,8 @@ import lombok.ToString;
 @RequiredArgsConstructor
 public enum RoleType {
     ROLE_USER("user", 1L),
-    ROLE_ADMIN("admin", 2L);
+    ROLE_ADMIN("admin", 2L),
+    SUPER_AMDMIN("superAdmin", 3L);
     private final String desc;
     private final Long dbValue;
 

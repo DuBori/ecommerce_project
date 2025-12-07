@@ -3,8 +3,10 @@ package com.duboribu.ecommerce.order.service;
 import com.duboribu.ecommerce.entity.*;
 import com.duboribu.ecommerce.entity.member.Member;
 import com.duboribu.ecommerce.enums.OrderState;
+import com.duboribu.ecommerce.order.OrderException;
 import com.duboribu.ecommerce.order.dto.OrderItemRequestDto;
 import com.duboribu.ecommerce.order.dto.OrderRequestDTO;
+import com.duboribu.ecommerce.order.orderExceptionType;
 import com.duboribu.ecommerce.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +28,13 @@ public class OmsOrderService {
 
     private final CartJpaRepository cartJpaRepository;
     @Transactional
-    public String create(OrderRequestDTO orderRequestDTO) {
+    public String create(OrderRequestDTO orderRequestDTO) throws Exception {
         Member member = null;
         Optional<Member> findMember = memberJpaRepository.findById(orderRequestDTO.getUserId());
-        if (findMember.isPresent()) {
-            member = findMember.get();
+        if (!findMember.isPresent()) {
+            throw new OrderException(orderExceptionType.OMS_ORDER_NON_MEMBER);
         }
+        member = findMember.get();
         log.info("member : {}", member);
         Payment payment = null;
         Optional<Payment> findPayment = paymentJpaRepository.findById(orderRequestDTO.getMerchantUid());

@@ -16,5 +16,6 @@ public interface FoItemCustomRepository {
     FoOrderResponse itemViewResponses(CreateOrderRequest request);
 
     FoOrderResponse itemLikeViewResponses(String userId);
+
     Page<FoItemResponse> dcList(String category, PageRequest pageable);
 }

@@ -62,6 +62,10 @@ dependencies {
 	implementation group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.10.0'
 	implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '3.12.2'
 
+    // s3 추가
+    implementation group: 'software.amazon.awssdk', name: 's3', version: '2.40.0'
+
+
 	// 테스트 코드 작성을 위한 라이브러리 추가
 	implementation 'org.springframework.boot:spring-boot-starter-hateoas'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'

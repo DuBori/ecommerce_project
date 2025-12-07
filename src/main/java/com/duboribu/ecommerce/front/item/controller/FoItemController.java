@@ -21,7 +21,7 @@ public class FoItemController {
 
     @GetMapping("/list")
     public String list(SearchItemRequest request, Model model) {
-        model.addAttribute("dcList", foItemService.dcList(null, null));
+        model.addAttribute("dcList", foItemService.dcList(request, request.getCategory()));
         model.addAttribute("categoryItems", foItemService.normalList(request, null));
         model.addAttribute("newItems", foItemService.normalList(new SearchItemRequest(0, 6), null));
         model.addAttribute("categoryList", foCategoryService.list("book"));
@@ -29,7 +29,7 @@ public class FoItemController {
     }
     @GetMapping("/{category}/list")
     public String categoryList(@PathVariable String category, SearchItemRequest request, Model model) {
-        model.addAttribute("dcList", foItemService.dcList(null, null));
+        model.addAttribute("dcList", foItemService.dcList(request, request.getCategory()));
         model.addAttribute("categoryItems", foItemService.normalList(request, category));
         model.addAttribute("newItems", foItemService.normalList(new SearchItemRequest(0, 6), null));
         model.addAttribute("categoryList", foCategoryService.list("book"));
@@ -39,7 +39,7 @@ public class FoItemController {
     @GetMapping("/view/{id}")
     public String itemPage(@PathVariable Long id, Model model) {
         FoItemView attributeValue = foItemService.loadItemViewResponse(id);
-        log.info("{}", attributeValue);
+
         model.addAttribute("item", attributeValue);
         return "front/shop-details";
     }

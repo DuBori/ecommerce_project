@@ -46,15 +46,20 @@ public class SecurityConfig {
                                 .accessDeniedHandler(jwtAccessDeniedHandler))
                 .authorizeHttpRequests(request -> request// Swagger UI 경로는 본인 IP만 허용
                         // 기존 공개 허용 경로에서 Swagger 제거했으니 주의
-                        .requestMatchers("/auth/**","/", "/ecommerce/**", "/error/**","/wms/order/**",
+                        .requestMatchers("/",
+                                "/auth/sign-up", "/auth/sign-in", "/auth/logout", "/auth/oauth2/*", "/auth/verify",
+                                "/ecommerce/**", "/error/**","/wms/order/**",
                                 "/fonts/**","/wms/**", "/image/**",
                                 "/admin/item/exist/**",
                                 "/images/**",
                                 "/admin/login")
                         .permitAll()
 
-                        .requestMatchers("/admin/**", "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
-                        .hasAnyAuthority(RoleType.ROLE_ADMIN.name())
+                        .requestMatchers(
+                                "/auth/admin/sign-up",
+                                "/admin/**",
+                                "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
+                        .hasAnyAuthority(RoleType.ROLE_ADMIN.name(), RoleType.SUPER_AMDMIN.name())
 
                         .anyRequest()
                         .authenticated()
