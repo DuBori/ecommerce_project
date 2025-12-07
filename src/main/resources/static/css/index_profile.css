@@ -1,7 +1,6 @@
 body {
     margin: 0;
-    /* 헤더 높이만큼 여백 확보 */
-    padding: 100px 0 0;
+    padding: 0;
     background: #0b0e15;
     color: white;
     font-family: 'Pretendard', sans-serif;
@@ -22,7 +21,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;   /* 추가 */
 }
 
 
