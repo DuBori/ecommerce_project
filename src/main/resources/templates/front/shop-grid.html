@@ -120,6 +120,9 @@
                         <div class="col-lg-4 col-md-6 col-sm-6" th:each="categoryItem : ${categoryItems}">
                             <div class="product__item">
                                 <div class="product__item__pic set-bg product-link" th:attr="data-setbg=@{${categoryItem.filePath}}, data-id=@{${categoryItem.id}}">
+
+                                    <img th:src="@{${all.filePath}}" alt="" class="pd-img">
+
                                     <ul class="product__item__pic__hover">
                                         <li><a href="#"><i class="fa fa-heart"></i></a></li>
                                         <li><a href="#"><i class="fa fa-retweet"></i></a></li>
@@ -151,7 +154,7 @@
 <script>
     $(".product-link").on("click", function (){
         let id = $(this).data('id');
-        location.href = '/item/view/'+id;
+        location.href = '/ecommerce/item/view/'+id;
     });
 </script>
 
