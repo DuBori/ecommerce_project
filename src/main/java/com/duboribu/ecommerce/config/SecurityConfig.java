@@ -52,7 +52,8 @@ public class SecurityConfig {
                                 "/fonts/**","/wms/**", "/image/**",
                                 "/admin/item/exist/**",
                                 "/images/**",
-                                "/admin/login")
+                                "/admin/login",
+                                "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
                         .permitAll()
 
                         .requestMatchers(
