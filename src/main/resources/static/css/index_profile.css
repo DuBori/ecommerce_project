@@ -16,12 +16,14 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;          /* width 안 줘도 전체 폭 */
+    right: 0;
     padding: 20px 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    z-index: 9999;   /* 추가 */
 }
+
 
 .logo {
     font-weight: 700;
