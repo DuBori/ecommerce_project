@@ -53,7 +53,7 @@ public class SecurityConfig {
                                 "/admin/item/exist/**",
                                 "/images/**",
                                 "/admin/login",
-                                "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
+                                "/auth/admin/sign-up", "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
                         .permitAll()
 
                         .requestMatchers(
