@@ -1,0 +1,31 @@
+/* 할인 상품 이미지 보이게 + 배경 유지 */
+.product__discount__item__pic {
+    position: relative;
+    overflow: hidden;
+}
+
+/* 추가된 이미지 */
+.product__discount__item__pic .pd-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+
+    /* set-bg가 background로 들어가도 가리지 않도록 가장 아래 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+/* 기존 hover 아이콘 및 퍼센트 표시가 위로 올라오도록 */
+.product__discount__item__pic .product__discount__percent,
+.product__discount__item__pic ul {
+    position: relative;
+    z-index: 3;
+}
+
+/* 배경 set-bg 요소는 img 아래인 z-index:0 */
+.product__discount__item__pic.set-bg {
+    z-index: 0;
+}
