@@ -17,7 +17,7 @@
             </div>
             <ul th:if="${mainCategoryList != null}">
                 <li th:each="category: ${mainCategoryList}">
-                    <a th:href="@{/item/{category}/list(category=${category.code})}"
+                    <a th:href="@{/ecommerce/item/{category}/list(category=${category.code})}"
                        th:text="${category.name}"></a>
                 </li>
             </ul>
@@ -39,13 +39,15 @@
 <section class="categories">
     <div class="container">
         <div class="categories__slider owl-carousel">
-            <div class="categories__item set-bg"
-                 th:each="normal : ${normalList}"
-                 th:attr="data-setbg=@{${normal.filePath}}">
-                <h5>
-                    <a th:href="@{/item/view/{id}(id=${normal.id})}"
-                       th:text="${normal.name}"></a>
-                </h5>
+            <div class="categories__item" th:each="normal : ${normalList}">
+                <img th:src="${normal.filePath}"
+                     th:alt="${normal.name}">
+                <div class="categories__item__overlay">
+                    <h5>
+                        <a th:href="@{/ecommerce/item/view/{id}(id=${normal.id})}"
+                           th:text="${normal.name}"></a>
+                    </h5>
+                </div>
             </div>
         </div>
     </div>

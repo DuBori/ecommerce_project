@@ -1430,6 +1430,18 @@ body {
         height: 35px;
         font-size: 14px;
     }
+    .categories__item {
+        min-width: 220px;
+        height: 180px;
+    }
+
+    .categories__item h5 a {
+        font-size: 16px;
+    }
+
+    .categories__item__overlay {
+        padding: 20px;
+    }
 }
 
 @media (max-width: 576px) {
@@ -1449,6 +1461,22 @@ body {
     .col-lg-8 > .row > h5 {
         padding: 60px 20px;
         font-size: 16px;
+    }
+    .categories {
+        padding: 40px 0;
+    }
+
+    .categories .container {
+        padding: 0 20px;
+    }
+
+    .categories__item {
+        min-width: 200px;
+        height: 160px;
+    }
+
+    .categories__item h5 a {
+        font-size: 15px;
     }
 }
 
@@ -1482,43 +1510,98 @@ body {
 }
 
 /* 이미지가 보이도록 배경 설정 */
+/* ============ Categories Slider with IMG ============ */
+.categories {
+    padding: 60px 0;
+    background: #fff;
+    width: 100%;
+}
+
+.categories .container {
+    padding: 0 40px;
+}
+
+.categories__slider {
+    display: flex;
+    gap: 25px;
+    overflow-x: auto;
+    padding: 15px 0;
+}
+
+.categories__slider::-webkit-scrollbar {
+    height: 8px;
+}
+
+.categories__slider::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.categories__slider::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+/* 카드 래퍼 */
 .categories__item {
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
+    min-width: 280px;
+    height: 220px;
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
-/* Categories Item 이미지 표시 */
-.categories__item.set-bg {
-    background-size: cover !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
+.categories__item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-/* 텍스트 가독성을 위한 어두운 오버레이 */
-.categories__item.set-bg::before {
-    content: '';
+/* 이미지 */
+.categories__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 오버레이 (텍스트 영역) */
+.categories__item__overlay {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 1;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 25px;
     transition: all 0.3s;
 }
 
-.categories__item.set-bg:hover::before {
-    background: rgba(0, 0, 0, 0.6);
+.categories__item:hover .categories__item__overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
 }
 
+/* 텍스트 */
 .categories__item h5 {
-    position: relative;
-    z-index: 2;
-    padding: 20px;
+    margin: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .categories__item h5 a {
-    color: #fff !important;
+    color: #fff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    display: block;
+    line-height: 1.4;
+}
+
+.categories__item h5 a:hover {
+    color: #f0f0f0;
 }
