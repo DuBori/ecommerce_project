@@ -2,7 +2,9 @@
 <html lang="zxx" xmlns:th ="http://www.thymeleaf.org">
 
 <div th:replace="front/common/header :: header"></div>
-
+<head>
+    <link rel="stylesheet" th:href="@{/css/shop_grid.css}" type="text/css">
+</head>
 <body>
     <div th:replace="front/common/top :: top"></div>
 
@@ -18,7 +20,7 @@
                             <a href="/ecommerce">Home</a>
                         </div>
                     </div>
-                </div>/
+                </div>
             </div>
         </div>
     </section>
@@ -68,6 +70,9 @@
                                     <div class="product__discount__item">
                                         <div class="product__discount__item__pic set-bg product-link"
                                              th:attr="data-setbg=@{${all.filePath}}, data-id=@{${all.id}}">
+
+                                            <img th:src="@{${all.filePath}}" alt="" class="pd-img">
+
                                             <div class="product__discount__percent" th:text="${all.dcrt + '%'}"></div>
                                             <ul class="product__item__pic__hover">
                                                 <!--<li><a href="#"><i class="fa fa-heart"></i></a></li>
