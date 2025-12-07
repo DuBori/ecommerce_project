@@ -19,7 +19,7 @@ public class OmsOrderController {
     private final OmsOrderService omsOrderService;
 
     @PostMapping("/create")
-    public ResponseEntity<DefaultResponse> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) {
+    public ResponseEntity<DefaultResponse> createOrder(@RequestBody OrderRequestDTO orderRequestDTO) throws Exception {
         log.info("orderRequestDTO : {}", orderRequestDTO);
         String merchant_uid = omsOrderService.create(orderRequestDTO);
         log.info("dd : {}: ", merchant_uid);
