@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 
+import java.util.List;
+
 @Configuration
 public class SwaggerConfig {
     String key = "Access Token (Bearer)";
@@ -50,7 +52,8 @@ public class SwaggerConfig {
                         .description("인증 인가를 담당하며, 토큰을 제공합니다")
                         .version("1.0.0"))
                 .addSecurityItem(securityRequirement)
-                .components(components);
+                .components(components)
+                .servers(List.of(server));
     }
 
 }
