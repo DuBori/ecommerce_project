@@ -416,7 +416,7 @@
           success: function (data) {
               if (data.resCode == 200) { // 회원가입 완료
                   alert(data.resMsg);
-                  location.href = '/login';
+                  location.href = '/ecommerce/login';
               } else if (data.resCode == 203) { // 이미 회원
                   alert(data.resMsg);
                   $("input[name=username]").val('');

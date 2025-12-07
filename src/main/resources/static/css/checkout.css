@@ -1,0 +1,153 @@
+/* ===================== Checkout Page ===================== */
+
+.checkout {
+    padding: 60px 0;
+    background: #fff;
+}
+
+.checkout .container {
+    max-width: 100%;
+    padding: 0 40px;
+}
+
+.checkout__form h4 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 12px;
+}
+
+/* 입력폼 묶음 */
+.checkout__input {
+    margin-bottom: 25px;
+}
+
+.checkout__input p {
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+.checkout__input p span {
+    color: #e74c3c;
+    margin-left: 4px;
+}
+
+/* input 공통 스타일 */
+.checkout__input input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s;
+}
+
+.checkout__input input:focus {
+    border-color: #333;
+    outline: none;
+}
+
+/* 주문서 박스 */
+.checkout__order {
+    background: #f8f9fa;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    padding: 25px;
+    position: sticky;
+    top: 120px;
+}
+
+.checkout__order h4 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 12px;
+}
+
+/* 주문 제품 리스트 */
+.checkout__order__products {
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.checkout__order ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.checkout__order ul li {
+    font-size: 14px;
+    color: #444;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkout__order ul li:last-child {
+    border-bottom: none;
+}
+
+/* Total 영역 */
+.checkout__order__total {
+    font-size: 18px;
+    font-weight: 700;
+    color: #333;
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 15px;
+    border-top: 2px solid #333;
+}
+
+/* 버튼 */
+.checkout__order button {
+    width: 100%;
+    margin-top: 25px;
+    padding: 15px 0;
+    font-size: 15px;
+    font-weight: 700;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.checkout__order button:hover {
+    background: #555;
+}
+
+/* 반응형 */
+@media (max-width: 991px) {
+    .checkout .container {
+        padding: 0 20px;
+    }
+
+    .checkout__order {
+        position: static;
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 576px) {
+    .checkout__form h4 {
+        font-size: 20px;
+    }
+
+    .checkout__order h4 {
+        font-size: 18px;
+    }
+}

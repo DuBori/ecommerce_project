@@ -2,7 +2,9 @@
 <html lang="zxx"  xmlns:th ="http://www.thymeleaf.org">
 
 <div th:replace="front/common/header :: header"></div>
-
+<head>
+    <link rel="stylesheet" th:href="@{/css/prduct_detial.css}" type="text/css">
+</head>
 <body>
     <div th:replace="front/common/top :: top"></div>
 
@@ -14,9 +16,7 @@
                     <div class="breadcrumb__text">
                         <h2></h2>
                         <div class="breadcrumb__option">
-                            <a href="/ecommerce">Home</a>
                             <a href="/ecommerce/item/list">상품 리스트</a>
-                            <span>상품 상세</span>
                         </div>
                     </div>
                 </div>
@@ -73,7 +73,7 @@
                         <button  class="primary-btn directPurchase">바로 구매</button>
                         <button href="/member/like" class="heart-icon"><span class="icon_heart_alt"></span></button>
                         <ul>
-                            <li><b>판매여부 : </b> <span th:text="${item.state == 'Y' ? '판매중' : '일시품절'}"></span></li>
+                            <li><b>판매여부 : </b> <span th:text="${item.state == 'Y' and item.stockCount gt 0 ? '판매중' : '일시품절'}"></span></li>
                             <!--<li><b>배달 : </b> <span> <samp>&lt;!&ndash;Free pickup today&ndash;&gt;</samp></span></li>-->
                             <li><b>중량</b> <span th:text="${item.weight}"></span></li>
                             <li><b>Share on</b>
@@ -98,10 +98,10 @@
                                 <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab"
                                     aria-selected="false">Information</a>
                             </li>
-                            <li class="nav-item">
+                            <!--<li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab"
                                     aria-selected="false">Reviews <span>(1)</span></a>
-                            </li>
+                            </li>-->
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane active" id="tabs-1" role="tabpanel">
@@ -114,10 +114,9 @@
                                 <div class="product__details__tab__desc">
                                     <h6>상품 정보</h6>
                                     <p th:text="${item.information}"></p>
-
                                 </div>
                             </div>
-                            <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <!--<div class="tab-pane" id="tabs-3" role="tabpanel">
                                 <div class="product__details__tab__desc">
                                     <h6>상품 리뷰</h6>
                                     <p>Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
@@ -132,7 +131,7 @@
                                         Donec velit neque, auctor sit amet aliquam vel, ullamcorper sit amet ligula.
                                         Proin eget tortor risus.</p>
                                 </div>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -230,10 +229,15 @@
             let productId = $("input[name=itemId]").val();
             let quantity = $("input[name=quantity]").val();
 
+            if (quantity <= 0) {
+                alert("일시품절 입니다.")
+                return false;
+            }
+
             directPurchase(productId, quantity);
 
             // form 생성
-            let form = $('<form action="/order/checkout" method="POST">' +
+            let form = $('<form action="/ecommerce/order/checkout" method="POST">' +
                 '<input type="hidden" name="orderItemRequest[0].productId" value="' + productId + '">' +
                 '<input type="hidden" name="orderItemRequest[0].quantity" value="' + quantity + '">' +
                 '</form>');
