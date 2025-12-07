@@ -1480,3 +1480,32 @@ body {
     font-family: inherit;
     font-size: 16px;
 }
+
+/* 이미지가 보이도록 배경 설정 */
+.categories__item {
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+/* 텍스트를 잘 보이게 어두운 오버레이 */
+.categories__item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.categories__item h5 {
+    position: relative;
+    z-index: 2;
+}
+
+.categories__item h5 a {
+    color: #fff !important;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
