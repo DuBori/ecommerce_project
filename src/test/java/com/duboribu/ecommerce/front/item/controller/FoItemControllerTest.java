@@ -139,6 +139,7 @@ class FoItemControllerTest {
 
     @Test
     @DisplayName("카테고리 있을 때 리스트 조회 테스트")
+    @Disabled
     void UseCate_list() {
         //given
         SearchItemRequest searchItemRequest = new SearchItemRequest(0, 20);

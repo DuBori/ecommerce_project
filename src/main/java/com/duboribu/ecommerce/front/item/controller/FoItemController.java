@@ -39,7 +39,6 @@ public class FoItemController {
     @GetMapping("/view/{id}")
     public String itemPage(@PathVariable Long id, Model model) {
         FoItemView attributeValue = foItemService.loadItemViewResponse(id);
-
         model.addAttribute("item", attributeValue);
         return "front/shop-details";
     }

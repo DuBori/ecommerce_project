@@ -63,7 +63,7 @@ public class FoItemCustomRepositoryImpl implements FoItemCustomRepository {
     public FoItemView loadItemViewResponse(Long itemId) {
         return jpaQueryFactory.select(new QFoItemView(book.id, book.title, book.author, book.publisher, book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
                 .from(book)
-                .innerJoin(stock)
+                .leftJoin(stock)
                 .on(book.id.eq(stock.item.id))
                 .leftJoin(price)
                 .on(book.eq(price.item))
