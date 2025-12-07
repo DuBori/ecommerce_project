@@ -57,8 +57,8 @@ public class SecurityConfig {
 
                         .requestMatchers(
                                 "/auth/admin/sign-up",
-                                "/admin/**",
-                                "/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**")
+                                "/admin/**"
+                                /*"/swagger-ui/**", "/swagger/**", "/v2/api-docs", "/swagger-resources/**", "/webjars/**", "/v3/api-docs/**"*/)
                         .hasAnyAuthority(RoleType.ROLE_ADMIN.name(), RoleType.SUPER_AMDMIN.name())
 
                         .anyRequest()
