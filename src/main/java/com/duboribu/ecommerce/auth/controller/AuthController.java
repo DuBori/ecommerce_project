@@ -55,7 +55,7 @@ public class AuthController {
      * 일반 유저 회원가입 및 리프레시 토큰 저장
      * 그 후 일반 회원은 다시 로그인을 해야한다.
      * */
-    @PostMapping(value = "/auth/admin/sign-up",
+    @PostMapping(value = "/admin/sign-up",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = "application/json;charset=UTF-8")
     @Operation(summary = "관리자 강제가입", description = "회원가입 및 리프레시 토큰 발급을 진행합니다.")
