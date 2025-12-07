@@ -1,6 +1,7 @@
 package com.duboribu.ecommerce.s3.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +12,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import java.io.IOException;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class S3Uploader {
@@ -22,14 +24,19 @@ public class S3Uploader {
 
     public String upload(MultipartFile file, String dirName) throws IOException {
         String filename = dirName + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
-        PutObjectRequest putRequest = PutObjectRequest.builder()
-                .bucket(bucket)
-                .key(filename)
-                .acl("public-read")
-                .contentType(file.getContentType())
-                .build();
+        try {
+            PutObjectRequest putRequest = PutObjectRequest.builder()
+                    .bucket(bucket)
+                    .key(filename)
+                    .acl("public-read")
+                    .contentType(file.getContentType())
+                    .build();
 
-        s3Client.putObject(putRequest, RequestBody.fromBytes(file.getBytes()));
+            s3Client.putObject(putRequest, RequestBody.fromBytes(file.getBytes()));
+        } catch (Exception e) {
+            log.error("exception : {}", e.getMessage());
+        }
+
         return getFileUrl(filename);
     }
 
