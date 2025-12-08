@@ -845,12 +845,12 @@ body {
 }
 
 .product__discount__item__pic {
-    width: 100%;
-    height: 280px;
     position: relative;
+    width: 100%;
+    padding-top: 125%; /* 동일 비율 적용 */
     background-size: cover;
     background-position: center;
-    cursor: pointer;
+    background-repeat: no-repeat;
 }
 
 .product__discount__percent {
@@ -999,16 +999,17 @@ body {
 .product__item__pic {
     position: relative;
     width: 100%;
-    padding-top: 130%; /* 1:1.3 비율 → 원하는 비율로 조절 (1:1이면 100%) */
+    padding-top: 125%; /* 4:5 비율 (height / width) */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 8px;
     overflow: hidden;
-    margin-bottom: 20px;
+    height: auto !important;  /* 기존 280px 강제 제거 */
 }
 
 .product__item__text {
+    margin-top: 10px;
     padding: 20px;
     text-align: center;
 }
