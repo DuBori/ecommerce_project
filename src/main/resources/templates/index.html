@@ -26,8 +26,7 @@
 
     <div class="hero-img">
         <!-- 방법 1: Thymeleaf 경로 -->
-        <img th:src="@{/assets/profile.png}"
-             src="./assets/profile.png"
+        <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/profile_img.png"
              alt="Profile"
              onerror="this.src='https://via.placeholder.com/280x280/1f2937/ffffff?text=Profile'" />
     </div>
@@ -46,7 +45,7 @@
 <section id="projects" class="projects">
     <h2>Projects</h2>
     <div class="project-grid">
-        <!-- 방법 1: 정확한 S3 URL 사용 -->
+
         <div class="project-card" data-link="/ecommerce">
             <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/temp_commerce.PNG"
                  alt="쇼핑몰 프로젝트"
@@ -55,7 +54,7 @@
             <p>2024.03.11 ~ 2024.05.11</p>
         </div>
 
-        <!-- 방법 2: 로컬 이미지 사용 -->
+
         <div class="project-card" data-link="/">
             <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/ficnic.PNG"
                  alt="Fionic Project"
