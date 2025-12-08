@@ -148,11 +148,4 @@
     <!-- Footer Section Begin -->
     <div th:replace="front/common/footer :: footer"></div>
 </body>
-<script>
-    $(".product-link").on("click", function (){
-        let id = $(this).data('id');
-        location.href = '/item/view/'+id;
-    });
-</script>
-
 </html>
