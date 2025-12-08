@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request// Swagger UI 경로는 본인 IP만 허용
                         // 기존 공개 허용 경로에서 Swagger 제거했으니 주의
                         .requestMatchers("/",
-                                "/auth/sign-up", "/auth/sign-in", "/auth/logout", "/auth/oauth2/*", "/auth/verify",
+                                "/auth/sign-up", "/auth/sign-in", "/auth/logout", "/auth/oauth2/**", "/auth/verify",
                                 "/ecommerce/**", "/error/**","/wms/order/**",
                                 "/fonts/**","/wms/**", "/image/**",
                                 "/admin/item/exist/**",
