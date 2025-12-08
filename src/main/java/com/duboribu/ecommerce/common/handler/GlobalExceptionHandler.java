@@ -1,6 +1,9 @@
-package com.duboribu.ecommerce.order;
+package com.duboribu.ecommerce.common;
 
+import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
+import com.duboribu.ecommerce.order.OrderException;
+import com.duboribu.ecommerce.warehouse.WmsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,14 +11,31 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@RestControllerAdvice
 @Slf4j
-@RestControllerAdvice("com.duboribu.ecommerce.order")
-public class OrderAdvisor {
+public class GlobalExceptionHandler {
+
+    // 인증, 인가 Handler
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<DefaultResponse> handleJwtException(JwtException e) {
+        log.warn("JWT Error: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new DefaultResponse(e.getMessage(), e.getCode()));
+    }
+    // 주문 Handler
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<DefaultResponse> exceptionHandler(final OrderException e) {
-        log.info(e.getMessage());
+        log.info("OrderException : {}", e.getMessage());
         return new ResponseEntity<>(new DefaultResponse(e.getMessage(), e.getCode()), HttpStatus.OK);
     }
+
+    // wms Handler
+    @ExceptionHandler(WmsException.class)
+    public ResponseEntity<DefaultResponse> exceptionHandler(final WmsException e) {
+        log.info("WmsException : {}", e.getMessage());
+        return new ResponseEntity<>(new DefaultResponse(e.getMessage(), e.getCode()), HttpStatus.OK);
+    }
+
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<DefaultResponse> exceptionHandler(final HttpRequestMethodNotSupportedException e) {
@@ -25,7 +45,7 @@ public class OrderAdvisor {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<DefaultResponse> exceptionHandler(final Exception e) {
-        log.info(e.getMessage());
+        log.info("Exception : {}", e.getMessage());
         return new ResponseEntity<>(new DefaultResponse(DefaultResponse.SYSTEM_ERR_MSG, DefaultResponse.SYSTEM_ERR), HttpStatus.OK);
     }
 }
