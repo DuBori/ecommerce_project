@@ -21,11 +21,15 @@
 <section class="hero">
     <div class="hero-text">
         <h1>안녕하세요.<br><span>박정현</span>입니다.</h1>
-        <!--<p class="sub">저는 백엔드 개발을 하고 있어요.</p>-->
+        <p class="sub" style="color: #9ca3af; font-size: 18px;">저는 백엔드 개발을 하고 있어요.</p>
     </div>
 
     <div class="hero-img">
-        <img src="./assets/profile.png" alt="profile" />
+        <!-- 방법 1: Thymeleaf 경로 -->
+        <img th:src="@{/assets/profile.png}"
+             src="./assets/profile.png"
+             alt="Profile"
+             onerror="this.src='https://via.placeholder.com/280x280/1f2937/ffffff?text=Profile'" />
     </div>
 </section>
 
@@ -42,20 +46,28 @@
 <section id="projects" class="projects">
     <h2>Projects</h2>
     <div class="project-grid">
+        <!-- 방법 1: 정확한 S3 URL 사용 -->
         <div class="project-card" data-link="/ecommerce">
-            <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/temp_commerce.PNG" />
+            <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/temp_commerce.PNG"
+                 alt="쇼핑몰 프로젝트"
+                 onerror="this.src='https://via.placeholder.com/400x200/1f2937/ffffff?text=Commerce+Project'" />
             <h3>쇼핑몰 개인 프로젝트(JPA/QueryDSL)</h3>
             <p>2024.03.11 ~ 2024.05.11</p>
         </div>
 
-        <div class="project-card" data-link="./project-detail/fionic.html">
-            <img src="./assets/fionic.png" />
+        <!-- 방법 2: 로컬 이미지 사용 -->
+        <div class="project-card" data-link="/">
+            <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/ficnic.PNG"
+                 alt="Fionic Project"
+                 onerror="this.src='https://via.placeholder.com/400x200/1f2937/ffffff?text=Fionic+Project'" />
             <h3>Fionic Java Final Project</h3>
             <p>2022.11.25 ~ 2022.12.29</p>
         </div>
 
-        <div class="project-card" data-link="./project-detail/watchpedia.html">
-            <img src="./assets/watch.png" />
+        <div class="project-card" data-link="/">
+            <img src="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/whatchpdia.PNG"
+                 alt="와차피디아"
+                 onerror="this.src='https://via.placeholder.com/400x200/1f2937/ffffff?text=Watchpedia'" />
             <h3>와차피디아</h3>
             <p>2022.10.18 ~ 2022.11.14</p>
         </div>
@@ -66,7 +78,9 @@
     <h2>Notion</h2>
     <div class="project-grid">
         <div class="project-card" data-link="https://balsam-tumbleweed-3cd.notion.site/Park-Jeong-Hyeon-0772b4124b154714b40d51e40d163c22?pvs=74">
-            <img src="./assets/ecommerce.png" />
+            <img src="./assets/ecommerce.png"
+                 alt="Notion"
+                 onerror="this.src='https://via.placeholder.com/400x200/1f2937/ffffff?text=Notion'" />
             <h3>notion 주소</h3>
             <p>개인 notion 주소입니다.</p>
         </div>
@@ -77,10 +91,27 @@
     document.querySelectorAll('.project-card').forEach(card => {
         card.addEventListener('click', () => {
             const link = card.getAttribute('data-link');
-            if (link) location.href = link;
+            if (link) {
+                // 외부 링크는 새 탭에서 열기
+                if (link.startsWith('http')) {
+                    window.open(link, '_blank');
+                } else {
+                    location.href = link;
+                }
+            }
         });
     });
 
+    // 이미지 로딩 확인 디버깅
+    document.querySelectorAll('.project-card img').forEach(img => {
+        img.addEventListener('error', function() {
+            console.error('이미지 로딩 실패:', this.src);
+        });
+
+        img.addEventListener('load', function() {
+            console.log('이미지 로딩 성공:', this.src);
+        });
+    });
 </script>
 </body>
 </html>
