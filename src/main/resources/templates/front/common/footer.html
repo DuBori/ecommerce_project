@@ -31,5 +31,16 @@
     <!-- Js Plugins -->
     <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
     <script th:src="@{/js/commonUpload.js}"></script>
+    <script>
+        $('.set-bg').each(function () {
+            const bg = $(this).data('setbg');
+            $(this).css('background-image', 'url(' + bg + ')');
+        });
+
+        $(".product-link").on("click", function (){
+            let id = $(this).data('id');
+            location.href = '/ecommerce/item/view/' + id;
+        });
+    </script>
 </footer>
 
