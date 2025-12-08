@@ -34,6 +34,7 @@ public class JwtCustomFilter extends OncePerRequestFilter {
             doFilter(request, response, filterChain);
             return;
         }*/
+
         if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/swagger-resources")) {
             log.info("swagger 진입");
             filterChain.doFilter(request, response);
@@ -55,8 +56,12 @@ public class JwtCustomFilter extends OncePerRequestFilter {
         }
         log.info("accessToken : {}", accessToken);
         String requestURI = request.getRequestURI();
+
         if (!tokenProvider.validateToken(accessToken)) {
-            throw new JwtException("Access Token 만료");
+            // 토큰 만료 → 인증 없이 진행 (Security가 나중에 권한 체크)
+            log.info("Access Token 만료 - 인증 없이 진행");
+            filterChain.doFilter(request, response);
+            return;
         }
 
         try {
@@ -65,14 +70,13 @@ public class JwtCustomFilter extends OncePerRequestFilter {
             log.info("Security Context에 '{}' 인증 정보를 저장했습니다, uri: {}", authentication.getName(), requestURI);
             filterChain.doFilter(request, response);
         } catch (JwtException e) {
-            log.error("JwtException : {}", e.getMessage());
-            throw new JwtException(e.getMessage());
+            log.error("Access Token 만료 : {}", e.getMessage());
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Access Token 만료");
+            return;
         } catch (Exception e) {
-            log.error("JwtCustomFilter : {}", e.getMessage());
+            log.error("예상치 못한 예외가 발생했습니다. : {}", e.getMessage());
+            response.sendError(HttpServletResponse.SC_FORBIDDEN,    "예상치 못한 예외가 발생했습니다.");
+            return;
         }
-
-
-
-
     }
 }
