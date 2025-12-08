@@ -750,15 +750,12 @@ body {
 }
 
 .latest-product__item__pic {
-    position: relative;
-    width: 100%;
-    padding-top: 130%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    flex-shrink: 0;
+    border-radius: 6px;
     overflow: hidden;
-    margin-bottom: 20px;
+    background: #f8f9fa;
 }
 
 .latest-product__item__pic img {
