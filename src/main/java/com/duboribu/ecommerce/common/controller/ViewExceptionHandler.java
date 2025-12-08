@@ -1,3 +1,5 @@
+package com.duboribu.ecommerce.common.controller;
+
 import com.duboribu.ecommerce.admin.exception.AdminAccessDeniedException;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;

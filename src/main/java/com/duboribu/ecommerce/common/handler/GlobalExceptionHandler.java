@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.common;
+package com.duboribu.ecommerce.common.handler;
 
 import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.DefaultResponse;
@@ -19,9 +19,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(JwtException.class)
     public ResponseEntity<DefaultResponse> handleJwtException(JwtException e) {
         log.warn("JWT Error: {}", e.getMessage());
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new DefaultResponse(e.getMessage(), e.getCode()));
+        return new ResponseEntity<>(new DefaultResponse(e.getMessage(), e.getCode()), HttpStatus.OK);
     }
+
     // 주문 Handler
     @ExceptionHandler(OrderException.class)
     public ResponseEntity<DefaultResponse> exceptionHandler(final OrderException e) {

@@ -58,10 +58,7 @@ public class JwtCustomFilter extends OncePerRequestFilter {
         String requestURI = request.getRequestURI();
 
         if (!tokenProvider.validateToken(accessToken)) {
-            // 토큰 만료 → 인증 없이 진행 (Security가 나중에 권한 체크)
-            log.info("Access Token 만료 - 인증 없이 진행");
-            filterChain.doFilter(request, response);
-            return;
+            throw new JwtException("Access Token 만료");
         }
 
         try {
