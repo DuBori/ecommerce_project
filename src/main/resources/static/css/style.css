@@ -750,12 +750,15 @@ body {
 }
 
 .latest-product__item__pic {
-    width: 80px;
-    height: 80px;
-    flex-shrink: 0;
-    border-radius: 6px;
+    position: relative;
+    width: 100%;
+    padding-top: 130%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 8px;
     overflow: hidden;
-    background: #f8f9fa;
+    margin-bottom: 20px;
 }
 
 .latest-product__item__pic img {
@@ -997,15 +1000,12 @@ body {
 }
 
 .product__item__pic {
-    position: relative;
     width: 100%;
-    padding-top: 130%; /* 1:1.3 비율 → 원하는 비율로 조절 (1:1이면 100%) */
+    height: 280px;
+    position: relative;
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
+    cursor: pointer;
 }
 
 .product__item__text {
