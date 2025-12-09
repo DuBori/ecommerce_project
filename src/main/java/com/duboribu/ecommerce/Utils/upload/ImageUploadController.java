@@ -25,7 +25,7 @@ public class ImageUploadController {
     private final String dirName = "image";
     @PostMapping("/upload")
     public ResponseEntity<DefaultResponse> uploadImage(@RequestParam("file") MultipartFile file, String path, Model model) throws IOException {
-        String filePath = s3Uploader.upload(file, dirName);
+        String filePath = s3Uploader.uploadForItemImgs(file, dirName);
         return new ResponseEntity<>(new DefaultResponse(filePath), HttpStatus.OK);
     }
 }
