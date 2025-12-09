@@ -60,7 +60,7 @@ public class FoQnaController {
             return "redirect:/ecommerce/qna";
         }
         Long id = foNoticeService.writeQna(qnaWriteReq, userId);
-        return "redirect:/qna/view/" + id;
+        return "redirect:/ecommerce/qna/view/" + id;
     }
 
     @GetMapping("/view/{id}")
