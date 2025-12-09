@@ -10,18 +10,6 @@
 
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-section set-bg" data-setbg="https://duboribu-s3.s3.ap-northeast-2.amazonaws.com/profile/duboribu_banner.png">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <div class="breadcrumb__text">
-                        <h2></h2>
-                        <div class="breadcrumb__option">
-                            <a href="/ecommerce/item/list">리스트</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </section>
     <!-- Breadcrumb Section End -->
 
@@ -65,7 +53,7 @@
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="text" name="quantity" value="1" readonly>
+                                    <input type="text" name="quantity" th:value="${item.stockCount}" readonly>
                                 </div>
                             </div>
                         </div>

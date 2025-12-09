@@ -795,6 +795,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
 }
 
 .latest-product__item__text h6 {
