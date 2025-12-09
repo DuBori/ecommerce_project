@@ -7,9 +7,8 @@
 .col-md-6 .product__item .product__item__pic,
 .col-sm-6 .product__item .product__item__pic {
     position: relative !important;
-    width: 100% !important;
-    height: 0 !important;
-    padding-top: 125% !important; /* 4:5 비율 */
+    width: 300px !important;
+    height: 400px !important; /* FIXED */
     background-size: cover !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
@@ -147,6 +146,15 @@
     z-index: 0;
 }
 
+.product__item__text h6 {
+    font-size: 14px;
+    height: 40px; /* 고정 */
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
 /* ============ Responsive - Shop Grid ============ */
 @media (max-width: 768px) {
     .product__discount__item__pic {
@@ -171,3 +179,4 @@
         padding-top: 115% !important;
     }
 }
+
