@@ -53,7 +53,7 @@
                         <div class="product__details__quantity">
                             <div class="quantity">
                                 <div class="pro-qty">
-                                    <input type="text" name="quantity" th:value="${item.stockCount}" readonly>
+                                    <input type="text" name="quantity" value="1" readonly>
                                 </div>
                             </div>
                         </div>
@@ -64,6 +64,7 @@
                             <li><b>판매여부 : </b> <span th:text="${item.state == 'Y' and item.stockCount gt 0 ? '판매중' : '일시품절'}"></span></li>
                             <!--<li><b>배달 : </b> <span> <samp>&lt;!&ndash;Free pickup today&ndash;&gt;</samp></span></li>-->
                             <li><b>중량</b> <span th:text="${item.weight}"></span></li>
+                            <li><b>재고</b> <span th:text="${item.stockCount}"></span></li>
                             <li><b>Share on</b>
                                 <div class="share">
                                     <a href="#"><i class="fa fa-facebook"></i></a>
