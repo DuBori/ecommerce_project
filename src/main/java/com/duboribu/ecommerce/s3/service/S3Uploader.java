@@ -38,6 +38,7 @@ public class S3Uploader {
             PutObjectRequest putRequest = PutObjectRequest.builder()
                     .bucket(bucket)
                     .key(filename)
+                    .acl("public-read")
                     .contentType("image/jpeg") // 리사이징된 타입에 맞게
                     .build();
 
