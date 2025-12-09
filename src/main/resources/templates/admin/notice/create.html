@@ -1,10 +1,235 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 등록</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+<div th:replace="admin/common/header :: header"></div>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
 
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+
+<div class="container">
+    <h1>공지사항 등록</h1>
+    <form id="noticeForm">
+        <div class="form-group">
+            <label for="title">제목:</label>
+            <input type="text" id="title" name="title" required>
+        </div>
+        <div class="form-group">
+            <label for="noticeType">유형:</label>
+            <select id="noticeType" name="noticeType" required>
+                <option value="">유형을 선택하세요</option>
+                <option th:each="type : ${noticeTypes}" th:text="${type.desc}" th:value="${type.name()}"></option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="comment">내용:</label>
+            <textarea id="comment" name="comment" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>상태:</label><br>
+            <input type="radio" id="stateY" name="state" value="Y" required checked>
+            <label for="stateY">활성화</label>
+            <input type="radio" id="stateN" name="state" value="N">
+            <label for="stateN">비활성화</label>
+        </div>
+
+        <input type="hidden" name="filePath" id="filePath">
+        <div class="form-group">
+            <label for="imageInput">첨부파일:</label>
+            <input type="file" id="imageInput" data-path="notice">
+        </div>
+        <div id="imageContainer"></div>
+
+        <button type="submit">등록</button>
+    </form>
+    <div id="message"></div>
+    <div class="button-group">
+        <button type="button" class="btn-back" onclick="location.href='/admin/notice'">목록으로</button>
+    </div>
+</div>
+
+<div th:replace="admin/common/footer :: footer"></div>
 </body>
 </html>
+<style>
+    .container {
+        max-width: 800px;
+        margin: 60px auto;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .container h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    .container .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        box-sizing: border-box;
+    }
+
+    #comment {
+        height: 200px;
+        resize: vertical;
+    }
+
+    .container label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .container input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+    }
+
+    .container button[type="submit"] {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .container button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    .container #message {
+        color: red;
+        margin-top: 10px;
+        text-align: center;
+    }
+
+    .container select {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ccc;
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        background-color: #fff;
+        color: #333;
+        border-radius: 3px;
+    }
+
+    .container select:hover {
+        border-color: #999;
+    }
+
+    .container select:focus {
+        border-color: #555;
+    }
+
+    .container input[type="radio"] {
+        margin-right: 10px;
+        display: inline-block;
+    }
+
+    .container input[type="radio"] + label {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        cursor: pointer;
+        display: inline;
+        margin-right: 20px;
+    }
+
+    .container input[type="radio"]:checked + label {
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .button-group {
+        margin-top: 20px;
+        text-align: center;
+    }
+
+    .btn-back {
+        background-color: #6c757d;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .btn-back:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        $('#noticeForm').on('submit', function(event) {
+            event.preventDefault();
+
+            var title = $('#title').val();
+            var noticeType = $('#noticeType').val();
+            var comment = $('#comment').val();
+            var state = $('input[name=state]:checked').val();
+            var filePath = $('#filePath').val();
+
+            // 유효성 검사
+            if (!title || !noticeType || !comment || !state) {
+                $('#message').html('<div id="error">모든 필수 항목을 입력하세요.</div>');
+                return;
+            }
+
+            var formData = {
+                title: title,
+                noticeType: noticeType,
+                comment: comment,
+                state: state,
+                filePath: filePath
+            };
+
+            // AJAX를 사용하여 서버로 데이터를 전송
+            $.ajax({
+                url: '/admin/notice/create',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(data) {
+                    if (data.resCode == 200) {
+                        alert("공지사항이 성공적으로 등록되었습니다.");
+                        document.location.href = '/admin/notice/view/' + data.body.id;
+                    } else {
+                        $('#message').html('<div id="error">' + data.resMsg + '</div>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#message').html('<div id="error">공지사항 등록에 실패했습니다.</div>');
+                }
+            });
+        });
+    });
+</script>

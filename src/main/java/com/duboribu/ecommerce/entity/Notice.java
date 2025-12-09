@@ -37,4 +37,12 @@ public class Notice extends BaseEntity{
         this.member = member;
         this.noticeType = noticeType;
     }
+
+    public void update(String title, String comment, State state, String filePath, NoticeType noticeType) {
+        this.title = title;
+        this.comment = comment;
+        this.state = state;
+        this.filePath = filePath;
+        this.noticeType = noticeType;
+    }
 }

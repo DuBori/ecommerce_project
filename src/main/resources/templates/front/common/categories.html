@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<!-- Categories Section Begin -->
+<section th:fragment="categories" class="categories py-5">
+  <div class="container">
+    <h2 class="section-title text-center mb-4">Shop by Category</h2>
+    <div class="categories__slider owl-carousel">
+      <!-- normalList 는 컨트롤러에서 넘기는 카테고리 리스트 -->
+      <div class="categories__item set-bg"
+           th:each="normal : ${normalList}"
+           th:attr="data-setbg=@{${normal.filePath}}">
+        <h5>
+          <a th:href="@{/ecommerce/item/view/{id}(id=${normal.id})}"
+             th:text="${normal.name}">카테고리명</a>
+        </h5>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Categories Section End -->
+
+<!-- (=Optional=) JS 초기화 스크립트 -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  document.addEventListener('DOMContentLoaded', function() {
+    // 배경 이미지 세팅
+    document.querySelectorAll('.set-bg').forEach(function(el) {
+      var bg = el.getAttribute('data-setbg');
+      el.style.backgroundImage = 'url(' + /*[[@{${bg}}]]*/ bg + ')';
+    });
+    // Owl Carousel 초기화
+    $('.categories__slider').owlCarousel({
+      loop: true,
+      margin: 16,
+      nav: true,
+      dots: false,
+      autoplay: true,
+      autoplayTimeout: 5000,
+      responsive:{
+        0:   { items: 1 },
+        576: { items: 2 },
+        768: { items: 3 },
+        992: { items: 4 }
+      }
+    });
+  });
+  /*]]>*/
+</script>
+</body>
+</html>

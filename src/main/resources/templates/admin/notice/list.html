@@ -1,17 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
-<div th:replace="admin/common/header :: header"></div>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>공지사항 관리</title>
+    <style>
+        .container {
+            max-width: 1000px;
+            margin: 60px auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container h1 {
+            color: #333;
+        }
+
+        .container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .container table th,
+        .container table td {
+            border: 1px solid #dee2e6;
+            padding: 12px;
+            text-align: center;
+        }
+
+        .container table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .container table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container table a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .container table a:hover {
+            color: #007bff;
+            text-decoration: underline;
+        }
+
+        .container .pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container .pagination li {
+            display: inline-block;
+            list-style: none;
+        }
+
+        .container .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            text-decoration: none;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            margin: 0 2px;
+        }
+
+        .container .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .container .pagination a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .container .create-btn {
+            display: inline-block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            text-decoration: none;
+        }
+
+        .container .create-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .container .search-form {
+            margin-bottom: 20px;
+        }
+
+        .container .search-type,
+        .container .search-keyword {
+            padding: 8px;
+            width: 200px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .container .search-keyword {
+            margin-right: 5px;
+        }
+
+        .container .search-btn {
+            padding: 8px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .container .search-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .state-y {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .state-n {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
+<div th:replace="admin/common/header :: header"></div>
 <!-- ======= top ======= -->
 <div th:replace="admin/common/top :: top"></div>
 
 <!-- ======= 네비게이션 ======= -->
 <div th:replace="admin/common/sidebar :: sidebar"></div>
+
 <div class="container">
+    <h1>공지사항 관리</h1>
 
+    <form method="GET" class="search-form">
+        <select name="searchType" class="search-type">
+            <option value="title" th:selected="${searchType == 'title'}">제목</option>
+            <option value="comment" th:selected="${searchType == 'comment'}">내용</option>
+        </select>
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요" class="search-keyword" th:value="${keyword}">
+        <button type="submit" class="search-btn">검색</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 60px;">번호</th>
+                <th>제목</th>
+                <th style="width: 100px;">유형</th>
+                <th style="width: 80px;">상태</th>
+                <th style="width: 100px;">작성자</th>
+                <th style="width: 150px;">등록일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="notice : ${list.content}">
+                <td th:text="${notice.id}"></td>
+                <td>
+                    <a th:href="@{/admin/notice/view/{id}(id=${notice.id})}" th:text="${notice.title}"></a>
+                </td>
+                <td th:text="${notice.noticeType?.desc}"></td>
+                <td>
+                    <span th:if="${notice.state?.name() == 'Y'}" class="state-y">활성화</span>
+                    <span th:if="${notice.state?.name() == 'N'}" class="state-n">비활성화</span>
+                </td>
+                <td th:text="${notice.createdBy}"></td>
+                <td th:text="${notice.createdAt}"></td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(list.content)}">
+                <td colspan="6">등록된 공지사항이 없습니다.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- 공지사항 생성 버튼 -->
+    <a class="create-btn" th:href="@{/admin/notice/create}">공지사항 등록</a>
+
+    <!-- 페이징 -->
+    <ul class="pagination" th:if="${list.totalPages > 0}">
+        <li class="page-item" th:class="${list.first ? 'disabled' : ''}">
+            <a class="page-link" th:href="@{/admin/notice(page=${list.number - 1}, searchType=${searchType}, keyword=${keyword})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+        <li th:each="pageNumber : ${#numbers.sequence(0, list.totalPages - 1)}" th:class="${pageNumber == list.number ? 'page-item active' : 'page-item'}">
+            <a class="page-link" th:href="@{/admin/notice(page=${pageNumber}, searchType=${searchType}, keyword=${keyword})}" 
+               th:text="${pageNumber + 1}"
+               th:classappend="${pageNumber == list.number ? 'active' : ''}"></a>
+        </li>
+        <li class="page-item" th:class="${list.number >= list.totalPages - 1 ? 'disabled' : ''}">
+            <a class="page-link" th:href="@{/admin/notice(page=${list.number + 1}, searchType=${searchType}, keyword=${keyword})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
 </div>
-
-
 <div th:replace="admin/common/footer :: footer"></div>
 </body>
 </html>

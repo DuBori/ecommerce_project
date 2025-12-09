@@ -1,10 +1,320 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항 상세</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .container {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
 
+        .inner-container {
+            width: 80%;
+            max-width: 900px;
+            margin: 60px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .inner-container h1 {
+            color: #333;
+            padding: 20px;
+            margin: 0;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            width: 100%;
+        }
+
+        .inner-container hr {
+            margin: 0;
+            width: 100%;
+        }
+
+        .inner-container .form {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .inner-container .form-group {
+            margin-bottom: 20px;
+        }
+
+        .inner-container .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .inner-container .form-group input[type="text"],
+        .inner-container .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .inner-container .form-group textarea {
+            height: 200px;
+            resize: vertical;
+        }
+
+        .inner-container .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+
+        .inner-container .form-group input[type="radio"] {
+            margin-right: 10px;
+        }
+
+        .inner-container .form-group input[type="radio"] + label {
+            display: inline;
+            margin-right: 20px;
+            cursor: pointer;
+        }
+
+        .inner-container .form-group input[type="radio"]:checked + label {
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-modify {
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-modify:hover {
+            background-color: #218838;
+        }
+
+        .btn-delete {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-delete:hover {
+            background-color: #c82333;
+        }
+
+        .btn-back {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+
+        .info-group {
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .info-group span {
+            color: #666;
+            font-size: 14px;
+        }
+
+        #message {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<div th:replace="admin/common/header :: header"></div>
+<body>
+<!-- ======= top ======= -->
+<div th:replace="admin/common/top :: top"></div>
+
+<!-- ======= 네비게이션 ======= -->
+<div th:replace="admin/common/sidebar :: sidebar"></div>
+<div class="container">
+    <div class="inner-container">
+        <h1>공지사항 상세</h1>
+        <hr>
+
+        <div class="info-group">
+            <span>작성자: <strong th:text="${notice.createdBy}"></strong></span>
+            <span>등록일: <strong th:text="${notice.createdAt}"></strong></span>
+            <span>수정일: <strong th:text="${notice.updatedAt}"></strong></span>
+        </div>
+
+        <div class="form">
+            <form id="noticeForm">
+                <input type="hidden" id="id" name="id" th:value="${notice.id}">
+
+                <div class="form-group">
+                    <label for="title">제목:</label>
+                    <input type="text" id="title" name="title" th:value="${notice.title}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="noticeType">유형:</label>
+                    <select id="noticeType" name="noticeType" required>
+                        <option value="">유형을 선택하세요</option>
+                        <option th:each="type : ${noticeTypes}" 
+                                th:text="${type.desc}" 
+                                th:value="${type.name()}"
+                                th:selected="${notice.noticeType?.name() == type.name()}"></option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">내용:</label>
+                    <textarea id="comment" name="comment" required th:text="${notice.comment}"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>상태:</label><br>
+                    <input type="radio" id="stateY" name="state" value="Y" th:checked="${notice.state?.name() == 'Y'}">
+                    <label for="stateY">활성화</label>
+                    <input type="radio" id="stateN" name="state" value="N" th:checked="${notice.state?.name() == 'N'}">
+                    <label for="stateN">비활성화</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="imageInput">첨부파일:</label>
+                    <input type="file" id="imageInput" data-path="notice">
+                </div>
+                <div id="imageContainer">
+                    <img th:if="${notice.filePath != null and notice.filePath != ''}" 
+                         th:src="${notice.filePath}" 
+                         alt="첨부 이미지" 
+                         style="max-width: 400px; max-height: 400px;">
+                </div>
+                <input type="hidden" name="filePath" id="filePath" th:value="${notice.filePath}">
+
+                <div id="message"></div>
+
+                <div class="button-group">
+                    <button type="submit" class="btn-modify">수정</button>
+                    <button type="button" class="btn-delete" onclick="deleteNotice()">삭제</button>
+                    <button type="button" class="btn-back" onclick="location.href='/admin/notice'">목록으로</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="admin/common/footer :: footer"></div>
 </body>
 </html>
+<script th:inline="javascript">
+    var noticeId = [[${notice.id}]];
+
+    $(document).ready(function() {
+        $('#noticeForm').on('submit', function(event) {
+            event.preventDefault();
+
+            var title = $('#title').val();
+            var noticeType = $('#noticeType').val();
+            var comment = $('#comment').val();
+            var state = $('input[name=state]:checked').val();
+            var filePath = $('#filePath').val();
+
+            // 유효성 검사
+            if (!title || !noticeType || !comment || !state) {
+                $('#message').html('<div id="error">모든 필수 항목을 입력하세요.</div>');
+                return;
+            }
+
+            var formData = {
+                title: title,
+                noticeType: noticeType,
+                comment: comment,
+                state: state,
+                filePath: filePath
+            };
+
+            // AJAX를 사용하여 서버로 데이터를 전송
+            $.ajax({
+                url: '/admin/notice/update/' + noticeId,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(formData),
+                success: function(data) {
+                    if (data.resCode == 200) {
+                        alert("공지사항이 성공적으로 수정되었습니다.");
+                        location.reload();
+                    } else {
+                        $('#message').html('<div id="error">' + data.resMsg + '</div>');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    $('#message').html('<div id="error">공지사항 수정에 실패했습니다.</div>');
+                }
+            });
+        });
+
+        // 이미지 삭제 버튼 이벤트
+        $(document).on('click', '.btn-img-delete', function() {
+            if ($('#imageContainer img').length > 0) {
+                $('#imageContainer img').remove();
+                $('#filePath').val('');
+            }
+        });
+    });
+
+    function deleteNotice() {
+        if (!confirm('정말 삭제하시겠습니까?')) {
+            return;
+        }
+
+        $.ajax({
+            url: '/admin/notice/delete/' + noticeId,
+            type: 'POST',
+            contentType: 'application/json',
+            success: function(data) {
+                if (data.resCode == 200) {
+                    alert("공지사항이 삭제되었습니다.");
+                    document.location.href = '/admin/notice';
+                } else {
+                    alert(data.resMsg);
+                }
+            },
+            error: function(xhr, status, error) {
+                alert('삭제에 실패했습니다.');
+            }
+        });
+    }
+</script>
