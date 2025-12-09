@@ -1,3 +1,67 @@
+/* ============================================
+   Shop Grid Page - Product List Specific Styles
+   ============================================ */
+
+/* ============ Product Item - 카테고리 상품 ============ */
+.col-lg-4 .product__item .product__item__pic,
+.col-md-6 .product__item .product__item__pic,
+.col-sm-6 .product__item .product__item__pic {
+    position: relative !important;
+    width: 100% !important;
+    height: 0 !important;
+    padding-top: 125% !important; /* 4:5 비율 */
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    overflow: hidden !important;
+    border-radius: 8px 8px 0 0 !important;
+}
+
+/* 호버 아이콘 위치 조정 */
+.product__item .product__item__pic .product__item__pic__hover {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    list-style: none;
+    transition: all 0.3s;
+    z-index: 10;
+}
+
+.product__item:hover .product__item__pic .product__item__pic__hover {
+    bottom: 15px;
+}
+
+.product__item .product__item__pic__hover li {
+    width: 40px;
+    height: 40px;
+}
+
+.product__item .product__item__pic__hover li a {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 16px;
+    transition: all 0.3s;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product__item .product__item__pic__hover li a:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* ============ Discount Products - 할인 특가 ============ */
 .product__discount__item__pic {
     width: 100%;
     height: 280px;
@@ -6,6 +70,7 @@
     background-position: center;
     cursor: pointer;
     overflow: hidden;
+    border-radius: 8px 8px 0 0;
 }
 
 .product__discount__item__pic .pd-img {
@@ -19,14 +84,90 @@
     display: block;
 }
 
-/* 기존 hover 아이콘 및 퍼센트 표시가 위로 올라오도록 */
-.product__discount__item__pic .product__discount__percent,
-.product__discount__item__pic ul {
-    position: relative;
+/* 퍼센트 표시 */
+.product__discount__item__pic .product__discount__percent {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: #e74c3c;
+    color: #fff;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
     z-index: 3;
 }
 
-/* 배경 set-bg 요소는 img 아래인 z-index:0 */
+/* 호버 아이콘들 */
+.product__discount__item__pic ul {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    list-style: none;
+    transition: all 0.3s;
+    z-index: 3;
+}
+
+.product__discount__item:hover .product__discount__item__pic ul {
+    bottom: 15px;
+}
+
+.product__discount__item__pic ul li {
+    width: 40px;
+    height: 40px;
+}
+
+.product__discount__item__pic ul li a {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #333;
+    font-size: 16px;
+    transition: all 0.3s;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product__discount__item__pic ul li a:hover {
+    background: #333;
+    color: #fff;
+}
+
+/* 배경 set-bg 요소 */
 .product__discount__item__pic.set-bg {
     z-index: 0;
+}
+
+/* ============ Responsive - Shop Grid ============ */
+@media (max-width: 768px) {
+    .product__discount__item__pic {
+        height: 240px;
+    }
+
+    .col-lg-4 .product__item .product__item__pic,
+    .col-md-6 .product__item .product__item__pic,
+    .col-sm-6 .product__item .product__item__pic {
+        padding-top: 120% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .product__discount__item__pic {
+        height: 200px;
+    }
+
+    .col-lg-4 .product__item .product__item__pic,
+    .col-md-6 .product__item .product__item__pic,
+    .col-sm-6 .product__item .product__item__pic {
+        padding-top: 115% !important;
+    }
 }

@@ -412,6 +412,7 @@ body {
 }
 
 /* ============ Categories Slider Section (제일 크기) ============ */
+/* ============ Categories Slider Section (제일 크기) ============ */
 .categories {
     padding: 60px 0;
     background: #fff;
@@ -424,49 +425,74 @@ body {
 
 .categories__slider {
     display: flex;
+    justify-content: center; /* 가운데 정렬 추가 */
+    flex-wrap: wrap; /* 요소가 많아지면 자동으로 줄바꿈 */
     gap: 25px;
-    overflow-x: auto;
     padding: 15px 0;
-}
-
-.categories__slider::-webkit-scrollbar {
-    height: 8px;
-}
-
-.categories__slider::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.categories__slider::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
 }
 
 .categories__item {
     min-width: 280px;
+    max-width: 280px; /* 최대 너비 고정 */
     height: 220px;
-    background: #f8f9fa;
     border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     position: relative;
     overflow: hidden;
     transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
 .categories__item:hover {
-    background: #e9ecef;
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* 이미지 */
+.categories__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* 오버레이 (텍스트 영역) */
+.categories__item__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 25px;
+    transition: all 0.3s;
+}
+
+.categories__item:hover .categories__item__overlay {
+    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
+}
+
+/* 텍스트 */
+.categories__item h5 {
+    margin: 0;
+    width: 100%;
+    text-align: center;
 }
 
 .categories__item h5 a {
-    color: #333;
+    color: #fff;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    display: block;
+    line-height: 1.4;
+}
+
+.categories__item h5 a:hover {
+    color: #f0f0f0;
 }
 
 /* ============ Welcome Section ============ */
@@ -999,20 +1025,17 @@ body {
 .product__item__pic {
     position: relative;
     width: 100%;
-    padding-top: 125%; /* 4:5 비율 유지 (정사각형은 100%) */
+    padding-top: 125%; /* 4:5 비율 (height / width) */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 8px 8px 0 0;
+    border-radius: 8px;
     overflow: hidden;
-}
-
-/* 만약 img 태그를 직접 사용한다면 숨김 처리 */
-.product__item__pic img {
-    display: none;
+    height: auto !important;  /* 기존 280px 강제 제거 */
 }
 
 .product__item__text {
+    margin-top: 10px;
     padding: 20px;
     text-align: center;
 }
