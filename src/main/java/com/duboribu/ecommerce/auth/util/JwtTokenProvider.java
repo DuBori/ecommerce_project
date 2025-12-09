@@ -5,6 +5,7 @@ import com.duboribu.ecommerce.auth.JwtException;
 import com.duboribu.ecommerce.auth.domain.UserDto;
 import com.duboribu.ecommerce.auth.enums.JwtUserExceptionType;
 import com.duboribu.ecommerce.enums.RoleType;
+import com.duboribu.ecommerce.front.exception.UserAccessLoginDeniedException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
@@ -151,10 +152,10 @@ public class JwtTokenProvider implements InitializingBean {
     public String getUserId(HttpServletRequest request) {
         String accessToken = Validator.getAccessToken(request);
         if (!StringUtils.hasText(accessToken)) {
-            throw new JwtException(JwtUserExceptionType.NON_TOKEN);
+            throw new UserAccessLoginDeniedException(JwtUserExceptionType.NON_TOKEN.getDesc());
         }
         if (isExpired(accessToken)) {
-            throw new JwtException(JwtUserExceptionType.EXPIRED_JWT_TOKEN);
+            throw new UserAccessLoginDeniedException(JwtUserExceptionType.EXPIRED_JWT_TOKEN.getDesc());
         }
         Authentication authentication = getAuthentication(accessToken);
         return authentication.getName();

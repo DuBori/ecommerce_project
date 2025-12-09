@@ -10,6 +10,7 @@ import com.duboribu.ecommerce.front.cart.dto.request.CartRequest;
 import com.duboribu.ecommerce.front.cart.dto.request.CartsRequest;
 import com.duboribu.ecommerce.front.cart.dto.response.CartItemResponse;
 import com.duboribu.ecommerce.front.cart.repository.CartCustomJpaRepository;
+import com.duboribu.ecommerce.front.exception.UserAccessLoginDeniedException;
 import com.duboribu.ecommerce.front.item.repository.FoItemCustomRepository;
 import com.duboribu.ecommerce.front.order.dto.FoOrderResponse;
 import com.duboribu.ecommerce.repository.*;
@@ -73,7 +74,7 @@ public class FoCartService {
     @Transactional
     public FoOrderResponse getCartList(String userId) {
         if (!StringUtils.hasText(userId)) {
-            throw new IllegalArgumentException("계정 정보가 없습니다.");
+            throw new UserAccessLoginDeniedException("계정 정보가 없습니다.");
         }
         return cartCustomJpaRepository.findCartByUserId(userId);
     }

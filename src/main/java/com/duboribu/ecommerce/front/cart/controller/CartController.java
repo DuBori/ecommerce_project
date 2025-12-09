@@ -29,6 +29,7 @@ public class CartController {
     private String cartPage(HttpServletRequest request, Model model) {
         String userId = jwtTokenProvider.getUserId(request);
         FoOrderResponse cartList = foCartService.getCartList(userId);
+        log.info("cartRes : {}", cartList);
         model.addAttribute("foOrderResponse", cartList);
         return "front/shoping-cart";
     }

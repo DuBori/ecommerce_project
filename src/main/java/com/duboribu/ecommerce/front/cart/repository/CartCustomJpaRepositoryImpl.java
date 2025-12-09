@@ -43,11 +43,11 @@ public class CartCustomJpaRepositoryImpl implements CartCustomJpaRepository {
         List<FoOrderItemView> list = jpaQueryFactory.select(new QFoOrderItemView(book.id, book.title, book.author, book.publisher,
                         book.filePath, book.price, stock.count, book.state, book.comment, book.information, book.weight))
                 .from(cart)
-                .innerJoin(cartItem)
+                .leftJoin(cartItem)
                 .on(cart.eq(cartItem.cart))
-                .innerJoin(book)
+                .leftJoin(book)
                 .on(cartItem.item.id.eq(book.id))
-                .innerJoin(stock)
+                .leftJoin(stock)
                 .on(stock.item.id.eq(book.id))
                 .where(cart.order.isNull(), cart.member.id.eq(userId))
                 .fetch();
