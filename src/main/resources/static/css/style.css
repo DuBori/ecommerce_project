@@ -999,17 +999,20 @@ body {
 .product__item__pic {
     position: relative;
     width: 100%;
-    padding-top: 125%; /* 4:5 비율 (height / width) */
+    padding-top: 125%; /* 4:5 비율 유지 (정사각형은 100%) */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 8px;
+    border-radius: 8px 8px 0 0;
     overflow: hidden;
-    height: auto !important;  /* 기존 280px 강제 제거 */
+}
+
+/* 만약 img 태그를 직접 사용한다면 숨김 처리 */
+.product__item__pic img {
+    display: none;
 }
 
 .product__item__text {
-    margin-top: 10px;
     padding: 20px;
     text-align: center;
 }
