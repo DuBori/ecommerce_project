@@ -1,0 +1,377 @@
+/* ============ MyPage CSS ============ */
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 80px auto 60px;
+    padding: 40px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* Page Title */
+.container h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    margin-bottom: 50px;
+    padding-bottom: 20px;
+    border-bottom: 3px solid #333;
+}
+
+/* Section Titles */
+.container h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+/* Sections */
+.container #user-info,
+.container #order-info {
+    margin-bottom: 50px;
+}
+
+/* Tables */
+.container table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.container th,
+.container td {
+    padding: 16px 20px;
+    text-align: left;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 15px;
+}
+
+.container th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+    width: 150px;
+}
+
+.container td {
+    color: #666;
+}
+
+.container tr:last-child th,
+.container tr:last-child td {
+    border-bottom: none;
+}
+
+/* User Info Table */
+#user-info table th {
+    width: 120px;
+}
+
+/* Order Info Table */
+#order-info table {
+    margin-bottom: 0;
+}
+
+#order-info thead {
+    background: #333;
+}
+
+#order-info thead th {
+    color: #fff;
+    background: #333;
+    font-weight: 600;
+    text-align: center;
+    padding: 18px 15px;
+}
+
+#order-info tbody td {
+    text-align: center;
+    vertical-align: top;
+    padding: 20px 15px;
+}
+
+/* Nested Order Items Table */
+.order-items {
+    width: 100%;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-top: 10px;
+}
+
+.order-items th {
+    background: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 12px 15px;
+    text-align: center;
+}
+
+.order-items td {
+    padding: 12px 15px;
+    font-size: 14px;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-items tr:last-child td {
+    border-bottom: none;
+}
+
+/* Order Row Styling */
+#order-info tbody tr {
+    transition: all 0.3s;
+}
+
+#order-info tbody tr:hover {
+    background: #fafafa;
+}
+
+/* Empty State */
+#order-info tbody tr td[colspan] {
+    padding: 60px 20px;
+    text-align: center;
+    color: #999;
+}
+
+/* Status Badge */
+.order-status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.order-status.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.order-status.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.order-status.cancelled {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+/* ============ Responsive ============ */
+@media (max-width: 1200px) {
+    .container {
+        margin: 60px 30px 40px;
+        padding: 30px;
+    }
+}
+
+@media (max-width: 991px) {
+    .container h1 {
+        font-size: 28px;
+        margin-bottom: 40px;
+    }
+
+    .container h2 {
+        font-size: 20px;
+    }
+
+    #order-info table {
+        font-size: 14px;
+    }
+
+    .container th,
+    .container td {
+        padding: 14px 16px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 40px 20px 30px;
+        padding: 25px;
+    }
+
+    .container h1 {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    .container h2 {
+        font-size: 18px;
+        margin-bottom: 20px;
+    }
+
+    /* User Info - Stack Layout */
+    #user-info table,
+    #user-info tbody,
+    #user-info tr,
+    #user-info th,
+    #user-info td {
+        display: block;
+        width: 100%;
+    }
+
+    #user-info th {
+        text-align: left;
+        padding-bottom: 8px;
+        border-bottom: none;
+    }
+
+    #user-info td {
+        padding-top: 0;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    /* Order Info - Horizontal Scroll */
+    #order-info {
+        overflow-x: auto;
+    }
+
+    #order-info table {
+        min-width: 800px;
+    }
+
+    .container th,
+    .container td {
+        padding: 12px 10px;
+        font-size: 13px;
+    }
+
+    #order-info thead th {
+        padding: 14px 10px;
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        margin: 30px 15px 20px;
+        padding: 20px;
+    }
+
+    .container h1 {
+        font-size: 20px;
+        margin-bottom: 25px;
+    }
+
+    .container h2 {
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    .container th,
+    .container td {
+        padding: 10px 8px;
+        font-size: 12px;
+    }
+
+    .order-items th,
+    .order-items td {
+        padding: 8px 6px;
+        font-size: 12px;
+    }
+}
+
+/* ============ Print Styles ============ */
+@media print {
+    .container {
+        box-shadow: none;
+        margin: 0;
+        padding: 20px;
+    }
+
+    .container h1 {
+        border-bottom: 2px solid #000;
+    }
+
+    #order-info tbody tr:hover {
+        background: none;
+    }
+}
+
+/* ============ Additional Utilities ============ */
+
+/* Loading State */
+.loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.loading::after {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f0f0f0;
+    border-top-color: #333;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 80px 20px;
+    color: #999;
+}
+
+.empty-state h3 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.empty-state p {
+    font-size: 14px;
+}
+
+/* Action Buttons (if needed) */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.action-buttons button {
+    padding: 8px 16px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    background: #fff;
+    color: #333;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.action-buttons button:hover {
+    background: #333;
+    color: #fff;
+    border-color: #333;
+}
+
+/* Highlight Row */
+tr.highlight {
+    background: #fffbea !important;
+}
+
+/* Total Amount Emphasis */
+.total-amount {
+    font-weight: 700;
+    color: #e74c3c;
+    font-size: 16px;
+}
