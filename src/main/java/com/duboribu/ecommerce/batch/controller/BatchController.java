@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -23,10 +24,13 @@ public class BatchController {
     private final Job bookCrawlJob;
 
     @GetMapping("/crawl-books")
-    public ResponseEntity<DefaultResponse<String>> runCrawlJob() {
+    public ResponseEntity<DefaultResponse<String>> runCrawlJob(
+            @RequestParam(value = "page", defaultValue = "1") int page
+    ) {
         try {
             JobParameters params = new JobParametersBuilder()
                     .addLong("time", System.currentTimeMillis())
+                    .addString("page", String.valueOf(page))
                     .toJobParameters();
 
             jobLauncher.run(bookCrawlJob, params);
