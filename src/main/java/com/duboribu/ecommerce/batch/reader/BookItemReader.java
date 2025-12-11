@@ -70,7 +70,7 @@ public class BookItemReader implements ItemReader<CrawledBookDto> {
                 log.info("카테고리 크롤링 시작: {} (코드: {}, 페이지: {})", categoryName, categoryCode, page);
                 
                 // URL 구성: https://store.kyobobook.co.kr/bestseller/online/daily/domestic/01?page=1
-                String url = BASE_URL + "&" + categoryCode;
+                String url = BASE_URL + "&CID=" + categoryCode;
                 log.info("크롤링 URL: {}", url);
                 
                 Document doc = Jsoup.connect(url)
