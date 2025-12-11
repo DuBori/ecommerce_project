@@ -21,27 +21,19 @@ import java.util.Map;
 @StepScope
 public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
 
-    // 교보문고 베스트셀러 URL: https://store.kyobobook.co.kr/bestseller/online/daily/domestic/{categoryCode}?page={page}
-    private static final String BASE_URL = "https://store.kyobobook.co.kr/bestseller/online/daily/domestic";
+    // 알라딘으로 변경
+    private static final String BASE_URL = "https://www.aladin.co.kr/shop/common/wbest.aspx?BestType=Bestseller";
     
-    // 교보문고 카테고리 코드 매핑 (URL 경로 기준)
+    // 알라딘으로 변경
     private static final Map<String, String> CATEGORY_MAP = new LinkedHashMap<>();
     
     static {
-        CATEGORY_MAP.put("소설", "01");
-        CATEGORY_MAP.put("시/에세이", "02");
-        CATEGORY_MAP.put("인문", "03");
-        CATEGORY_MAP.put("가정/육아", "04");
-        CATEGORY_MAP.put("요리", "05");
-        CATEGORY_MAP.put("건강", "06");
-        CATEGORY_MAP.put("취미/실용/스포츠", "07");
-        CATEGORY_MAP.put("경제/경영", "08");
-        CATEGORY_MAP.put("자기계발", "09");
-        CATEGORY_MAP.put("정치/사회", "10");
-        CATEGORY_MAP.put("역사/문화", "11");
-        CATEGORY_MAP.put("종교", "12");
-        CATEGORY_MAP.put("예술/대중문화", "13");
-        CATEGORY_MAP.put("컴퓨터/IT", "19");
+        CATEGORY_MAP.put("건강", "55890");
+        CATEGORY_MAP.put("경제경영", "170");
+        CATEGORY_MAP.put("고전", "2105");
+        CATEGORY_MAP.put("과학", "987");
+        CATEGORY_MAP.put("달력/기타", "4395");
+        CATEGORY_MAP.put("대학교재/전문서적", "8257");
     }
 
     @Value("#{jobParameters['page'] ?: '1'}")
@@ -78,7 +70,7 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
                 log.info("카테고리 크롤링 시작: {} (코드: {}, 페이지: {})", categoryName, categoryCode, page);
                 
                 // URL 구성: https://store.kyobobook.co.kr/bestseller/online/daily/domestic/01?page=1
-                String url = BASE_URL + "/" + categoryCode + "?page=" + page;
+                String url = BASE_URL + "&" + categoryCode;
                 log.info("크롤링 URL: {}", url);
                 
                 Document doc = Jsoup.connect(url)
@@ -90,7 +82,7 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
                         .get();
 
                 // 상품 리스트: div.flex > div.flex.items-top (각 책 아이템)
-                Elements bookElements = doc.select("div.flex.items-top.justify-start");
+                Elements bookElements = doc.select("div.ss_book_box");
                 
                 log.info("발견된 책 요소 수: {}", bookElements.size());
                 
@@ -120,40 +112,31 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
     private CrawledBookDto parseBookElement(Element book, String categoryCode, String categoryName) {
         try {
             // 제목: a.prod_link.line-clamp-2.font-medium
-            String title = book.select("a.prod_link.line-clamp-2.font-medium").text();
-            if (title.isEmpty()) {
-                title = book.select("a.prod_link").text();
-            }
+            String title = book.select("a.bo3").text();
             
             // 저자/출판사 정보: div.line-clamp-2.flex 안의 텍스트 (최서영 · 북로망스 · 2025.10.01)
-            String authorPublisherInfo = book.select("div.line-clamp-2.flex.overflow-hidden").text();
+            String authorPublisherInfo = book.select("div.ss_book_list ul li a").text();
             String author = "";
             String publisher = "";
             
             if (!authorPublisherInfo.isEmpty()) {
-                // " · " 또는 "·"로 분리
-                String[] parts = authorPublisherInfo.split("\\s*·\\s*");
-                if (parts.length >= 1) {
-                    author = parts[0].trim();
+                Elements selectA = book.select("div.ss_book_list ul li a");
+                int lastIndex = selectA.size() - 1;
+
+                List<String> authors = new ArrayList<>();
+                for (int i = 0; i < lastIndex; i++) {
+                    authors.add(selectA.get(i).text());
                 }
-                if (parts.length >= 2) {
-                    publisher = parts[1].trim();
-                }
+                author = String.join(", ", authors);
+                publisher = selectA.get(lastIndex).text();
             }
             
             // 가격: span.font-bold 다음의 숫자 (17,550)
             // 할인가 우선, 없으면 정가
             String priceText = "";
-            Element priceElement = book.selectFirst("span.inline-block.align-top.fz-16 span.font-bold");
+            Element priceElement = book.selectFirst("span.ss_p2");
             if (priceElement != null) {
                 priceText = priceElement.text();
-            }
-            if (priceText.isEmpty()) {
-                // 정가 가져오기
-                Element originalPrice = book.selectFirst("s.text-gray-700");
-                if (originalPrice != null) {
-                    priceText = originalPrice.text();
-                }
             }
             
             // 가격 숫자만 추출
@@ -165,18 +148,8 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
                 }
             }
             
-            // 이미지 URL: img 태그의 src
-            /*String imageUrl = "";
-            Element imgElement = book.selectFirst("a.prod_link img");
-            if (imgElement != null) {
-                imageUrl = imgElement.attr("src");
-                if (imageUrl.isEmpty()) {
-                    imageUrl = imgElement.attr("data-src");
-                }
-            }*/
-            
             // 책 소개: p.prod_introduction
-            String introduction = book.select("p.prod_introduction").text();
+            String introduction = book.select("span.ss_f_g2").text();
 
             // 빈 제목이면 건너뜀
             if (title.isEmpty()) {
