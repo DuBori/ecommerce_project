@@ -38,7 +38,7 @@ public class BookCrawlBatchConfig {
                               ItemProcessor<CrawledBookDto, Book> processor,
                               ItemWriter<Book> writer) {
         return new StepBuilder("bookCrawlStep", jobRepository)
-                .<CrawledBookDto, Book>chunk(5, transactionManager)
+                .<CrawledBookDto, Book>chunk(1, transactionManager)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
