@@ -62,9 +62,9 @@ public class BookItemProcessor implements ItemProcessor<CrawledBookDto, Book> {
         }
 
         // 책 판매 고정
-        Category book = categoryJpaRepository.findByCode("book").get();
-        // 신규 카테고리면 생성
-        return categoryJpaRepository.save(new Category(categoryName, categoryCode, "Y", book));
+        Category category = new Category(categoryName, categoryCode, "Y", null);
+        Category parentNewCate = categoryJpaRepository.save(category);
+        return categoryJpaRepository.save(new Category(categoryName, categoryCode, "Y", parentNewCate));
     }
 }
 
