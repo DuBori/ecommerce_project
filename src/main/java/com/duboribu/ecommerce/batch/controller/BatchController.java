@@ -35,7 +35,7 @@ public class BatchController {
 
             jobLauncher.run(bookCrawlJob, params);
             
-            log.info("교보문고 크롤링 배치 실행 시작");
+            log.info("크롤링 배치 실행 시작");
             return new ResponseEntity<>(new DefaultResponse<>("배치 실행 시작"), HttpStatus.OK);
 
         } catch (Exception e) {

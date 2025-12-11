@@ -19,7 +19,7 @@ import java.util.Map;
 @Slf4j
 @Component
 @StepScope
-public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
+public class BookItemReader implements ItemReader<CrawledBookDto> {
 
     // 알라딘으로 변경
     private static final String BASE_URL = "https://www.aladin.co.kr/shop/common/wbest.aspx?BestType=Bestseller";
