@@ -35,6 +35,13 @@ public class Category extends BaseEntity implements Serializable {
         state = request.getState();
     }
 
+    public Category(String name, String code, String state, Category parent) {
+        this.name = name;
+        this.code = code;
+        this.state = state;
+        this.parent = parent;
+    }
+
     public void addNewCategory(Category save) {
         childList.add(save);
         save.parent = this;
