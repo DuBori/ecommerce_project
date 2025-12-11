@@ -89,10 +89,10 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
                         .timeout(15000)
                         .get();
 
-                // 상품 리스트 파싱 (실제 HTML 구조에 맞게 선택자 수정 필요)
-                Elements bookElements = doc.select("li[class*=prod], div[class*=prod], ul[class*=list] > li");
+                // 상품 리스트: div.flex > div.flex.items-top (각 책 아이템)
+                Elements bookElements = doc.select("div.flex.items-top.justify-start");
                 
-                log.info("발견된 요소 수: {}", bookElements.size());
+                log.info("발견된 책 요소 수: {}", bookElements.size());
                 
                 int count = 0;
                 for (Element book : bookElements) {
@@ -102,7 +102,7 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
                     if (dto != null && dto.getTitle() != null && !dto.getTitle().isEmpty()) {
                         allBooks.add(dto);
                         count++;
-                        log.info("책 파싱 완료: {} - {}", categoryName, dto.getTitle());
+                        log.info("책 파싱 완료: {} - {} ({}원)", categoryName, dto.getTitle(), dto.getPrice());
                     }
                 }
 
@@ -119,54 +119,64 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
 
     private CrawledBookDto parseBookElement(Element book, String categoryCode, String categoryName) {
         try {
-            // 제목 (여러 선택자 시도)
-            String title = selectText(book, 
-                "span.prod_name", 
-                "a.prod_info span.title",
-                "[class*=name]",
-                "[class*=title]",
-                "a[class*=prod] span"
-            );
+            // 제목: a.prod_link.line-clamp-2.font-medium
+            String title = book.select("a.prod_link.line-clamp-2.font-medium").text();
+            if (title.isEmpty()) {
+                title = book.select("a.prod_link").text();
+            }
             
-            // 저자
-            String author = selectText(book,
-                "span.author",
-                "span.prod_author",
-                "[class*=author]",
-                "span.info_author"
-            );
+            // 저자/출판사 정보: div.line-clamp-2.flex 안의 텍스트 (최서영 · 북로망스 · 2025.10.01)
+            String authorPublisherInfo = book.select("div.line-clamp-2.flex.overflow-hidden").text();
+            String author = "";
+            String publisher = "";
             
-            // 출판사
-            String publisher = selectText(book,
-                "span.publisher",
-                "span.prod_publish",
-                "[class*=publish]",
-                "span.info_publish"
-            );
+            if (!authorPublisherInfo.isEmpty()) {
+                // " · " 또는 "·"로 분리
+                String[] parts = authorPublisherInfo.split("\\s*·\\s*");
+                if (parts.length >= 1) {
+                    author = parts[0].trim();
+                }
+                if (parts.length >= 2) {
+                    publisher = parts[1].trim();
+                }
+            }
             
-            // 가격
-            String priceText = selectText(book,
-                "span.price",
-                "span.sale_price",
-                "span.prod_price",
-                "[class*=price]"
-            );
-            priceText = priceText.replaceAll("[^0-9]", "");
+            // 가격: span.font-bold 다음의 숫자 (17,550)
+            // 할인가 우선, 없으면 정가
+            String priceText = "";
+            Element priceElement = book.selectFirst("span.inline-block.align-top.fz-16 span.font-bold");
+            if (priceElement != null) {
+                priceText = priceElement.text();
+            }
+            if (priceText.isEmpty()) {
+                // 정가 가져오기
+                Element originalPrice = book.selectFirst("s.text-gray-700");
+                if (originalPrice != null) {
+                    priceText = originalPrice.text();
+                }
+            }
+            
+            // 가격 숫자만 추출
             int price = 0;
             if (!priceText.isEmpty()) {
-                // 첫 번째 숫자 그룹만 추출 (정가와 할인가가 붙어있는 경우)
-                String firstNumber = priceText.length() > 10 ? priceText.substring(0, priceText.length() / 2) : priceText;
-                price = Integer.parseInt(firstNumber);
+                String numericPrice = priceText.replaceAll("[^0-9]", "");
+                if (!numericPrice.isEmpty()) {
+                    price = Integer.parseInt(numericPrice);
+                }
             }
             
-            // 이미지
-           /* String imageUrl = book.select("img").attr("src");
-            if (imageUrl.isEmpty()) {
-                imageUrl = book.select("img").attr("data-src");
-            }
-            if (imageUrl.isEmpty()) {
-                imageUrl = book.select("img").attr("data-lazy-src");
+            // 이미지 URL: img 태그의 src
+            /*String imageUrl = "";
+            Element imgElement = book.selectFirst("a.prod_link img");
+            if (imgElement != null) {
+                imageUrl = imgElement.attr("src");
+                if (imageUrl.isEmpty()) {
+                    imageUrl = imgElement.attr("data-src");
+                }
             }*/
+            
+            // 책 소개: p.prod_introduction
+            String introduction = book.select("p.prod_introduction").text();
 
             // 빈 제목이면 건너뜀
             if (title.isEmpty()) {
@@ -178,29 +188,17 @@ public class KyoboBookItemReader implements ItemReader<CrawledBookDto> {
                     .author(truncate(author, 50))
                     .publisher(truncate(publisher, 50))
                     .price(price)
+                    /*.filePath(imageUrl)*/
                     .categoryCode(categoryCode)
                     .categoryName(categoryName)
-                    .comment(title + " - " + author)
-                    .information("출판사: " + publisher)
+                    .comment(truncate(introduction, 500))
+                    .information("저자: " + author + ", 출판사: " + publisher)
                     .build();
 
         } catch (Exception e) {
             log.warn("책 파싱 실패: {}", e.getMessage());
             return null;
         }
-    }
-    
-    /**
-     * 여러 선택자를 시도하여 첫 번째로 매칭되는 텍스트 반환
-     */
-    private String selectText(Element element, String... selectors) {
-        for (String selector : selectors) {
-            Element found = element.selectFirst(selector);
-            if (found != null && !found.text().trim().isEmpty()) {
-                return found.text().trim();
-            }
-        }
-        return "";
     }
     
     /**
