@@ -1,4 +1,4 @@
-package com.duboribu.ecommerce.batch.config;
+package com.duboribu.ecommerce.batch.job;
 
 import com.duboribu.ecommerce.batch.dto.CrawledBookDto;
 import com.duboribu.ecommerce.entity.Book;
@@ -17,10 +17,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.PlatformTransactionManager;
 
+/**
+ * 책 크롤링 배치 Job 설정
+ * - Job 이름: bookCrawlJob
+ * - 알라딘에서 카테고리별 베스트셀러 크롤링
+ */
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class BookCrawlBatchConfig {
+public class BookCrawlJobConfig {
 
     private final JobRepository jobRepository;
     private final PlatformTransactionManager transactionManager;
@@ -34,17 +39,18 @@ public class BookCrawlBatchConfig {
     }
 
     @Bean
-    public Step bookCrawlStep(ItemReader<CrawledBookDto> reader,
-                              ItemProcessor<CrawledBookDto, Book> processor,
-                              ItemWriter<Book> writer) {
+    public Step bookCrawlStep(ItemReader<CrawledBookDto> bookItemReader,
+                              ItemProcessor<CrawledBookDto, Book> bookItemProcessor,
+                              ItemWriter<Book> bookItemWriter) {
         return new StepBuilder("bookCrawlStep", jobRepository)
-                .<CrawledBookDto, Book>chunk(1, transactionManager)
-                .reader(reader)
-                .processor(processor)
-                .writer(writer)
+                .<CrawledBookDto, Book>chunk(5, transactionManager)
+                .reader(bookItemReader)
+                .processor(bookItemProcessor)
+                .writer(bookItemWriter)
                 .faultTolerant()
                 .skip(Exception.class)
                 .skipLimit(10)
                 .build();
     }
 }
+
