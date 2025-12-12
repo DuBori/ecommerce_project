@@ -24,4 +24,12 @@ public class FoItemResponse {
         this.price = price;
         this.filePath = filePath;
     }
+
+    public String getName() {
+        if (name.length() > 10) {
+            name = name.substring(0, 5) + "..";
+        }
+
+        return name;
+    }
 }

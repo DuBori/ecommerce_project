@@ -18,10 +18,13 @@ public class Member extends BaseEntity implements Serializable {
     @Id
     @Column(name = "member_id")
     private String id;
+
     @Column
     private String pwd;
+
     @Column
     private String name;
+
     @Enumerated(EnumType.STRING)
     private State state;
 
