@@ -30,27 +30,38 @@ public class BookItemWriter implements ItemWriter<Book> {
         
         for (Book book : books) {
             try {
-                Optional<Book> byTitle = bookJpaRepository.findByTitle(book.getTitle());
+                // 기존 책 확인
+                Optional<Book> existingBook = bookJpaRepository.findByTitle(book.getTitle());
 
-                // 기존 책이 아닐경우만 s3 업로드
-                // 기존 책인 경우 일단 업데이트 처리하지않는 배치
-                if (!byTitle.isPresent()) {
-                    // src s3 저장
-                    String imageS3Url = s3Uploader.uploadToS3(s3Uploader.downloadImage(book.getFilePath()), "image");
-                    book.updatePath(imageS3Url);
+                // 기존 책이면 스킵 (저장 안 함)
+                if (existingBook.isPresent()) {
+                    log.info("기존 책 존재 - 스킵: {}", book.getTitle());
+                    continue;
                 }
                 
-                // 저장
+                // 신규 책만 S3 업로드
+                try {
+                    String imageS3Url = s3Uploader.uploadToS3(
+                            s3Uploader.downloadImage(book.getFilePath()), 
+                            "image"
+                    );
+                    book.updatePath(imageS3Url);
+                    log.info("S3 업로드 완료: {}", book.getTitle());
+                } catch (Exception e) {
+                    log.warn("S3 업로드 실패 - 원본 URL 유지: {} - {}", book.getTitle(), e.getMessage());
+                }
+
+                // 신규 책 저장
                 Book savedBook = bookJpaRepository.save(book);
                 
-                // Stock이 없으면 기본 재고 생성
+                // Stock 생성
                 if (savedBook.getStock() == null) {
                     Stock stock = new Stock(savedBook, 100);
                     stockJpaRepository.save(stock);
                     log.info("재고 생성: {} - 100개", savedBook.getTitle());
                 }
                 
-                log.info("책 저장 완료: {} (ID: {})", savedBook.getTitle(), savedBook.getId());
+                log.info("신규 책 저장 완료: {} (ID: {})", savedBook.getTitle(), savedBook.getId());
                 
             } catch (Exception e) {
                 log.error("책 저장 실패: {} - {}", book.getTitle(), e.getMessage());
@@ -58,4 +69,3 @@ public class BookItemWriter implements ItemWriter<Book> {
         }
     }
 }
-
