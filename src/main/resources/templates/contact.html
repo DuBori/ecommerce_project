@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - DUBORIBU</title>
+    <style>
+        /* 기본 스타일 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #fff;
+        }
+
+        /* Preloader 스타일 */
+        #preloder {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 999999;
+            background: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-top-color: #333;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Contact 섹션 */
+        .contact-section {
+            padding: 50px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #121212;
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+            background-color: #222;
+            border-radius: 8px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #00bcd4;
+            margin-bottom: 20px;
+        }
+
+        /* 폼 스타일 */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            color: #ddd;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            background-color: #444;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        textarea {
+            height: 150px;
+        }
+
+        button[type="submit"] {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #00bcd4;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #007c91;
+        }
+
+        /* 홈 버튼 */
+        .home-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            font-size: 1.1em;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .home-btn:hover {
+            background-color: #555;
+        }
+
+        /* 폼 및 버튼 호버 효과 */
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00bcd4;
+        }
+
+        button[type="submit"]:focus {
+            outline: none;
+            border-color: #007c91;
+        }
+    </style>
+</head>
+<body onload="hideLoader()">
+<!-- Preloader -->
+<div id="preloder">
+    <div class="loader"></div>
+</div>
+
+<!-- Contact 섹션 -->
+<section class="contact-section">
+    <div class="container">
+        <h2>Contact Me</h2>
+        <form id="contactForm" method="POST" enctype="application/json">
+            <div class="form-group">
+                <label for="name">작성자 이름</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">작성자 이메일</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            <button type="submit" class="submit-btn">메일 보내기</button>
+        </form>
+        <a href="/" class="home-btn">돌아가기</a>
+    </div>
+</section>
+
+<script>
+    // Loader 숨기기
+    function hideLoader() {
+        document.getElementById('preloder').style.display = 'none';
+    }
+
+    // 폼 제출 처리
+    document.getElementById("contactForm").addEventListener("submit", function(e) {
+        e.preventDefault(); // 기본 제출 동작 방지
+        const formData = new FormData(e.target); // 폼 데이터 수집
+        const data = Object.fromEntries(formData); // FormData를 객체로 변환
+
+        fetch("/contact", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data) // JSON 형식으로 서버에 전송
+        })
+        .then(data => {
+            alert("전송 완료");
+            location.href = '/'; // 전송 후 홈페이지로 이동
+        });
+    });
+</script>
+</body>
+</html>
