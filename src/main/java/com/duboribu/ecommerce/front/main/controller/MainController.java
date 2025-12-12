@@ -29,7 +29,7 @@ public class MainController {
 
     @GetMapping("")
     public String main(SearchItemRequest request, Model model) {
-        model.addAttribute("normalList", foItemService.normalList(request, null));
+        model.addAttribute("normalList", foItemService.normalList(new SearchItemRequest(0, 5), null));
         model.addAttribute("mainCategoryList", foCategoryService.list("book"));
         return "front/index";
     }
