@@ -62,7 +62,7 @@
                         <button href="/member/like" class="heart-icon"><span class="icon_heart_alt"></span></button>
                         <ul>
                             <li><b>판매여부 : </b> <span th:text="${item.state == 'Y' and item.stockCount gt 0 ? '판매중' : '일시품절'}"></span></li>
-                            <!--<li><b>배달 : </b> <span> <samp>&lt;!&ndash;Free pickup today&ndash;&gt;</samp></span></li>-->
+                            <li><b>금액 : </b> <span th:text="${item.price} + '원'"></span></li>
                             <li><b>중량</b> <span th:text="${item.weight}"></span></li>
                             <li><b>재고</b> <span th:text="${item.stockCount}"></span></li>
                             <li><b>Share on</b>
