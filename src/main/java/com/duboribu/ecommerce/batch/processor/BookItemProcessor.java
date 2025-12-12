@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Slf4j
-@Component
+@Component("bookItemProcessor")
 @RequiredArgsConstructor
 public class BookItemProcessor implements ItemProcessor<CrawledBookDto, Book> {
 
