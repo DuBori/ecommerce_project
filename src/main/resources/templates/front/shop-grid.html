@@ -105,7 +105,7 @@
                         <h2>카테고리 상품</h2>
                     </div>
                     <div class="row">
-                        <div class="col-lg-4 col-md-6 col-sm-6" th:each="categoryItem : ${categoryItems}" th:href="@{/ecommerce/item/view/{id}(id=${categoryItem.id})}">
+                        <div class="col-lg-4 col-md-6 col-sm-6" th:each="categoryItem : ${categoryItems}">
                             <div class="product__item">
                                 <div class="product__item__pic"
                                      th:style="'background-image: url(' + ${categoryItem.filePath} + ');'"
