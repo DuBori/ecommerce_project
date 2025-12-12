@@ -67,4 +67,8 @@ public abstract class Item extends BaseEntity implements Serializable {
         this.information = information;
         this.weight = weight;
     }
+
+    public void updatePath(String imageS3Url) {
+        this.filePath = imageS3Url;
+    }
 }
