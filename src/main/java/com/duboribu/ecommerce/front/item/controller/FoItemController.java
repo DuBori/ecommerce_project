@@ -23,7 +23,7 @@ public class FoItemController {
     public String list(SearchItemRequest request, Model model) {
         model.addAttribute("dcList", foItemService.dcList(request, request.getCategory()));
         model.addAttribute("categoryItems", foItemService.normalList(request, null));
-        model.addAttribute("newItems", foItemService.normalList(new SearchItemRequest(0, 6), null));
+        model.addAttribute("newItems", foItemService.normalList(new SearchItemRequest(0, 5), null));
         model.addAttribute("categoryList", foCategoryService.list("book"));
         return "front/shop-grid";
     }
