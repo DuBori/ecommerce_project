@@ -36,6 +36,7 @@ public class FoQnaController {
             return "front/qna/list";
         }
         model.addAttribute("list", foNoticeService.list(PageRequest.of(0, 20), new NoticeRequest(userId, NoticeType.QNA)));
+        model.addAttribute("userId", "Y");
         return "front/qna/list";
     }
 

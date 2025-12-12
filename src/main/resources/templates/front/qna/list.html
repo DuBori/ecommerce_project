@@ -9,18 +9,18 @@
     <div class="row">
         <div class="col-lg">
             <div class="card border-0">
-                <div class="card-header bg-white border-0 p-0">
+                <!--<div class="card-header bg-white border-0 p-0">
                     <form name="search_form" method="get" class="bf-search">
                         <i class="fa fa-search"></i>
                         <input type="text" name="keyword" placeholder="검색어를 입력하세요" />
                         <button type="submit" class="btn btn-dark">검색</button>
                     </form>
-<!--
+                &lt;!&ndash;
                     <ul class="bf-category">
                         <li><a href="board_list.do?bbs_id=${param.bbs_id}">전체보기</a></li>
                         <li><a href="board_list.do?bbs_id=${param.bbs_id}&field=${param.field}&keyword=${param.keyword}&category=${cateList.getBcate_no()}">이름</a></li>
-                    </ul>-->
-                </div>
+                    </ul>&ndash;&gt;
+                </div>-->
 
                 <div class="card-body p-0">
                     <ul class="bf-list" th:if="${not #lists.isEmpty(list)}">
@@ -31,7 +31,7 @@
                                 <div class="bflc-body" th:text="${notice.detail}">
 
                                 </div>
-                                <div class="bflc-btn">
+                                <div class="bflc-btn" th:if="${not empty userId}">
                                     <a th:href="@{/ecommerce/qna/view/{id}(id=${notice.id})}" class="btn btn-outline-success btn-sm m-1">자세히 보기</a>
                                 </div>
                             </div>
