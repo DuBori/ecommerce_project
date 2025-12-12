@@ -52,8 +52,7 @@ CI/CD는 GitHub Actions 기반 자동화 배포를 구성했고, 구조적 리�
 
 ## 🧠 기술적 핵심 구현 포인트
 
-- **QueryDSL 동적 복합 검색**  
-  `BooleanBuilder` + `null safe where절` 조합으로 상품명, 카테고리, 가격범위 동시 검색을 유연하게 처리함  
+- **QueryDSL 복잡성 커스텀 쿼리 처리**   
   → 쿼리 가독성과 재사용성 개선
 
 - **JPA 성능 최적화 (N+1 해결)**  
@@ -69,9 +68,6 @@ CI/CD는 GitHub Actions 기반 자동화 배포를 구성했고, 구조적 리�
   → 장애 추적 가능성 확보, 코드 일관성 유지
 
 ---
-
-QueryDSL
-복합 검색 기능 (상품명 + 카테고리 + 가격 범위)을 BooleanBuilder와 where절 null 무시 방식으로 구현하여 가독성과 재사용성 향상.
 
 N+1 문제 해결
 JPA에서 fetch join과 @BatchSize를 통해 쿼리 수 감소 및 성능 최적화.
