@@ -1,6 +1,8 @@
 package com.duboribu.ecommerce.batch.reader;
 
 import com.duboribu.ecommerce.batch.dto.CrawledBookDto;
+import com.duboribu.ecommerce.s3.service.S3Uploader;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,6 +21,7 @@ import java.util.Map;
 @Slf4j
 @Component("bookItemReader")
 @StepScope
+@RequiredArgsConstructor
 public class BookItemReader implements ItemReader<CrawledBookDto> {
 
     // 알라딘으로 변경
@@ -39,6 +42,7 @@ public class BookItemReader implements ItemReader<CrawledBookDto> {
     @Value("#{jobParameters['page'] ?: '1'}")
     private String page;
 
+    private final S3Uploader s3Uploader;
     private List<CrawledBookDto> crawledBooks;
     private int currentIndex = 0;
 
@@ -138,7 +142,13 @@ public class BookItemReader implements ItemReader<CrawledBookDto> {
             if (priceElement != null) {
                 priceText = priceElement.text();
             }
-            
+
+            // 이미지 추출
+            Elements imgElements = book.select("div.flipcover_in img");
+            Element element = imgElements.get(1);
+            String src = element.attr("src");
+
+
             // 가격 숫자만 추출
             int price = 0;
             if (!priceText.isEmpty()) {
@@ -161,7 +171,7 @@ public class BookItemReader implements ItemReader<CrawledBookDto> {
                     .author(truncate(author, 50))
                     .publisher(truncate(publisher, 50))
                     .price(price)
-                    /*.filePath(imageUrl)*/
+                    .filePath(src)
                     .categoryCode(categoryCode)
                     .categoryName(categoryName)
                     .comment(truncate(introduction, 500))
