@@ -5,6 +5,7 @@
 /* ============ 기본 레이아웃 강제 적용 ============ */
 .product.spad .row {
     display: flex !important;
+    flex-direction: row !important;
     flex-wrap: wrap !important;
     gap: 20px !important;
     margin: 0 !important;
@@ -247,6 +248,9 @@
 @media (max-width: 991px) {
     /* Product Grid - 2개씩 */
     .product.spad .row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
         gap: 15px !important;
     }
 
@@ -262,7 +266,7 @@
     .col-lg-4 .product__item .product__item__pic,
     .col-md-6 .product__item .product__item__pic,
     .col-sm-6 .product__item .product__item__pic {
-        padding-top: 110% !important;
+        padding-top: 130% !important;
     }
 
     /* 호버 아이콘 크기 조정 */
@@ -308,6 +312,9 @@
 @media (max-width: 768px) {
     /* Product Grid - 2개씩 유지 */
     .product.spad .row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
         gap: 12px !important;
     }
 
@@ -323,7 +330,7 @@
     .col-lg-4 .product__item .product__item__pic,
     .col-md-6 .product__item .product__item__pic,
     .col-sm-6 .product__item .product__item__pic {
-        padding-top: 120% !important;
+        padding-top: 140% !important;
     }
 
     /* Product Text */
@@ -353,16 +360,19 @@
 
 /* ============ 작은 모바일 최적화 (576px 이하) ============ */
 @media (max-width: 576px) {
-    /* Product Grid - 1개씩 */
+    /* Product Grid - 2개씩 유지 (1개가 아니라!) */
     .product.spad .row {
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: wrap !important;
         gap: 10px !important;
     }
 
     .product.spad .row .col-lg-4,
     .product.spad .row .col-md-6,
     .product.spad .row .col-sm-6 {
-        flex: 0 0 100% !important;
-        max-width: 100% !important;
+        flex: 0 0 calc(50% - 5px) !important;
+        max-width: calc(50% - 5px) !important;
         margin-bottom: 12px !important;
     }
 
@@ -370,7 +380,7 @@
     .col-lg-4 .product__item .product__item__pic,
     .col-md-6 .product__item .product__item__pic,
     .col-sm-6 .product__item .product__item__pic {
-        padding-top: 115% !important;
+        padding-top: 145% !important;
     }
 
     /* Product Text */
@@ -424,6 +434,22 @@
 
     .product.spad {
         padding: 30px 0 !important;
+    }
+}
+
+/* ============ 초소형 모바일 (400px 이하) - 1개씩 ============ */
+@media (max-width: 400px) {
+    .product.spad .row .col-lg-4,
+    .product.spad .row .col-md-6,
+    .product.spad .row .col-sm-6 {
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+
+    .col-lg-4 .product__item .product__item__pic,
+    .col-md-6 .product__item .product__item__pic,
+    .col-sm-6 .product__item .product__item__pic {
+        padding-top: 120% !important;
     }
 }
 
