@@ -253,12 +253,28 @@
         background: #fff !important;
         border: 1px solid #f0f0f0 !important;
         border-radius: 8px !important;
-        padding: 12px 15px !important;
+        padding: 12px 0 12px 15px !important;
         margin-bottom: 15px !important;
         overflow-x: auto !important;
         overflow-y: hidden !important;
         -webkit-overflow-scrolling: touch !important;
         display: block !important;
+        position: relative !important;
+    }
+
+    /* 오른쪽 페이드 효과 */
+    .col-lg-3 .sidebar .sidebar__item:first-child::after,
+    .sidebar .sidebar__item:first-child::after,
+    .sidebar__item:first-child::after {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        right: 0 !important;
+        width: 40px !important;
+        height: 100% !important;
+        background: linear-gradient(to right, transparent, #fff) !important;
+        pointer-events: none !important;
+        z-index: 1 !important;
     }
 
     .col-lg-3 .sidebar .sidebar__item:first-child h4,
@@ -268,6 +284,7 @@
         font-weight: 600 !important;
         margin-bottom: 10px !important;
         padding-bottom: 0 !important;
+        padding-right: 15px !important;
         border-bottom: none !important;
         white-space: nowrap !important;
         color: #333 !important;
@@ -282,7 +299,7 @@
         flex-wrap: nowrap !important;
         gap: 6px !important;
         white-space: nowrap !important;
-        padding: 0 !important;
+        padding: 0 45px 0 0 !important;
         margin: 0 !important;
         list-style: none !important;
         overflow-x: visible !important;
