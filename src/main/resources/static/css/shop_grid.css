@@ -246,6 +246,85 @@
 
 /* ============ 모바일 최적화 (991px 이하) ============ */
 @media (max-width: 991px) {
+    /* ===== 사이드바를 상단으로 이동 ===== */
+    .product .row {
+        flex-direction: column !important;
+    }
+
+    /* 카테고리 사이드바 */
+    .col-lg-3 {
+        width: 100% !important;
+        max-width: 100% !important;
+        order: -1 !important; /* 맨 위로 */
+        margin-bottom: 30px !important;
+    }
+
+    .sidebar {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 20px !important;
+    }
+
+    /* 카테고리 아이템 - 가로 스크롤 */
+    .sidebar__item:first-child {
+        background: #fff !important;
+        border: 1px solid #f0f0f0 !important;
+        border-radius: 8px !important;
+        padding: 20px !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+
+    .sidebar__item:first-child h4 {
+        font-size: 16px !important;
+        margin-bottom: 15px !important;
+        white-space: nowrap !important;
+    }
+
+    .sidebar__item:first-child ul {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 10px !important;
+        white-space: nowrap !important;
+        padding-bottom: 5px !important;
+    }
+
+    .sidebar__item:first-child ul li {
+        flex-shrink: 0 !important;
+    }
+
+    .sidebar__item:first-child ul li a {
+        display: inline-block !important;
+        padding: 10px 20px !important;
+        background: #f8f9fa !important;
+        border-radius: 20px !important;
+        color: #333 !important;
+        font-size: 14px !important;
+        transition: all 0.3s !important;
+        border: 1px solid #e0e0e0 !important;
+    }
+
+    .sidebar__item:first-child ul li a:hover,
+    .sidebar__item:first-child ul li a.active {
+        background: #333 !important;
+        color: #fff !important;
+        border-color: #333 !important;
+        padding-left: 20px !important;
+    }
+
+    /* 신규 제품 - 가로 스크롤 */
+    .sidebar__item:last-child {
+        display: none !important; /* 모바일에서 숨김 */
+    }
+
+    /* 메인 상품 영역 */
+    .col-lg-9 {
+        width: 100% !important;
+        max-width: 100% !important;
+        order: 0 !important;
+    }
+
     /* Product Grid - 2개씩 */
     .product.spad .row {
         display: flex !important;
@@ -266,7 +345,7 @@
     .col-lg-4 .product__item .product__item__pic,
     .col-md-6 .product__item .product__item__pic,
     .col-sm-6 .product__item .product__item__pic {
-        padding-top: 130% !important;
+        padding-top: 135% !important;
     }
 
     /* 호버 아이콘 크기 조정 */
@@ -284,27 +363,12 @@
         height: 240px;
     }
 
-    /* 레이아웃 */
-    .sidebar {
-        width: 100% !important;
-        margin-bottom: 30px !important;
-    }
-
-    .col-lg-9 {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
     .product .container {
-        padding: 0 20px !important;
-    }
-
-    .product .row {
-        margin: 0 !important;
+        padding: 0 15px !important;
     }
 
     .product.spad {
-        padding: 40px 0 !important;
+        padding: 30px 0 !important;
     }
 }
 
@@ -312,9 +376,6 @@
 @media (max-width: 768px) {
     /* Product Grid - 2개씩 유지 */
     .product.spad .row {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
         gap: 12px !important;
     }
 
@@ -335,36 +396,39 @@
 
     /* Product Text */
     .product__item__text {
-        padding: 15px !important;
+        padding: 12px !important;
     }
 
     .product__item__text h6 {
-        font-size: 13px !important;
-        height: 36px !important;
-        margin-bottom: 8px !important;
+        font-size: 12px !important;
+        height: 32px !important;
+        margin-bottom: 6px !important;
     }
 
     .product__item__text h6 a {
-        font-size: 14px !important;
+        font-size: 13px !important;
     }
 
     .product__item__text h5 {
-        font-size: 16px !important;
+        font-size: 15px !important;
     }
 
     /* Discount Item */
     .product__discount__item__pic {
         height: 220px;
     }
+
+    /* 카테고리 버튼 작게 */
+    .sidebar__item:first-child ul li a {
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+    }
 }
 
 /* ============ 작은 모바일 최적화 (576px 이하) ============ */
 @media (max-width: 576px) {
-    /* Product Grid - 2개씩 유지 (1개가 아니라!) */
+    /* Product Grid - 2개씩 유지 */
     .product.spad .row {
-        display: flex !important;
-        flex-direction: row !important;
-        flex-wrap: wrap !important;
         gap: 10px !important;
     }
 
@@ -385,20 +449,20 @@
 
     /* Product Text */
     .product__item__text {
-        padding: 12px !important;
+        padding: 10px !important;
     }
 
     .product__item__text h6 {
-        font-size: 12px !important;
-        height: 32px !important;
+        font-size: 11px !important;
+        height: 30px !important;
     }
 
     .product__item__text h6 a {
-        font-size: 13px !important;
+        font-size: 12px !important;
     }
 
     .product__item__text h5 {
-        font-size: 15px !important;
+        font-size: 14px !important;
     }
 
     /* 호버 아이콘 더 작게 */
@@ -427,13 +491,27 @@
         font-size: 12px;
     }
 
-    /* 컨테이너 */
     .container {
-        padding: 0 15px !important;
+        padding: 0 12px !important;
     }
 
     .product.spad {
-        padding: 30px 0 !important;
+        padding: 25px 0 !important;
+    }
+
+    /* 카테고리 버튼 더 작게 */
+    .sidebar__item:first-child {
+        padding: 15px !important;
+    }
+
+    .sidebar__item:first-child h4 {
+        font-size: 14px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .sidebar__item:first-child ul li a {
+        padding: 7px 14px !important;
+        font-size: 12px !important;
     }
 }
 
@@ -449,7 +527,7 @@
     .col-lg-4 .product__item .product__item__pic,
     .col-md-6 .product__item .product__item__pic,
     .col-sm-6 .product__item .product__item__pic {
-        padding-top: 120% !important;
+        padding-top: 130% !important;
     }
 }
 
