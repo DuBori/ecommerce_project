@@ -247,6 +247,8 @@
 /* ============ 모바일 최적화 (991px 이하) - 카테고리만 개선 ============ */
 @media (max-width: 991px) {
     /* ===== 카테고리를 가로 스크롤로 변경 ===== */
+    .col-lg-3 .sidebar .sidebar__item:first-child,
+    .sidebar .sidebar__item:first-child,
     .sidebar__item:first-child {
         background: #fff !important;
         border: 1px solid #f0f0f0 !important;
@@ -256,8 +258,11 @@
         overflow-x: auto !important;
         overflow-y: hidden !important;
         -webkit-overflow-scrolling: touch !important;
+        display: block !important;
     }
 
+    .col-lg-3 .sidebar .sidebar__item:first-child h4,
+    .sidebar .sidebar__item:first-child h4,
     .sidebar__item:first-child h4 {
         font-size: 14px !important;
         font-weight: 600 !important;
@@ -266,26 +271,39 @@
         border-bottom: none !important;
         white-space: nowrap !important;
         color: #333 !important;
+        display: block !important;
     }
 
+    .col-lg-3 .sidebar .sidebar__item:first-child ul,
+    .sidebar .sidebar__item:first-child ul,
     .sidebar__item:first-child ul {
         display: flex !important;
         flex-direction: row !important;
+        flex-wrap: nowrap !important;
         gap: 6px !important;
         white-space: nowrap !important;
         padding: 0 !important;
         margin: 0 !important;
+        list-style: none !important;
+        overflow-x: visible !important;
     }
 
+    .col-lg-3 .sidebar .sidebar__item:first-child ul::-webkit-scrollbar,
+    .sidebar .sidebar__item:first-child ul::-webkit-scrollbar,
     .sidebar__item:first-child ul::-webkit-scrollbar {
         display: none !important;
     }
 
+    .col-lg-3 .sidebar .sidebar__item:first-child ul li,
+    .sidebar .sidebar__item:first-child ul li,
     .sidebar__item:first-child ul li {
         flex-shrink: 0 !important;
         margin-bottom: 0 !important;
+        display: inline-block !important;
     }
 
+    .col-lg-3 .sidebar .sidebar__item:first-child ul li a,
+    .sidebar .sidebar__item:first-child ul li a,
     .sidebar__item:first-child ul li a {
         display: inline-block !important;
         padding: 7px 14px !important;
@@ -297,9 +315,14 @@
         transition: all 0.3s !important;
         border: 1px solid #e0e0e0 !important;
         white-space: nowrap !important;
+        text-decoration: none !important;
     }
 
+    .col-lg-3 .sidebar .sidebar__item:first-child ul li a:hover,
+    .sidebar .sidebar__item:first-child ul li a:hover,
     .sidebar__item:first-child ul li a:hover,
+    .col-lg-3 .sidebar .sidebar__item:first-child ul li a.active,
+    .sidebar .sidebar__item:first-child ul li a.active,
     .sidebar__item:first-child ul li a.active {
         background: #333 !important;
         color: #fff !important;
