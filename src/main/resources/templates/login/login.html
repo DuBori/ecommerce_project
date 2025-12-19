@@ -1,393 +1,485 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th = "http://www.thymeleaf.org">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <title>로그인 (Please sign in)</title>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-  <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
-  <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    body {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        min-height: 100vh;
-        padding: 20px;
-    }
-
-    .login-container {
-        background-color: #fff;
-        border-radius: 20px;
-        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        position: relative;
-        overflow: hidden;
-        width: 100%;
-        max-width: 900px;
-        min-height: 600px;
-    }
-
-    .form-container {
-        position: absolute;
-        top: 0;
-        height: 100%;
-        transition: all 0.6s ease-in-out;
-    }
-
-    .sign-in-container {
-        left: 0;
-        width: 50%;
-        z-index: 2;
-        opacity: 1;
-    }
-
-    .login-container.right-panel-active .sign-in-container {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-
-    .sign-up-container {
-        left: 0;
-        width: 50%;
-        opacity: 0;
-        z-index: 1;
-        pointer-events: none;
-    }
-
-    .login-container.right-panel-active .sign-up-container {
-        transform: translateX(100%);
-        opacity: 1;
-        z-index: 5;
-        animation: show 0.6s;
-        pointer-events: auto;
-    }
-
-    @keyframes show {
-        0%, 49.99% {
-            opacity: 0;
-            z-index: 1;
-        }
-        50%, 100% {
-            opacity: 1;
-            z-index: 5;
-        }
-    }
-
-    form {
-        background-color: #FFFFFF;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        padding: 0 60px;
-        height: 100%;
-        text-align: center;
-    }
-
-    h1 {
-        font-weight: 700;
-        font-size: 32px;
-        margin: 0 0 20px;
-        color: #333;
-    }
-
-    .social-container {
-        margin: 25px 0;
-        display: flex;
-        gap: 15px;
-    }
-
-    .social-container a {
-        border: 1px solid #ddd;
-        border-radius: 50%;
-        display: inline-flex;
-        justify-content: center;
-        align-items: center;
-        width: 45px;
-        height: 45px;
-        color: #333;
-        text-decoration: none;
-        transition: all 0.3s;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .social-container a:hover {
-        border-color: #667eea;
-        color: #667eea;
-        transform: translateY(-2px);
-    }
-
-    span {
-        font-size: 13px;
-        color: #666;
-        margin: 15px 0;
-    }
-
-    input {
-        background-color: #f5f5f5;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        padding: 14px 18px;
-        margin: 10px 0;
-        width: 100%;
-        font-size: 14px;
-        transition: all 0.3s;
-    }
-
-    input:focus {
-        outline: none;
-        border-color: #667eea;
-        background-color: #fff;
-    }
-
-    input::placeholder {
-        color: #999;
-    }
-
-    a {
-        color: #667eea;
-        font-size: 14px;
-        text-decoration: none;
-        margin: 18px 0;
-        font-weight: 500;
-        transition: color 0.3s;
-    }
-
-    a:hover {
-        color: #764ba2;
-    }
-
-    button {
-        border-radius: 25px;
-        border: none;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #FFFFFF;
-        font-size: 13px;
-        font-weight: 700;
-        padding: 14px 50px;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        transition: all 0.3s;
-        cursor: pointer;
-        margin-top: 15px;
-    }
-
-    button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    button:active {
-        transform: translateY(0);
-    }
-
-    button.ghost {
-        background: transparent;
-        border: 2px solid #FFFFFF;
-    }
-
-    button.ghost:hover {
-        background: rgba(255, 255, 255, 0.1);
-    }
-
-    /* Overlay */
-    .overlay-container {
-        position: absolute;
-        top: 0;
-        left: 50%;
-        width: 50%;
-        height: 100%;
-        overflow: hidden;
-        transition: transform 0.6s ease-in-out;
-        z-index: 100;
-    }
-
-    .login-container.right-panel-active .overlay-container {
-        transform: translateX(-100%);
-    }
-
-    .overlay {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: #FFFFFF;
-        position: relative;
-        left: -100%;
-        height: 100%;
-        width: 200%;
-        transform: translateX(0);
-        transition: transform 0.6s ease-in-out;
-    }
-
-    .login-container.right-panel-active .overlay {
-        transform: translateX(50%);
-    }
-
-    .overlay-panel {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        padding: 0 50px;
-        text-align: center;
-        top: 0;
-        height: 100%;
-        width: 50%;
-        transform: translateX(0);
-        transition: transform 0.6s ease-in-out;
-    }
-
-    .overlay-panel h1 {
-        color: #fff;
-        font-size: 36px;
-        margin-bottom: 20px;
-    }
-
-    .overlay-panel p {
-        font-size: 15px;
-        font-weight: 400;
-        line-height: 24px;
-        letter-spacing: 0.3px;
-        margin: 25px 0 35px;
-        color: rgba(255, 255, 255, 0.9);
-    }
-
-    .overlay-left {
-        transform: translateX(-20%);
-    }
-
-    .login-container.right-panel-active .overlay-left {
-        transform: translateX(0);
-    }
-
-    .overlay-right {
-        right: 0;
-        transform: translateX(0);
-    }
-
-    .login-container.right-panel-active .overlay-right {
-        transform: translateX(20%);
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-        .login-container {
-            min-height: 500px;
-            max-width: 100%;
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>로그인 (Please sign in)</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    <script th:src="@{/js/jquery-3.3.1.min.js}"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
-        form {
-            padding: 0 30px;
-        }
-
-        h1 {
-            font-size: 26px;
-        }
-
-        .overlay-panel h1 {
-            font-size: 28px;
-        }
-
-        .overlay-panel p {
-            font-size: 14px;
-        }
-
-        input {
-            padding: 12px 15px;
-        }
-
-        button {
-            padding: 12px 40px;
-            font-size: 12px;
-        }
-    }
-
-    @media (max-width: 576px) {
         body {
-            padding: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            padding: 20px;
         }
 
         .login-container {
-            min-height: auto;
-            max-height: 95vh;
-            overflow-y: auto;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            min-height: 600px;
         }
 
         .form-container {
-            position: relative !important;
-            width: 100% !important;
-            transform: none !important;
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
         }
 
-        .overlay-container {
-            display: none !important;
-        }
-
-        .sign-in-container,
-        .sign-up-container {
-            width: 100% !important;
-            position: relative !important;
-            left: 0 !important;
-            transform: none !important;
-        }
-
-        .sign-up-container {
-            display: none !important;
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+            opacity: 1;
         }
 
         .login-container.right-panel-active .sign-in-container {
-            display: none !important;
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+            pointer-events: none;
         }
 
         .login-container.right-panel-active .sign-up-container {
-            display: flex !important;
-            opacity: 1 !important;
-            position: relative !important;
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+            pointer-events: auto;
+        }
+
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
         }
 
         form {
-            padding: 30px 20px;
+            background-color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 60px;
+            height: 100%;
+            text-align: center;
         }
 
         h1 {
-            font-size: 22px;
+            font-weight: 700;
+            font-size: 32px;
+            margin: 0 0 20px;
+            color: #333;
         }
 
-        input {
-            padding: 10px 14px;
-            font-size: 13px;
-        }
-
-        button {
-            padding: 12px 35px;
-            font-size: 11px;
+        .social-container {
+            margin: 25px 0;
+            display: flex;
+            gap: 15px;
         }
 
         .social-container a {
-            width: 40px;
-            height: 40px;
-            font-size: 11px;
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 45px;
+            height: 45px;
+            color: #333;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 12px;
+            font-weight: 600;
         }
-    }
-  </style>
+
+        .social-container a:hover {
+            border-color: #667eea;
+            color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        span {
+            font-size: 13px;
+            color: #666;
+            margin: 15px 0;
+        }
+
+        input {
+            background-color: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 10px 0;
+            width: 100%;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            background-color: #fff;
+        }
+
+        input::placeholder {
+            color: #999;
+        }
+
+        a {
+            color: #667eea;
+            font-size: 14px;
+            text-decoration: none;
+            margin: 18px 0;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        a:hover {
+            color: #764ba2;
+        }
+
+        button {
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #FFFFFF;
+            font-size: 13px;
+            font-weight: 700;
+            padding: 14px 50px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.ghost {
+            background: transparent;
+            border: 2px solid #FFFFFF;
+        }
+
+        button.ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Overlay */
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .login-container.right-panel-active .overlay-container {
+            transform: translateX(-100%);
+        }
+
+        .overlay {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #FFFFFF;
+            position: relative;
+            left: -100%;
+            height: 100%;
+            width: 200%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .login-container.right-panel-active .overlay {
+            transform: translateX(50%);
+        }
+
+        .overlay-panel {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding: 0 50px;
+            text-align: center;
+            top: 0;
+            height: 100%;
+            width: 50%;
+            transform: translateX(0);
+            transition: transform 0.6s ease-in-out;
+        }
+
+        .overlay-panel h1 {
+            color: #fff;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .overlay-panel p {
+            font-size: 15px;
+            font-weight: 400;
+            line-height: 24px;
+            letter-spacing: 0.3px;
+            margin: 25px 0 35px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .overlay-left {
+            transform: translateX(-20%);
+        }
+
+        .login-container.right-panel-active .overlay-left {
+            transform: translateX(0);
+        }
+
+        .overlay-right {
+            right: 0;
+            transform: translateX(0);
+        }
+
+        .login-container.right-panel-active .overlay-right {
+            transform: translateX(20%);
+        }
+
+        /* ============ 모바일 탭 네비게이션 ============ */
+        .mobile-tabs {
+            display: none;
+            width: 100%;
+            background: #fff;
+            border-bottom: 2px solid #f0f0f0;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mobile-tabs button {
+            width: 50%;
+            padding: 18px 0;
+            background: transparent;
+            color: #999;
+            border: none;
+            border-bottom: 3px solid transparent;
+            font-size: 16px;
+            font-weight: 600;
+            text-transform: none;
+            letter-spacing: 0;
+            margin: 0;
+            border-radius: 0;
+            transition: all 0.3s;
+        }
+
+        .mobile-tabs button:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .mobile-tabs button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .login-container {
+                min-height: 500px;
+                max-width: 100%;
+            }
+
+            form {
+                padding: 0 30px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .overlay-panel h1 {
+                font-size: 28px;
+            }
+
+            .overlay-panel p {
+                font-size: 14px;
+            }
+
+            input {
+                padding: 12px 15px;
+            }
+
+            button {
+                padding: 12px 40px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            body {
+                padding: 0;
+                align-items: flex-start;
+            }
+
+            .login-container {
+                min-height: 100vh;
+                max-height: none;
+                border-radius: 0;
+                box-shadow: none;
+            }
+
+            /* 모바일 탭 표시 */
+            .mobile-tabs {
+                display: flex;
+            }
+
+            /* 오버레이 숨김 */
+            .overlay-container {
+                display: none !important;
+            }
+
+            /* 폼 컨테이너 재설정 */
+            .form-container {
+                position: relative !important;
+                width: 100% !important;
+                transform: none !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+            }
+
+            .sign-in-container,
+            .sign-up-container {
+                width: 100% !important;
+                position: relative !important;
+                left: 0 !important;
+                transform: none !important;
+                display: none;
+            }
+
+            /* 활성 탭만 표시 */
+            .sign-in-container.active,
+            .sign-up-container.active {
+                display: flex !important;
+            }
+
+            form {
+                padding: 30px 25px;
+                min-height: calc(100vh - 60px);
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+
+            .social-container {
+                margin: 20px 0;
+                gap: 12px;
+            }
+
+            .social-container a {
+                width: 50px;
+                height: 50px;
+                font-size: 11px;
+            }
+
+            span {
+                font-size: 12px;
+                margin: 12px 0;
+            }
+
+            input {
+                padding: 13px 16px;
+                font-size: 14px;
+                margin: 8px 0;
+            }
+
+            button {
+                padding: 14px 40px;
+                font-size: 13px;
+                width: 100%;
+                margin-top: 12px;
+            }
+
+            a {
+                font-size: 13px;
+                margin: 12px 0;
+            }
+        }
+
+        @media (max-width: 375px) {
+            form {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            .social-container a {
+                width: 45px;
+                height: 45px;
+                font-size: 10px;
+            }
+
+            input {
+                padding: 12px 14px;
+                font-size: 13px;
+            }
+
+            button {
+                padding: 13px 35px;
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="login-container" id="container">
+    <!-- 모바일 탭 네비게이션 -->
+    <div class="mobile-tabs">
+        <button type="button" class="tab-signin active" onclick="showMobileTab('signin')">로그인</button>
+        <button type="button" class="tab-signup" onclick="showMobileTab('signup')">회원가입</button>
+    </div>
+
     <div class="form-container sign-up-container">
         <form action="#" class="myForm">
-            <h1>테스트 계정 생성</h1>
+            <h1>회원가입</h1>
             <div class="social-container">
                 <a href="/oauth2/authorization/kakao">Kakao</a>
                 <a href="/oauth2/authorization/google">Google</a>
@@ -402,9 +494,9 @@
         </form>
     </div>
 
-    <div class="form-container sign-in-container">
+    <div class="form-container sign-in-container active">
         <form action="#" class="myForm">
-            <h1>Sign in</h1>
+            <h1>로그인</h1>
             <div class="social-container">
                 <a href="/oauth2/authorization/kakao">Kakao</a>
                 <a href="/oauth2/authorization/google">Google</a>
@@ -422,10 +514,12 @@
         <div class="overlay">
             <div class="overlay-panel overlay-left">
                 <h1>DUBORIBU</h1>
+                <p>이미 계정이 있으신가요?</p>
                 <button class="ghost" id="signIn">Sign In</button>
             </div>
             <div class="overlay-panel overlay-right">
                 <h1>DUBORIBU</h1>
+                <p>계정이 없으신가요?</p>
                 <button class="ghost" id="signUp">Sign Up</button>
             </div>
         </div>
@@ -449,95 +543,115 @@
         });
     }
 
-  $(".myForm").on("submit", function(event){
-      event.preventDefault();
-  });
+    // 모바일 탭 전환 함수
+    function showMobileTab(tab) {
+        const signinContainer = document.querySelector('.sign-in-container');
+        const signupContainer = document.querySelector('.sign-up-container');
+        const signinTab = document.querySelector('.tab-signin');
+        const signupTab = document.querySelector('.tab-signup');
 
-  function signIn() {
-    let username = $("input[name=username]").val();
-    let password = $("input[name=password]").val();
-
-    if (!username || !password) {
-      alert("필수 정보를 모두 입력해주세요.");
-      return false;
+        if (tab === 'signin') {
+            signinContainer.classList.add('active');
+            signupContainer.classList.remove('active');
+            signinTab.classList.add('active');
+            signupTab.classList.remove('active');
+        } else {
+            signupContainer.classList.add('active');
+            signinContainer.classList.remove('active');
+            signupTab.classList.add('active');
+            signinTab.classList.remove('active');
+        }
     }
 
-    $.ajax({
-      url: '/auth/sign-in',
-      type: 'POST',
-      data: JSON.stringify({
-        username: username,
-        password: password,
-        name: name
-      }),
-      contentType: 'application/json',
-      success: function (data) {
-        if (data.resCode == 200) { // 회원가입 완료
-          location.href = '/ecommerce';
-        } else {
-          alert(data.resMsg);
-          location.reload();
-        }
-      },
-      error: function (xhr, status, error) {
-        console.error('Error:', error);
-        alert('시스템 오류');
-      }
+    $(".myForm").on("submit", function(event){
+        event.preventDefault();
     });
 
-  }
-  function signUpValidate() {
-      let userName = $("input[name=signUpUsername]").val();
-      let password = $("input[name=singUppassword]").val();
-      let passReword = $("input[name=repassword]").val();
-      let name = $("input[name=name]").val();
+    function signIn() {
+        let username = $("input[name=username]").val();
+        let password = $("input[name=password]").val();
 
-      if (!userName || !passReword || !passReword) {
-          alert("필수 정보를 모두 입력해주세요.");
-          return false;
-      }
-      // 정규표현식을 사용하여 영어와 숫자만 허용하는지 확인
-      let regex = /^[a-zA-Z0-9]+$/;
-      if (!regex.test(userName)) {
-          $("#usernameError").text("영어와 숫자만 입력 가능합니다.");
-          return;
-      }
+        if (!username || !password) {
+            alert("필수 정보를 모두 입력해주세요.");
+            return false;
+        }
 
-      if (password != passReword) {
-          alert("비밀번호가 다릅니다\n 다시 입력해주세요");
-          $("input[name=password]").val('')
-          $("input[name=repassword]").val('')
-          return false;
-      }
+        $.ajax({
+            url: '/auth/sign-in',
+            type: 'POST',
+            data: JSON.stringify({
+                username: username,
+                password: password,
+                name: name
+            }),
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.resCode == 200) {
+                    location.href = '/ecommerce';
+                } else {
+                    alert(data.resMsg);
+                    location.reload();
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('시스템 오류');
+            }
+        });
 
-      $.ajax({
-          url: '/auth/sign-up',
-          type: 'POST',
-          data: JSON.stringify({
-              username: userName,
-              password: password,
-              name: name
-          }),
-          contentType: 'application/json',
-          success: function (data) {
-              if (data.resCode == 200) { // 회원가입 완료
-                  alert(data.resMsg);
-                  location.href = '/ecommerce/login';
-              } else if (data.resCode == 203) { // 이미 회원
-                  alert(data.resMsg);
-                  $("input[name=username]").val('');
-                  $("input[name=password]").val('');
-                  $("input[name=repassword]").val('');
-              } else {
-                  alert('시스템 오류');
-              }
-          },
-          error: function (xhr, status, error) {
-              console.error('Error:', error);
-              alert('시스템 오류');
-          }
-      });
+    }
+    function signUpValidate() {
+        let userName = $("input[name=signUpUsername]").val();
+        let password = $("input[name=singUppassword]").val();
+        let passReword = $("input[name=repassword]").val();
+        let name = $("input[name=name]").val();
 
-  }
+        if (!userName || !passReword || !passReword) {
+            alert("필수 정보를 모두 입력해주세요.");
+            return false;
+        }
+        let regex = /^[a-zA-Z0-9]+$/;
+        if (!regex.test(userName)) {
+            alert("아이디는 영어와 숫자만 입력 가능합니다.");
+            return;
+        }
+
+        if (password != passReword) {
+            alert("비밀번호가 다릅니다\n 다시 입력해주세요");
+            $("input[name=singUppassword]").val('')
+            $("input[name=repassword]").val('')
+            return false;
+        }
+
+        $.ajax({
+            url: '/auth/sign-up',
+            type: 'POST',
+            data: JSON.stringify({
+                username: userName,
+                password: password,
+                name: name
+            }),
+            contentType: 'application/json',
+            success: function (data) {
+                if (data.resCode == 200) {
+                    alert(data.resMsg);
+                    showMobileTab('signin'); // 모바일에서 로그인 탭으로 전환
+                    container.classList.remove("right-panel-active"); // PC에서 로그인 화면으로
+                } else if (data.resCode == 203) {
+                    alert(data.resMsg);
+                    $("input[name=signUpUsername]").val('');
+                    $("input[name=singUppassword]").val('');
+                    $("input[name=repassword]").val('');
+                } else {
+                    alert('시스템 오류');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('Error:', error);
+                alert('시스템 오류');
+            }
+        });
+
+    }
 </script>
 </html>
