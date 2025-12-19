@@ -41,6 +41,56 @@
             let id = $(this).data('id');
             location.href = '/ecommerce/item/view/' + id;
         });
+
+        // 햄버거 메뉴 기능
+        $(document).ready(function() {
+            // 햄버거 메뉴 열기
+            $('.humberger__open').on('click', function() {
+                $('.humberger__menu__wrapper').addClass('show__humberger__menu__wrapper');
+                $('.humberger__menu__overlay').addClass('active');
+                $('body').css('overflow', 'hidden'); // 스크롤 방지
+            });
+
+            // 오버레이 클릭시 메뉴 닫기
+            $('.humberger__menu__overlay').on('click', function() {
+                $('.humberger__menu__wrapper').removeClass('show__humberger__menu__wrapper');
+                $('.humberger__menu__overlay').removeClass('active');
+                $('body').css('overflow', ''); // 스크롤 복원
+            });
+
+            // 메뉴 아이템 클릭시에도 닫기
+            $('.humberger__menu__nav ul li a').on('click', function() {
+                $('.humberger__menu__wrapper').removeClass('show__humberger__menu__wrapper');
+                $('.humberger__menu__overlay').removeClass('active');
+                $('body').css('overflow', '');
+            });
+        });
+
+    </script>
+    <script>
+        // 카테고리 토글 함수
+        function toggleCategory() {
+            const categoryElement = document.querySelector('.hero__categories');
+            categoryElement.classList.toggle('active');
+        }
+
+        // 페이지 로드 시 기본적으로 열린 상태로 (선택사항)
+        document.addEventListener('DOMContentLoaded', function() {
+            // 데스크톱에서는 기본적으로 열림
+            if (window.innerWidth > 991) {
+                document.querySelector('.hero__categories').classList.add('active');
+            }
+        });
+
+        // 외부 클릭 시 닫기 (선택사항)
+        document.addEventListener('click', function(event) {
+            const categoryElement = document.querySelector('.hero__categories');
+            const isClickInside = categoryElement.contains(event.target);
+
+            if (!isClickInside && window.innerWidth <= 991) {
+                categoryElement.classList.remove('active');
+            }
+        });
     </script>
 </footer>
 

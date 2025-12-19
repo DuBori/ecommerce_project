@@ -11,8 +11,8 @@
     <div class="container">
         <!-- 왼쪽: 카테고리 -->
         <div class="hero__categories">
-            <div class="hero__categories__all">
-                <i class="fa fa-bars"></i>
+            <div class="hero__categories__all" onclick="toggleCategory()">
+                <i class="fa fa-chevron-down toggle-icon"></i>
                 <span>카테고리</span>
             </div>
             <ul th:if="${mainCategoryList != null}">
