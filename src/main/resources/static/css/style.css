@@ -294,10 +294,25 @@ body {
     margin-right: 12px;
 }
 
-.hero__categories ul {
-    list-style: none;
-    padding: 0;
+.hero__categories__all .toggle-icon {
+    transition: transform 0.3s;
 }
+
+.hero__categories.active .hero__categories__all .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.hero__categories ul {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out;
+}
+
+.hero__categories.active ul {
+    max-height: 500px;
+    transition: max-height 0.5s ease-in;
+}
+
 
 .hero__categories ul li {
     border-bottom: 1px solid #f0f0f0;
@@ -412,7 +427,6 @@ body {
 }
 
 /* ============ Categories Slider Section (제일 크기) ============ */
-/* ============ Categories Slider Section (제일 크기) ============ */
 .categories {
     padding: 60px 0;
     background: #fff;
@@ -425,15 +439,15 @@ body {
 
 .categories__slider {
     display: flex;
-    justify-content: center; /* 가운데 정렬 추가 */
-    flex-wrap: wrap; /* 요소가 많아지면 자동으로 줄바꿈 */
+    justify-content: center;
+    flex-wrap: wrap;
     gap: 25px;
     padding: 15px 0;
 }
 
 .categories__item {
     min-width: 280px;
-    max-width: 280px; /* 최대 너비 고정 */
+    max-width: 280px;
     height: 220px;
     border-radius: 8px;
     position: relative;
@@ -447,7 +461,6 @@ body {
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
 
-/* 이미지 */
 .categories__item img {
     width: 100%;
     height: 100%;
@@ -455,7 +468,6 @@ body {
     display: block;
 }
 
-/* 오버레이 (텍스트 영역) */
 .categories__item__overlay {
     position: absolute;
     top: 0;
@@ -474,7 +486,6 @@ body {
     background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
 }
 
-/* 텍스트 */
 .categories__item h5 {
     margin: 0;
     width: 100%;
@@ -589,79 +600,6 @@ body {
 
 .footer__copyright__text i {
     color: #e74c3c;
-}
-
-/* ============ Responsive ============ */
-@media (max-width: 1200px) {
-    .container {
-        padding: 0 30px;
-    }
-}
-
-@media (max-width: 991px) {
-    .header__menu {
-        display: none;
-    }
-
-    .humberger__open {
-        display: block;
-    }
-
-    .hero .container {
-        flex-direction: column;
-    }
-
-    .hero__categories {
-        width: 100%;
-        margin-bottom: 25px;
-    }
-
-    .hero__right {
-        margin-left: 0;
-    }
-
-    .hero__item {
-        padding: 60px 30px;
-    }
-
-    .hero__text h2 {
-        font-size: 40px;
-    }
-}
-
-@media (max-width: 768px) {
-    .header__top {
-        display: none;
-    }
-
-    .footer__content {
-        flex-direction: column;
-    }
-
-    .footer__section {
-        margin-bottom: 30px;
-    }
-
-    .categories__item {
-        min-width: 220px;
-        height: 180px;
-    }
-
-    .container {
-        padding: 0 20px;
-    }
-
-    .hero .container {
-        padding: 20px;
-    }
-
-    .hero__text h2 {
-        font-size: 32px;
-    }
-
-    .welcome-section h2 {
-        font-size: 32px;
-    }
 }
 
 /* ============ Breadcrumb Section ============ */
@@ -875,7 +813,7 @@ body {
 .product__discount__item__pic {
     position: relative;
     width: 100%;
-    padding-top: 125%; /* 동일 비율 적용 */
+    padding-top: 125%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -1027,13 +965,13 @@ body {
 .product__item__pic {
     position: relative;
     width: 100%;
-    padding-top: 125%; /* 4:5 비율 (height / width) */
+    padding-top: 125%;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 8px;
     overflow: hidden;
-    height: auto !important;  /* 기존 280px 강제 제거 */
+    height: auto !important;
 }
 
 .product__item__text {
@@ -1097,93 +1035,6 @@ body {
     border-color: #333;
 }
 
-/* ============ Responsive ============ */
-@media (max-width: 1200px) {
-    .product .container {
-        padding: 0 30px;
-    }
-}
-
-@media (max-width: 991px) {
-    .product .row {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        width: 100%;
-        margin-bottom: 40px;
-    }
-
-    .sidebar__item {
-        display: flex;
-        gap: 20px;
-        overflow-x: auto;
-    }
-
-    .sidebar__item ul {
-        display: flex;
-        gap: 15px;
-        white-space: nowrap;
-    }
-
-    .col-lg-9 {
-        width: 100%;
-    }
-
-    .product__discount__item,
-    .categories__item {
-        min-width: 240px;
-    }
-}
-
-@media (max-width: 768px) {
-    .breadcrumb__text h2 {
-        font-size: 28px;
-    }
-
-    .section-title h2 {
-        font-size: 24px;
-    }
-
-    .filter__item .row {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-
-    .filter__option {
-        text-align: center;
-    }
-
-    .product .container {
-        padding: 0 20px;
-    }
-
-    .product__item__pic,
-    .product__discount__item__pic {
-        height: 240px;
-    }
-}
-
-@media (max-width: 576px) {
-    .product__discount__item,
-    .categories__item {
-        min-width: 200px;
-        height: 200px;
-    }
-
-    .latest-product__item__pic {
-        width: 60px;
-        height: 60px;
-    }
-
-    .product__pagination a {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-    }
-}
-
 /* ============ Blog/Notice Section ============ */
 .blog.spad {
     padding: 60px 0;
@@ -1200,18 +1051,15 @@ body {
     gap: 30px;
 }
 
-/* ============ Blog Sidebar (왼쪽 빈 공간) ============ */
 .blog__sidebar {
     width: 280px;
     flex-shrink: 0;
 }
 
-/* ============ Main Blog Area (오른쪽) ============ */
 .col-lg-8 {
     flex: 1;
 }
 
-/* ============ Blog Item Grid ============ */
 .blog__item {
     background: #fff;
     border: 1px solid #f0f0f0;
@@ -1229,7 +1077,6 @@ body {
     transform: translateY(-5px);
 }
 
-/* ============ Blog Item Image ============ */
 .blog__item__pic {
     width: 100%;
     height: 220px;
@@ -1248,7 +1095,6 @@ body {
     transform: scale(1.05);
 }
 
-/* ============ Blog Item Text ============ */
 .blog__item__text {
     padding: 25px;
     flex: 1;
@@ -1311,7 +1157,6 @@ body {
     -webkit-box-orient: vertical;
 }
 
-/* ============ Blog Button ============ */
 .blog__btn {
     color: #333;
     font-size: 14px;
@@ -1338,7 +1183,6 @@ body {
     border-bottom: 4px solid transparent;
 }
 
-/* ============ Blog Pagination ============ */
 .blog__pagination {
     display: flex;
     justify-content: center;
@@ -1381,7 +1225,6 @@ body {
     pointer-events: none;
 }
 
-/* ============ Empty State ============ */
 .col-lg-8 > .row > h5 {
     width: 100%;
     text-align: center;
@@ -1391,7 +1234,6 @@ body {
     font-weight: 500;
 }
 
-/* ============ Grid System Override ============ */
 .col-lg-6 {
     flex: 0 0 50%;
     max-width: 50%;
@@ -1401,127 +1243,6 @@ body {
 .col-lg-12 {
     flex: 0 0 100%;
     max-width: 100%;
-}
-
-/* ============ Responsive ============ */
-@media (max-width: 1200px) {
-    .blog .container {
-        padding: 0 30px;
-    }
-}
-
-@media (max-width: 991px) {
-    .blog .row {
-        flex-direction: column;
-    }
-
-    .blog__sidebar {
-        width: 100%;
-        margin-bottom: 40px;
-        display: none; /* 모바일에서는 사이드바 숨김 */
-    }
-
-    .col-lg-8 {
-        width: 100%;
-    }
-
-    .col-lg-6 {
-        flex: 0 0 100%;
-        max-width: 100%;
-    }
-
-    .blog__item__pic {
-        height: 250px;
-    }
-}
-
-@media (max-width: 768px) {
-    .blog .container {
-        padding: 0 20px;
-    }
-
-    .blog__item__pic {
-        height: 220px;
-    }
-
-    .blog__item__text {
-        padding: 20px;
-    }
-
-    .blog__item__text h5 {
-        font-size: 16px;
-    }
-
-    .blog__item__text p {
-        font-size: 13px;
-        -webkit-line-clamp: 2;
-    }
-
-    .blog__pagination a {
-        width: 35px;
-        height: 35px;
-        font-size: 14px;
-    }
-    .categories__item {
-        min-width: 220px;
-        height: 180px;
-    }
-
-    .categories__item h5 a {
-        font-size: 16px;
-    }
-
-    .categories__item__overlay {
-        padding: 20px;
-    }
-}
-
-@media (max-width: 576px) {
-    .blog__item__pic {
-        height: 200px;
-    }
-
-    .blog__item__text ul {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .blog__item__text {
-        padding: 15px;
-    }
-
-    .col-lg-8 > .row > h5 {
-        padding: 60px 20px;
-        font-size: 16px;
-    }
-    .categories {
-        padding: 40px 0;
-    }
-
-    .categories .container {
-        padding: 0 20px;
-    }
-
-    .categories__item {
-        min-width: 200px;
-        height: 160px;
-    }
-
-    .categories__item h5 a {
-        font-size: 15px;
-    }
-}
-
-/* ============ 2단 레이아웃 최적화 ============ */
-@media (min-width: 768px) and (max-width: 1199px) {
-    .col-lg-6 {
-        flex: 0 0 50%;
-        max-width: 50%;
-    }
-
-    .blog__item__pic {
-        height: 200px;
-    }
 }
 
 /* ============ Font Awesome 아이콘 대체 ============ */
@@ -1541,99 +1262,354 @@ body {
     font-size: 16px;
 }
 
-/* 이미지가 보이도록 배경 설정 */
-/* ============ Categories Slider with IMG ============ */
-.categories {
-    padding: 60px 0;
-    background: #fff;
-    width: 100%;
+/* ============ Responsive ============ */
+@media (max-width: 1200px) {
+    .container {
+        padding: 0 30px;
+    }
+
+    .product .container,
+    .blog .container {
+        padding: 0 30px;
+    }
 }
 
-.categories .container {
-    padding: 0 40px;
+@media (max-width: 991px) {
+    /* ===== 헤더 모바일 최적화 ===== */
+    .header__menu {
+        display: none;
+    }
+
+    .humberger__open {
+        display: block;
+    }
+
+    .header .container {
+        padding: 15px 20px;
+    }
+
+    .header__cart ul {
+        gap: 15px;
+    }
+
+    .header__cart ul li a {
+        font-size: 18px;
+    }
+
+    /* ===== Hero 영역 ===== */
+    .hero .container {
+        flex-direction: column;
+        padding: 20px;
+    }
+
+    .hero__categories {
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .hero__right {
+        margin-left: 0;
+    }
+
+    .hero__item {
+        padding: 60px 30px;
+    }
+
+    .hero__text h2 {
+        font-size: 40px;
+    }
+
+    .hero__categories ul {
+        max-height: 0;
+    }
+
+    .hero__categories.active ul {
+        max-height: 600px;
+    }
+
+    /* ===== Product 영역 ===== */
+    .product .row {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        margin-bottom: 40px;
+    }
+
+    .sidebar__item {
+        display: flex;
+        gap: 20px;
+        overflow-x: auto;
+    }
+
+    .sidebar__item ul {
+        display: flex;
+        gap: 15px;
+        white-space: nowrap;
+    }
+
+    .col-lg-9 {
+        width: 100%;
+    }
+
+    .product__discount__item,
+    .categories__item {
+        min-width: 240px;
+    }
+
+    /* ===== Blog 영역 ===== */
+    .blog .row {
+        flex-direction: column;
+    }
+
+    .blog__sidebar {
+        width: 100%;
+        margin-bottom: 40px;
+        display: none;
+    }
+
+    .col-lg-8 {
+        width: 100%;
+    }
+
+    .col-lg-6 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    .blog__item__pic {
+        height: 250px;
+    }
 }
 
-.categories__slider {
-    display: flex;
-    gap: 25px;
-    overflow-x: auto;
-    padding: 15px 0;
+@media (max-width: 768px) {
+    /* ===== 헤더 숨기기 ===== */
+    .header__top {
+        display: none;
+    }
+
+    /* ===== 컨테이너 패딩 ===== */
+    .container {
+        padding: 0 20px;
+    }
+
+    .hero .container,
+    .product .container,
+    .blog .container {
+        padding: 0 20px;
+    }
+
+    /* ===== Hero 텍스트 ===== */
+    .hero__text h2 {
+        font-size: 32px;
+    }
+
+    .hero__item {
+        padding: 40px 20px;
+    }
+
+    .hero__search__form input {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+
+    .hero__search__form .site-btn {
+        padding: 12px 25px;
+        font-size: 14px;
+    }
+
+    /* ===== Welcome Section ===== */
+    .welcome-section h2 {
+        font-size: 32px;
+    }
+
+    .welcome-section {
+        padding: 60px 0;
+    }
+
+    /* ===== Categories ===== */
+    .categories__item {
+        min-width: 220px;
+        height: 180px;
+    }
+
+    .categories__item h5 a {
+        font-size: 16px;
+    }
+
+    /* ===== Breadcrumb ===== */
+    .breadcrumb__text h2 {
+        font-size: 28px;
+    }
+
+    .breadcrumb-section {
+        padding: 40px 0;
+    }
+
+    /* ===== Section Title ===== */
+    .section-title h2 {
+        font-size: 24px;
+    }
+
+    /* ===== Filter ===== */
+    .filter__item .row {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+
+    .filter__option {
+        text-align: center;
+    }
+
+    /* ===== Product Items ===== */
+    .product__item__pic,
+    .product__discount__item__pic {
+        height: 240px;
+    }
+
+    /* ===== Blog Items ===== */
+    .blog__item__pic {
+        height: 220px;
+    }
+
+    .blog__item__text {
+        padding: 20px;
+    }
+
+    .blog__item__text h5 {
+        font-size: 16px;
+    }
+
+    .blog__item__text p {
+        font-size: 13px;
+        -webkit-line-clamp: 2;
+    }
+
+    /* ===== Pagination ===== */
+    .blog__pagination a,
+    .product__pagination a {
+        width: 35px;
+        height: 35px;
+        font-size: 14px;
+    }
+
+    /* ===== Footer ===== */
+    .footer__content {
+        flex-direction: column;
+    }
+
+    .footer__section {
+        margin-bottom: 30px;
+    }
 }
 
-.categories__slider::-webkit-scrollbar {
-    height: 8px;
+@media (max-width: 576px) {
+    /* ===== 작은 모바일 최적화 ===== */
+    .header .container {
+        padding: 12px 15px;
+    }
+
+    .header__cart ul {
+        gap: 12px;
+    }
+
+    .header__cart ul li a {
+        font-size: 16px;
+    }
+
+    .header__cart ul li a span {
+        width: 18px;
+        height: 18px;
+        font-size: 10px;
+        top: -8px;
+        right: -10px;
+    }
+
+    /* ===== Hero ===== */
+    .hero__text h2 {
+        font-size: 28px;
+    }
+
+    .hero__text p {
+        font-size: 16px;
+    }
+
+    /* ===== Categories ===== */
+    .categories {
+        padding: 40px 0;
+    }
+
+    .categories__item {
+        min-width: 200px;
+        height: 160px;
+    }
+
+    .categories__item h5 a {
+        font-size: 15px;
+    }
+
+    .categories__item__overlay {
+        padding: 15px;
+    }
+
+    /* ===== Latest Product ===== */
+    .latest-product__item__pic {
+        width: 60px;
+        height: 60px;
+    }
+
+    .latest-product__item__text h6 {
+        font-size: 13px;
+    }
+
+    .latest-product__item__text span {
+        font-size: 14px;
+    }
+
+    /* ===== Product Discount ===== */
+    .product__discount__item {
+        min-width: 200px;
+    }
+
+    /* ===== Blog ===== */
+    .blog__item__pic {
+        height: 200px;
+    }
+
+    .blog__item__text ul {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .blog__item__text {
+        padding: 15px;
+    }
+
+    .col-lg-8 > .row > h5 {
+        padding: 60px 20px;
+        font-size: 16px;
+    }
+
+    /* ===== Welcome Section ===== */
+    .welcome-section h2 {
+        font-size: 28px;
+    }
+
+    .welcome-section p {
+        font-size: 14px;
+    }
 }
 
-.categories__slider::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
+/* ============ 2단 레이아웃 최적화 (태블릿) ============ */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .col-lg-6 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
 
-.categories__slider::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 10px;
-}
-
-/* 카드 래퍼 */
-.categories__item {
-    min-width: 280px;
-    height: 220px;
-    border-radius: 8px;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.3s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.categories__item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-/* 이미지 */
-.categories__item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-/* 오버레이 (텍스트 영역) */
-.categories__item__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.6) 100%);
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 25px;
-    transition: all 0.3s;
-}
-
-.categories__item:hover .categories__item__overlay {
-    background: linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.8) 100%);
-}
-
-/* 텍스트 */
-.categories__item h5 {
-    margin: 0;
-    width: 100%;
-    text-align: center;
-}
-
-.categories__item h5 a {
-    color: #fff;
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 600;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-    display: block;
-    line-height: 1.4;
-}
-
-.categories__item h5 a:hover {
-    color: #f0f0f0;
+    .blog__item__pic {
+        height: 200px;
+    }
 }
