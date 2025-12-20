@@ -2,10 +2,311 @@
 <html lang="zxx" xmlns:th="http://www.thymeleaf.org">
 <div th:replace="front/common/header :: header"></div>
 <head>
-    <link rel="stylesheet" th:href="@{/css/notice_fo.css}" type="text/css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>공지사항</title>
+    <style>
+        /* ============ Notice Table Layout CSS ============ */
+
+        .blog.spad {
+            padding: 60px 0;
+            background: #fff;
+        }
+
+        .blog .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+        }
+
+        /* Hide Sidebar */
+        .blog__sidebar {
+            display: none;
+        }
+
+        .blog .row {
+            display: block;
+        }
+
+        .blog .col-lg-8 {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+
+        /* Page Title */
+        .notice-header {
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #333;
+        }
+
+        .notice-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        /* Notice Table */
+        .notice-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .notice-table thead {
+            background: #333;
+        }
+
+        .notice-table thead th {
+            padding: 18px 20px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            text-align: center;
+            border-bottom: 2px solid #555;
+        }
+
+        .notice-table thead th:first-child {
+            width: 80px;
+        }
+
+        .notice-table thead th:nth-child(2) {
+            text-align: left;
+            padding-left: 30px;
+        }
+
+        .notice-table thead th:nth-child(3) {
+            width: 150px;
+        }
+
+        .notice-table thead th:nth-child(4) {
+            width: 100px;
+        }
+
+        .notice-table tbody tr {
+            border-bottom: 1px solid #f0f0f0;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .notice-table tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .notice-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .notice-table tbody td {
+            padding: 20px;
+            font-size: 15px;
+            color: #666;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        /* Number Column */
+        .notice-number {
+            font-weight: 600;
+            color: #333;
+        }
+
+        /* Title Column */
+        .notice-title {
+            text-align: left !important;
+            padding-left: 30px !important;
+        }
+
+        .notice-title a {
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            transition: color 0.3s;
+        }
+
+        .notice-title a:hover {
+            color: #667eea;
+        }
+
+        /* Date Column */
+        .notice-date {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Views Column */
+        .notice-views {
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* Badge for New */
+        .badge-new {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #e74c3c;
+            color: #fff;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        /* Empty State */
+        .empty-notice {
+            text-align: center;
+            padding: 80px 20px;
+            color: #999;
+        }
+
+        .empty-notice h5 {
+            font-size: 18px;
+            font-weight: 500;
+        }
+
+        /* Pagination */
+        .notice-pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .notice-pagination a {
+            min-width: 40px;
+            height: 40px;
+            padding: 0 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .notice-pagination a:hover:not(.disabled) {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        .notice-pagination a.active {
+            background: #333;
+            color: #fff;
+            border-color: #333;
+        }
+
+        .notice-pagination a.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        /* ============ Responsive ============ */
+        @media (max-width: 1200px) {
+            .blog .container {
+                padding: 0 30px;
+            }
+        }
+
+        @media (max-width: 991px) {
+            .notice-table thead th:nth-child(3),
+            .notice-table tbody td:nth-child(3) {
+                display: none;
+            }
+
+            .notice-table thead th:nth-child(4) {
+                width: 80px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .blog .container {
+                padding: 0 20px;
+            }
+
+            .blog.spad {
+                padding: 40px 0;
+            }
+
+            .notice-header h2 {
+                font-size: 26px;
+            }
+
+            .notice-table {
+                font-size: 14px;
+            }
+
+            .notice-table thead th {
+                padding: 14px 12px;
+                font-size: 14px;
+            }
+
+            .notice-table tbody td {
+                padding: 16px 12px;
+                font-size: 14px;
+            }
+
+            .notice-table thead th:first-child,
+            .notice-table tbody td:first-child {
+                display: none;
+            }
+
+            .notice-table thead th:nth-child(2),
+            .notice-table tbody td.notice-title {
+                padding-left: 15px !important;
+            }
+
+            .notice-pagination a {
+                min-width: 35px;
+                height: 35px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .notice-header h2 {
+                font-size: 22px;
+            }
+
+            .notice-table thead th,
+            .notice-table tbody td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+
+            .notice-table thead th:nth-child(4),
+            .notice-table tbody td:nth-child(4) {
+                display: none;
+            }
+
+            .empty-notice h5 {
+                font-size: 16px;
+            }
+        }
+
+        /* ============ Icon Styles ============ */
+        .fa-long-arrow-right::before {
+            content: "→";
+            font-family: inherit;
+        }
+    </style>
 </head>
 <body>
 <div th:replace="front/common/top :: top"></div>
