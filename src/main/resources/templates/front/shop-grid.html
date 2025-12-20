@@ -2,6 +2,101 @@
 <html lang="zxx" xmlns:th ="http://www.thymeleaf.org">
 
 <div th:replace="front/common/header :: header"></div>
+
+<style>
+        /* 모바일 카테고리 최적화 - 최우선 적용 */
+    @media (max-width: 991px) {
+        /* 카테고리 컨테이너 */
+        .sidebar .sidebar__item:first-child {
+            background: #fff !important;
+            border: 1px solid #f0f0f0 !important;
+            border-radius: 6px !important;
+            padding: 8px 0 8px 10px !important;
+            margin-bottom: 10px !important;
+            overflow-x: auto !important;
+            overflow-y: hidden !important;
+            -webkit-overflow-scrolling: touch !important;
+            display: block !important;
+            position: relative !important;
+        }
+
+        /* 페이드 효과 */
+        .sidebar .sidebar__item:first-child::after {
+            content: '' !important;
+            position: absolute !important;
+            top: 0 !important;
+            right: 0 !important;
+            width: 25px !important;
+            height: 100% !important;
+            background: linear-gradient(to right, rgba(255,255,255,0), #fff) !important;
+            pointer-events: none !important;
+            z-index: 1 !important;
+        }
+
+        /* 제목 */
+        .sidebar .sidebar__item:first-child h4 {
+            font-size: 12px !important;
+            font-weight: 600 !important;
+            margin-bottom: 6px !important;
+            padding-bottom: 0 !important;
+            padding-right: 10px !important;
+            border-bottom: none !important;
+            white-space: nowrap !important;
+            color: #333 !important;
+            display: block !important;
+        }
+
+        /* ul 리스트 */
+        .sidebar .sidebar__item:first-child ul {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            gap: 4px !important;
+            white-space: nowrap !important;
+            padding: 0 30px 0 0 !important;
+            margin: 0 !important;
+            list-style: none !important;
+            overflow-x: visible !important;
+        }
+
+        /* 스크롤바 숨김 */
+        .sidebar .sidebar__item:first-child ul::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        /* li 아이템 */
+        .sidebar .sidebar__item:first-child ul li {
+            flex-shrink: 0 !important;
+            margin-bottom: 0 !important;
+            display: inline-block !important;
+        }
+
+        /* 카테고리 칩 버튼 */
+        .sidebar .sidebar__item:first-child ul li a {
+            display: inline-block !important;
+            padding: 5px 10px !important;
+            background: #f5f5f5 !important;
+            border-radius: 14px !important;
+            color: #555 !important;
+            font-size: 11px !important;
+            font-weight: 500 !important;
+            transition: all 0.3s !important;
+            border: 1px solid #e5e5e5 !important;
+            white-space: nowrap !important;
+            text-decoration: none !important;
+            line-height: 1.2 !important;
+        }
+
+        /* 호버 및 활성 상태 */
+        .sidebar .sidebar__item:first-child ul li a:hover,
+        .sidebar .sidebar__item:first-child ul li a.active {
+            background: #333 !important;
+            color: #fff !important;
+            border-color: #333 !important;
+            transform: scale(1.02) !important;
+        }
+    }
+</style>
 <body>
     <div th:replace="front/common/top :: top"></div>
 
