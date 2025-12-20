@@ -218,7 +218,12 @@
                     <th:block th:if="${categoryItems != null}">
                         <div class="product__pagination">
                             <a href="#" th:each="pageNumber : ${#numbers.sequence(0, categoryItems.totalPages - 1)}" th:href="@{${'/ecommerce/item/list?page=' + pageNumber}}" th:text="${pageNumber + 1}"></a>
-                            <a th:href="@{${'/ecommerce/item/list?page=' + (categoryItems.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
+                            <th:block th:if="${category == null}">
+                                <a th:href="@{${'/ecommerce/item/${category}/list?page=' + (categoryItems.number + 1)}}"><i class="fa fa-long-arrow-right"></i></a>
+                            </th:block>
+                            <th:block th:if="${category != null}">
+                                <a th:href="@{/ecommerce/item/{category}/list(category=${category}, page=${categoryItems.number + 1})}"><i class="fa fa-long-arrow-right"></i></a>
+                            </th:block>
                         </div>
                     </th:block>
                 </div>
